@@ -1,7 +1,6 @@
-library(ggplot2)
 #' @import ggplot2
+#' @import dplyr
 #' @importFrom cli cli_abort
-#' @importFrom dplyr mutate row_number
 
 # Rename to match ggplot2 pattern
 StatEpicurve <- ggproto("StatEpicurve", Stat,
@@ -28,108 +27,161 @@ StatEpicurve <- ggproto("StatEpicurve", Stat,
   }
 )
 
+#' @import ggplot2
+#' @import dplyr
+#' @importFrom cli cli_alert_info cli_alert_warning
+#' @importFrom lubridate as_date as_datetime floor_date ceiling_date
+GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
+
+  extra_params = c(GeomBar$extra_params, "date.resolution", "relative.width", "datetime", "week_start"),
+
+  setup_params = function(data, params) {
+    params <- GeomBar$setup_params(data, params)
+    params$date.resolution <- params$date.resolution %||% NA
+    params$relative.width <- params$relative.width %||% 1
+    params$datetime <- params$datetime %||% (max(data$x, na.rm = TRUE) > 10^6)
+    params$week_start <- params$week_start %||% 1
+    if (!dplyr::between(params$relative.width, 0, 1))
+      cli::cli_warn("relative.width is {params$relative.width}.
+                             relative.width should be between 0 and 1 (geom_epicurve).")
+    params
+  },
+
+  setup_data = function(data, params) {
+
+    data$flipped_aes <- params$flipped_aes
+    data <- flip_data(data, params$flipped_aes)
+    data$just <- params$just %||% 0.5
+
+
+    # Drop missing x
+    complete <- stats::complete.cases(data$x)
+    data <- data |> dplyr::filter(complete)
+    if (!all(complete) && !params$na.rm) {
+      cli::cli_warn(paste0(
+        "Removed {sum(!complete)} row{?s} containing missing values (geom_epicurve)."
+      ))
+    }
+
+    if (!is.na(params$date.resolution)) {
+      # Try to infer if x was date or datetime and convert to date.
+      data$date <- if (params$datetime) lubridate::as_datetime(data$x) else lubridate::as_date(data$x)
+      # Round to specified resolution
+      data$x <- as.numeric(lubridate::floor_date(data$date,
+                                                 unit = params$date.resolution,
+                                                 week_start = params$week_start))
+      # Use ceiling to be able to infer resolution in days using ggplot2::resolution
+      data$date <- as.numeric(lubridate::ceiling_date(data$date,
+                                                      unit = params$date.resolution,
+                                                      week_start = params$week_start,
+                                                      change_on_boundary = TRUE))
+      # Calculate width of bar in days based on specified rounding
+      data$width <- (data$date - data$x)
+
+      data |>
+        dplyr::distinct(x, width, just) -> data_width
+
+      # Adjust Bars to avoid jittering when using months
+      if (nrow(data_width) > 1) for (i in 2:nrow(data_width)) {
+        # Check if there is a space between bars
+        if ((data_width[i, ]$x - data_width[i - 1, ]$x) == data_width[i - 1, ]$width) {
+          # If there is a previous bar, adjust justification to avoid gaps or overlap
+          data_width[i, ]$just = (data_width[i - 1, ]$width * data_width[i - 1, ]$just) / data_width[i, ]$width
+        }
+      }
+      data |>
+        dplyr::select(-just, -width) |>
+        dplyr::left_join(data_width, by = "x") |>
+        dplyr::mutate(width = params$width %||%  width * params$relative.width) -> data
+
+      #TODO: Sum up y if stat is count
+
+    } else if (params$datetime) {
+      cli::cli_alert_info("It seems you provided a datetime format. Column used as specified.
+                          Please use the resoultion = 'day' to round to date (geom_epicurve).")
+      data$width <- params$width %||% (resolution(data$x) * params$relative.width)
+    } else {
+      data$width <- params$width %||% params$relative.width
+    }
+    data <- transform(data,
+      ymin = pmin(y, 0), ymax = pmax(y, 0),
+      xmin = x - width * just, xmax = x + width * (1 - just),
+      width = NULL, just = NULL
+    )
+    flip_data(data, params$flipped_aes)
+  },
+  rename_size = TRUE
+)
+
 #' Create an epidemic curve plot
 #'
-#' @param mapping Set of aesthetic mappings
-#' @param data The data to be displayed
-#' @param stat The statistical transformation to use
-#' @param linewidth Line width for the bars outline
-#' @param size Deprecated. Use linewidth instead
-#' @param position Position adjustment # Stack, Fill?
-#' @param ... Other arguments passed to layer()
-#' @param na.rm If FALSE, remove missing values
+#' Creates a bar plot specifically designed for visualizing epidemic curves (epicurves).
+#' Supports both date/datetime and categorical data, with special handling for date-based
+#' aggregation.
+#'
+#' @param mapping Set of aesthetic mappings created by \code{\link[ggplot2]{aes}}
+#' @param data The data frame containing the variables for the plot
+#' @param stat Test
+#' @param linewidth Width of the bar borders. Defaults to 0.5pt
+#' @param position Position adjustment. Currently supports "stack"
+#' @param color Color of the observation borders. Defaults to "white"
+#' @param date.resolution Character string specifying the time unit for date aggregation
+#'        (e.g., "day", "week", "month"). Set to NULL for no date aggregation
+#' @param width Numeric value specifying the width of the bars. If NULL, calculated
+#'        based on resolution and relative.width
+#' @param relative.width Numeric value between 0 and 1 adjusting the relative width
+#'        of bars. Defaults to 1
+#' @param week_start Integer specifying the start of the week (1 = Monday, 7 = Sunday).
+#'        Only used when date.resolution includes weeks. Defaults to 1 (Monday)
+#' @param ... Other arguments passed to \code{\link[ggplot2]{layer}}
+#' @param na.rm If FALSE, missing values are removed with a warning.
+#'        If TRUE, missing values are silently removed
 #' @param show.legend logical. Should this layer be included in the legends?
-#' @param inherit.aes If FALSE, overrides the default aesthetics
+#' @param inherit.aes If FALSE, overrides the default aesthetics from the plot
+#'
+#' @return A ggplot2 layer that can be added to a plot
 #' @export
+#'
+#' @examples
+#' # Basic epicurve with dates
+#' library(ggplot2)
+#' data <- data.frame(date = as.Date("2024-01-01") + 0:30)
+#' ggplot(data, aes(x = date)) +
+#'   geom_epicurve(date.resolution = "week")
+#'
+#' # Categorical epicurve
+#' ggplot(mtcars, aes(x = factor(cyl))) +
+#'   geom_epicurve()
 geom_epicurve <- function(mapping = NULL, data = NULL,
-                         linewidth = NULL, position = "stack", 
-                         ..., na.rm = FALSE, color = "white",
-                         show.legend = NA, inherit.aes = TRUE) {
-  
-  # GeomEpicurve params ist ein besserer Ort
-  linewidth <- linewidth %||% .5 * .pt
-  
-  # ggplot2::resolution
-  # Datetime
-  # specify resolution 
-  # https://github.com/tidyverse/ggplot2/blob/efc53cc000e7d86e3db22e1f43089d366fe24f2e/R/geom-bar.R
+                          stat = "epicurve", #or count for no outlines
+                          linewidth = NULL, position = "stack",
+                          color = "white", date.resolution = NULL,
+                          width = NULL, relative.width = 1,
+                          week_start = getOption("lubridate.week.start", 1),
+                          ..., na.rm = FALSE,
+                          show.legend = NA, inherit.aes = TRUE) {
 
-  list(
-    layer(
-      geom = "bar",
-      mapping = mapping,
-      data = data,
-      stat = StatEpicurve,
-      position = position,
-      show.legend = show.legend,
-      inherit.aes = inherit.aes,
-      params = list(
-        linewidth = linewidth,
-        color = color,
-        #fill = NA,
-        na.rm = na.rm,
-        ...
-      )
+  if (stat == "epicurve") stat <- StatEpicurve
+
+  linewidth <- linewidth %||% 0.5 * .pt
+
+  layer(
+    geom = GeomEpicurve,
+    mapping = mapping,
+    data = data,
+    stat = stat,
+    position = position,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+    params = list(
+      linewidth = linewidth,
+      color = color,
+      width = width,
+      relative.width = relative.width,
+      date.resolution = date.resolution,
+      week_start = week_start,
+      na.rm = na.rm,
+      ...
     )
   )
 }
-
-# Test the custom geom
-plot_data_epicurve_imp <- data.frame(
-  date = rep(as.Date("2024-01-01") + (0:6) * 2, times = c(3, 6, 4, 1, 4, 5, 1))
-  # category = rep(c("A", "B"), times = 7)
-)
-
-ggplot(plot_data_epicurve_imp, aes(x = date)) +
-  geom_epicurve(width = 0.9) +
-  labs(title = "Epicurve Example") +
-  theme_bw()
-
-# # Test the custom geom
-ggplot(mtcars, aes(y = factor(cyl), fill = factor(gear))) +
-   geom_epicurve(width = 0.9)
-#ggsave("test.png")
-
-ggplot(mtcars, aes(x = factor(cyl), fill = factor(gear))) +
-  geom_epicurve(width = 0.9, size = 0.5) +
-  labs(title = "Epicurve Example")
-
-#resolution(as.numeric(plot_data_epicurve_imp$date), zero = F)
-
-# 
-# GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
-#                    required_aes = c("x", "y"),
-#                    
-#                    # These aes columns are created by setup_data(). They need to be listed here so
-#                    # that GeomRect$handle_na() properly removes any bars that fall outside the defined
-#                    # limits, not just those for which x and y are outside the limits
-#                    non_missing_aes = c("xmin", "xmax", "ymin", "ymax"),
-#                    
-#                    default_aes = aes(!!!GeomRect$default_aes, width = NULL),
-#                    
-#                    setup_params = function(data, params) {
-#                      params$flipped_aes <- has_flipped_aes(data, params)
-#                      params
-#                    },
-#                    
-#                    extra_params = c("just", "na.rm", "orientation"),
-#                    
-#                    setup_data = function(data, params) {
-#                      data$flipped_aes <- params$flipped_aes
-#                      data <- flip_data(data, params$flipped_aes)
-#                      data$width <- data$width %||%
-#                        params$width %||% (min(vapply(
-#                          split(data$x, data$PANEL, drop = TRUE),
-#                          resolution, numeric(1), zero = FALSE
-#                        )) * 0.9)
-#                      data$just <- params$just %||% 0.5
-#                      data <- transform(data,
-#                                        ymin = pmin(y, 0), ymax = pmax(y, 0),
-#                                        xmin = x - width * just, xmax = x + width * (1 - just),
-#                                        width = NULL, just = NULL
-#                      )
-#                      flip_data(data, params$flipped_aes)
-#                    },
-#                    
-#                    rename_size = TRUE
-# )

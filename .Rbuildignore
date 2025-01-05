@@ -1,3 +1,6 @@
 ^ggsurveillance\.Rproj$
 ^\.Rproj\.user$
 ^\.github$
+^LICENSE\.md$
+^.lintr
+^dev$

@@ -1,0 +1,6 @@
+linters: linters_with_tags(
+  tags = c("package_development", "readability"),
+	line_length_linter = line_length_linter(120L)
+  )
+exclusions: list(
+  )

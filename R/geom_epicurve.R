@@ -1,5 +1,6 @@
 #' @import ggplot2
 #' @import dplyr
+#' @import rlang
 #' @importFrom cli cli_abort
 
 # Rename to match ggplot2 pattern
@@ -36,6 +37,7 @@ StatEpicurve <- ggproto("StatEpicurve", Stat,
 
 #' @import ggplot2
 #' @import dplyr
+#' @import rlang
 #' @import lubridate
 #' @importFrom cli cli_alert_info cli_alert_warning
 GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
@@ -99,7 +101,8 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
       data$width <- (data$date - data$x)
 
       data |>
-        dplyr::distinct(x, width, just) -> data_width
+        dplyr::distinct(x, width, just) |>
+        dplyr::arrange(x) -> data_width
 
       # Adjust Bars to avoid jittering when using months
       if (nrow(data_width) > 1) for (i in 2:nrow(data_width)) {

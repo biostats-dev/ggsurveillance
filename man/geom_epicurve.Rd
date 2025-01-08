@@ -8,9 +8,7 @@ geom_epicurve(
   mapping = NULL,
   data = NULL,
   stat = "epicurve",
-  linewidth = NULL,
   position = "stack",
-  color = "white",
   date.resolution = NULL,
   width = NULL,
   relative.width = 1,
@@ -22,22 +20,24 @@ geom_epicurve(
 )
 }
 \arguments{
-\item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2]{aes}}}
+\item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2]{aes}}. Commonly used mappings:
+\itemize{
+\item x or y
+\item fill for colouring groups
+\item weight
+}}
 
 \item{data}{The data frame containing the variables for the plot}
 
-\item{stat}{Test}
+\item{stat}{either "\code{epicurve}" for outlines around cases or "\code{count}" for outlines around (fill) groups}
 
-\item{linewidth}{Width of the bar borders. Defaults to 0.5pt}
-
-\item{position}{Position adjustment. Currently supports "stack"}
-
-\item{color}{Color of the observation borders. Defaults to "white"}
+\item{position}{Position adjustment. Currently supports "\code{stack}".}
 
 \item{date.resolution}{Character string specifying the time unit for date aggregation
-(e.g., "day", "week", "month"). Set to NULL for no date aggregation}
+(e.g., "\code{day}", "\code{week}", "\code{month}", "\code{bimonth}", "\code{season}", "\code{quarter}", "\code{halfyear}", "\code{year}").
+Set to \code{NULL} for no date aggregation}
 
-\item{width}{Numeric value specifying the width of the bars. If NULL, calculated
+\item{width}{Numeric value specifying the width of the bars. If \code{NULL}, calculated
 based on resolution and relative.width}
 
 \item{relative.width}{Numeric value between 0 and 1 adjusting the relative width
@@ -46,7 +46,11 @@ of bars. Defaults to 1}
 \item{week_start}{Integer specifying the start of the week (1 = Monday, 7 = Sunday).
 Only used when date.resolution includes weeks. Defaults to 1 (Monday)}
 
-\item{...}{Other arguments passed to \code{\link[ggplot2]{layer}}}
+\item{...}{Other arguments passed to \code{\link[ggplot2]{layer}}
+\itemize{
+\item \code{colour} Color of the observation borders. Disable with colour = NA. Defaults to "white".
+\item \code{linewidth}  Width of the outlines.
+}}
 
 \item{na.rm}{If FALSE, missing values are removed with a warning.
 If TRUE, missing values are silently removed}

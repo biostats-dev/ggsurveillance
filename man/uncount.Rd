@@ -5,23 +5,39 @@
 \alias{expand_counts}
 \title{Duplicate rows according to a weighting variable}
 \usage{
+uncount(data, weights, ..., .remove = TRUE, .id = NULL)
+
 expand_counts(data, weights, ..., .remove = TRUE, .id = NULL)
+}
+\arguments{
+\item{data}{A data frame, tibble, or grouped tibble.}
+
+\item{weights}{A vector of weights. Evaluated in the context of \code{data};
+supports quasiquotation.}
+
+\item{...}{Additional arguments passed on to methods.}
+
+\item{.remove}{If \code{TRUE}, and \code{weights} is the name of a column in \code{data},
+then this column is removed.}
+
+\item{.id}{Supply a string to create a new variable which gives a unique
+identifier for each created row.}
 }
 \value{
 A data frame with rows duplicated according to weights.
 }
 \description{
+\code{uncount()} is provided by the tidyr package, and re-exported
+by ggsurveillance. See \code{\link[tidyr:uncount]{tidyr::uncount()}} for more details.
+
 \code{uncount()} and its alias \code{expand_counts()} are complements of \code{\link[dplyr:count]{dplyr::count()}}: they take
 a data frame with a column of frequencies and duplicate each row according to
 those frequencies.
-
-\code{uncount()} is provided by the tidyr package, and re-exported
-by ggsurveillance. See \code{\link[tidyr:uncount]{tidyr::uncount()}} for more details.
 }
 \examples{
 df <- data.frame(x = c("a", "b"), n = c(2, 3))
-uncount(df, n)
+df |> uncount(n)
 # Or equivalently:
-expand_count(df, n)
+df |> expand_counts(n)
 
 }

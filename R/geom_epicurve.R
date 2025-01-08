@@ -5,7 +5,7 @@
 # Rename to match ggplot2 pattern
 StatEpicurve <- ggproto("StatEpicurve", Stat,
   required_aes = "x|y",
-  default_aes = aes(x = after_stat(count), y = after_stat(count), group = row_number),
+  default_aes = aes(x = after_stat(count), y = after_stat(count), group = row_number, weight = 1),
   setup_params = function(self, data, params) {
     params$flipped_aes <- has_flipped_aes(data, params, main_is_orthogonal = FALSE)
 
@@ -22,25 +22,46 @@ StatEpicurve <- ggproto("StatEpicurve", Stat,
   },
   compute_layer = function(data, scales, flipped_aes = FALSE) {
     data <- flip_data(data, flipped_aes)
+    #browser()
+    #TODO: handle weight
+    weight <- data$weight %||% rep(1, length(data$x))
+    data <- data |> expand_counts(weight)
+
     bars <- data |> dplyr::mutate(row_number = dplyr::row_number(data), count = 1)
     flip_data(bars, flipped_aes)
-  }
+  },
+
+  dropped_aes = "weight"
 )
 
 #' @import ggplot2
 #' @import dplyr
+#' @import lubridate
 #' @importFrom cli cli_alert_info cli_alert_warning
-#' @importFrom lubridate as_date as_datetime floor_date ceiling_date
 GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
 
-  extra_params = c(GeomBar$extra_params, "date.resolution", "relative.width", "datetime", "week_start"),
+  default_aes = ggplot2:::defaults(
+    # colour = from_theme(paper), linewidth = from_theme(borderwidth)
+    aes(colour = "white", linewidth = 1, linetype = "solid"),
+    GeomBar$default_aes),
+
+  extra_params = c(GeomBar$extra_params, "date.resolution", "relative.width", "datetime", "week_start", "stat"),
 
   setup_params = function(data, params) {
     params <- GeomBar$setup_params(data, params)
+    # Disable date binning if not specified
     params$date.resolution <- params$date.resolution %||% NA
+    # Full (100%) width bars
     params$relative.width <- params$relative.width %||% 1
+    # Check values of x are so large to be datetime
     params$datetime <- params$datetime %||% (max(data$x, na.rm = TRUE) > 10^6)
+    # Week_start defaults to Monday
     params$week_start <- params$week_start %||% 1
+
+    if (!is.null(params$colour)) {
+      data$colour <- params$colour
+    }
+
     if (!dplyr::between(params$relative.width, 0, 1))
       cli::cli_warn("relative.width is {params$relative.width}.
                              relative.width should be between 0 and 1 (geom_epicurve).")
@@ -52,7 +73,6 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
     data$flipped_aes <- params$flipped_aes
     data <- flip_data(data, params$flipped_aes)
     data$just <- params$just %||% 0.5
-
 
     # Drop missing x
     complete <- stats::complete.cases(data$x)
@@ -94,7 +114,13 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
         dplyr::left_join(data_width, by = "x") |>
         dplyr::mutate(width = params$width %||%  width * params$relative.width) -> data
 
-      #TODO: Sum up y if stat is count
+      # Recalc counts after binning if stat = "count"
+      if (params$stat == "count")
+        data <- data |>
+          dplyr::group_by(dplyr::pick(PANEL:just)) |>
+          dplyr::group_modify(~StatCount$compute_group(data = .x)) |>
+          dplyr::mutate(y = count) |>
+          dplyr::ungroup()
 
     } else if (params$datetime) {
       cli::cli_alert_info("It seems you provided a datetime format. Column used as specified.
@@ -103,6 +129,14 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
     } else {
       data$width <- params$width %||% params$relative.width
     }
+
+    max_bar_height = data |> dplyr::count(x) |> dplyr::slice_max(n, n = 1, with_ties = FALSE) |> dplyr::pull(n)
+    if (max_bar_height[1] > 200) cli::cli_alert_warning(
+      "To many observations per date. If you experience problems, please use color = NA to disable outlines.")
+    x_width = diff(range(data$x))/data[1,]$width
+    if (x_width > 300) cli::cli_alert_warning(
+      "To many bars. If you experience problems, please change date.resolution to a lower resolution or use color = NA to disable outlines.")
+
     data <- transform(data,
       ymin = pmin(y, 0), ymax = pmax(y, 0),
       xmin = x - width * just, xmax = x + width * (1 - just),
@@ -119,21 +153,25 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
 #' Supports both date/datetime and categorical data, with special handling for date-based
 #' aggregation.
 #'
-#' @param mapping Set of aesthetic mappings created by \code{\link[ggplot2]{aes}}
+#' @param mapping Set of aesthetic mappings created by \code{\link[ggplot2]{aes}}. Commonly used mappings:
+#'   * x or y
+#'   * fill for colouring groups
+#'   * weight
 #' @param data The data frame containing the variables for the plot
-#' @param stat Test
-#' @param linewidth Width of the bar borders. Defaults to 0.5pt
-#' @param position Position adjustment. Currently supports "stack"
-#' @param color Color of the observation borders. Defaults to "white"
+#' @param stat either "`epicurve`" for outlines around cases or "`count`" for outlines around (fill) groups
+#' @param position Position adjustment. Currently supports "`stack`".
 #' @param date.resolution Character string specifying the time unit for date aggregation
-#'        (e.g., "day", "week", "month"). Set to NULL for no date aggregation
-#' @param width Numeric value specifying the width of the bars. If NULL, calculated
+#'        (e.g., "`day`", "`week`", "`month`", "`bimonth`", "`season`", "`quarter`", "`halfyear`", "`year`").
+#'        Set to \code{NULL} for no date aggregation
+#' @param width Numeric value specifying the width of the bars. If \code{NULL}, calculated
 #'        based on resolution and relative.width
 #' @param relative.width Numeric value between 0 and 1 adjusting the relative width
 #'        of bars. Defaults to 1
 #' @param week_start Integer specifying the start of the week (1 = Monday, 7 = Sunday).
 #'        Only used when date.resolution includes weeks. Defaults to 1 (Monday)
 #' @param ... Other arguments passed to \code{\link[ggplot2]{layer}}
+#'   * \code{colour} Color of the observation borders. Disable with colour = NA. Defaults to "white".
+#'   * \code{linewidth}  Width of the outlines.
 #' @param na.rm If FALSE, missing values are removed with a warning.
 #'        If TRUE, missing values are silently removed
 #' @param show.legend logical. Should this layer be included in the legends?
@@ -154,16 +192,15 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
 #'   geom_epicurve()
 geom_epicurve <- function(mapping = NULL, data = NULL,
                           stat = "epicurve", #or count for no outlines
-                          linewidth = NULL, position = "stack",
-                          color = "white", date.resolution = NULL,
+                          position = "stack",
+                          date.resolution = NULL,
                           width = NULL, relative.width = 1,
                           week_start = getOption("lubridate.week.start", 1),
                           ..., na.rm = FALSE,
                           show.legend = NA, inherit.aes = TRUE) {
 
-  if (stat == "epicurve") stat <- StatEpicurve
-
-  linewidth <- linewidth %||% 0.5 * .pt
+  stat2 <- stat
+  #if (stat == "epicurve") stat <- StatEpicurve
 
   layer(
     geom = GeomEpicurve,
@@ -174,9 +211,8 @@ geom_epicurve <- function(mapping = NULL, data = NULL,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(
-      linewidth = linewidth,
-      color = color,
       width = width,
+      stat = stat2,
       relative.width = relative.width,
       date.resolution = date.resolution,
       week_start = week_start,

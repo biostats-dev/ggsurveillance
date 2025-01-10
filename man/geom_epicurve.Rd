@@ -29,7 +29,8 @@ geom_epicurve(
 
 \item{data}{The data frame containing the variables for the plot}
 
-\item{stat}{either "\code{epicurve}" for outlines around cases or "\code{count}" for outlines around (fill) groups}
+\item{stat}{either "\code{epicurve}" for outlines around cases or "\code{count}" for outlines around (fill) groups.
+For large numbers of cases please use "\code{count}".}
 
 \item{position}{Position adjustment. Currently supports "\code{stack}".}
 

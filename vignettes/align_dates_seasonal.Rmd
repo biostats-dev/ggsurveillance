@@ -1,0 +1,58 @@
+---
+title: "Align a bin case data for seasonal analysis for surveillance"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Align a bin case data for seasonal analysis for surveillance}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(ggsurveillance)
+```
+
+# Seasonal alignment and plot
+```{r}
+library(ggplot2)
+
+influenza_germany |>
+  align_dates_seasonal(
+    dates_from = ReportingWeek, date.resolution = "epiweek", start = 28
+  ) -> df_flu_aligned
+
+ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence, color = season)) +
+  geom_line() +
+  facet_wrap(~AgeGroup) +
+  theme_bw()
+```
+
+```{r}
+influenza_germany |>
+  align_dates_seasonal(dates_from = ReportingWeek) |>
+  group_by(AgeGroup, season) |>
+  tally(wt = Cases) |>
+  pivot_wider(names_from = AgeGroup, values_from = n)
+```
+
+
+# Other visualisations
+```{r}
+influenza_germany |>
+  filter(AgeGroup != "00+") |>
+  align_dates_seasonal(dates_from = ReportingWeek) |>
+  ggplot(aes(x = ReportingWeek, weight = Cases, fill = season)) + 
+  # Use stat = count for more efficient plotting
+  geom_epicurve(color = NA, stat = "count") +
+  theme_bw()
+```
+

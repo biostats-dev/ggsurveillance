@@ -23,15 +23,14 @@ StatEpicurve <- ggproto("StatEpicurve", Stat,
   },
   compute_layer = function(data, scales, flipped_aes = FALSE) {
     data <- flip_data(data, flipped_aes)
-    #browser()
-    #TODO: handle weight
+    # browser()
+    # TODO: handle weight
     weight <- data$weight %||% rep(1, length(data$x))
     data <- data |> expand_counts(weight)
 
     bars <- data |> dplyr::mutate(row_number = dplyr::row_number(data), count = 1)
     flip_data(bars, flipped_aes)
   },
-
   dropped_aes = "weight"
 )
 
@@ -41,14 +40,12 @@ StatEpicurve <- ggproto("StatEpicurve", Stat,
 #' @import lubridate
 #' @importFrom cli cli_alert_info cli_alert_warning
 GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
-
   default_aes = ggplot2:::defaults(
     # colour = from_theme(paper), linewidth = from_theme(borderwidth)
     aes(colour = "white", linewidth = 1, linetype = "solid"),
-    GeomBar$default_aes),
-
+    GeomBar$default_aes
+  ),
   extra_params = c(GeomBar$extra_params, "date.resolution", "relative.width", "datetime", "week_start", "stat"),
-
   setup_params = function(data, params) {
     params <- GeomBar$setup_params(data, params)
     # Disable date binning if not specified
@@ -64,14 +61,13 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
       data$colour <- params$colour
     }
 
-    if (!dplyr::between(params$relative.width, 0, 1))
+    if (!dplyr::between(params$relative.width, 0, 1)) {
       cli::cli_warn("relative.width is {params$relative.width}.
                              relative.width should be between 0 and 1 (geom_epicurve).")
+    }
     params
   },
-
   setup_data = function(data, params) {
-
     data$flipped_aes <- params$flipped_aes
     data <- flip_data(data, params$flipped_aes)
     data$just <- params$just %||% 0.5
@@ -90,13 +86,15 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
       data$date <- if (params$datetime) lubridate::as_datetime(data$x) else lubridate::as_date(data$x)
       # Round to specified resolution
       data$x <- as.numeric(lubridate::floor_date(data$date,
-                                                 unit = params$date.resolution,
-                                                 week_start = params$week_start))
+        unit = params$date.resolution,
+        week_start = params$week_start
+      ))
       # Use ceiling to be able to infer resolution in days using ggplot2::resolution
       data$date <- as.numeric(lubridate::ceiling_date(data$date,
-                                                      unit = params$date.resolution,
-                                                      week_start = params$week_start,
-                                                      change_on_boundary = TRUE))
+        unit = params$date.resolution,
+        week_start = params$week_start,
+        change_on_boundary = TRUE
+      ))
       # Calculate width of bar in days based on specified rounding
       data$width <- (data$date - data$x)
 
@@ -105,40 +103,53 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
         dplyr::arrange(x) -> data_width
 
       # Adjust Bars to avoid jittering when using months
-      if (nrow(data_width) > 1) for (i in 2:nrow(data_width)) {
-        # Check if there is a space between bars
-        if ((data_width[i, ]$x - data_width[i - 1, ]$x) == data_width[i - 1, ]$width) {
-          # If there is a previous bar, adjust justification to avoid gaps or overlap
-          data_width[i, ]$just = (data_width[i - 1, ]$width * data_width[i - 1, ]$just) / data_width[i, ]$width
+      if (nrow(data_width) > 1) {
+        for (i in 2:nrow(data_width)) {
+          # Check if there is a space between bars
+          if ((data_width[i, ]$x - data_width[i - 1, ]$x) == data_width[i - 1, ]$width) {
+            # If there is a previous bar, adjust justification to avoid gaps or overlap
+            data_width[i, ]$just <- (data_width[i - 1, ]$width * data_width[i - 1, ]$just) / data_width[i, ]$width
+          }
         }
       }
       data |>
         dplyr::select(-just, -width) |>
         dplyr::left_join(data_width, by = "x") |>
-        dplyr::mutate(width = params$width %||%  width * params$relative.width) -> data
+        dplyr::mutate(width = params$width %||% width * params$relative.width) -> data
 
       # Recalc counts after binning if stat = "count"
-      if (params$stat == "count")
+      if (params$stat == "count") {
         data <- data |>
-          dplyr::group_by(dplyr::pick(PANEL:just)) |>
-          dplyr::group_modify(~StatCount$compute_group(data = .x)) |>
+          select(-date) |>
+          rename(weight = count) |>
+          dplyr::group_by(dplyr::pick(-(y:flipped_aes))) |>
+          dplyr::group_modify(~ StatCount$compute_group(data = .x)) |>
           dplyr::mutate(y = count) |>
           dplyr::ungroup()
-
+      }
     } else if (params$datetime) {
       cli::cli_alert_info("It seems you provided a datetime format. Column used as specified.
                           Please use the resoultion = 'day' to round to date (geom_epicurve).")
       data$width <- params$width %||% (resolution(data$x) * params$relative.width)
     } else {
-      data$width <- params$width %||% params$relative.width
+      data$width <- params$width %||% (resolution(data$x) * params$relative.width)
     }
 
-    max_bar_height = data |> dplyr::count(x) |> dplyr::slice_max(n, n = 1, with_ties = FALSE) |> dplyr::pull(n)
-    if (max_bar_height[1] > 200) cli::cli_alert_warning(
-      "To many observations per date. If you experience problems, please use color = NA to disable outlines.")
-    x_width = diff(range(data$x))/data[1,]$width
-    if (x_width > 300) cli::cli_alert_warning(
-      "To many bars. If you experience problems, please change date.resolution to a lower resolution or use color = NA to disable outlines.")
+    max_bar_height <- data |>
+      dplyr::count(x) |>
+      dplyr::slice_max(n, n = 1, with_ties = FALSE) |>
+      dplyr::pull(n)
+    if (max_bar_height[1] > 200) {
+      cli::cli_alert_warning(
+        "To many observations per date. If you experience problems, please use color = NA to disable outlines."
+      )
+    }
+    x_width <- diff(range(data$x)) / data[1, ]$width
+    if (x_width > 300) {
+      cli::cli_alert_warning(
+        "To many bars. If you experience problems, please change date.resolution to a lower resolution or use color = NA to disable outlines."
+      )
+    }
 
     data <- transform(data,
       ymin = pmin(y, 0), ymax = pmax(y, 0),
@@ -161,7 +172,8 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
 #'   * fill for colouring groups
 #'   * weight
 #' @param data The data frame containing the variables for the plot
-#' @param stat either "`epicurve`" for outlines around cases or "`count`" for outlines around (fill) groups
+#' @param stat either "`epicurve`" for outlines around cases or "`count`" for outlines around (fill) groups.
+#' For large numbers of cases please use "`count`".
 #' @param position Position adjustment. Currently supports "`stack`".
 #' @param date.resolution Character string specifying the time unit for date aggregation
 #'        (e.g., "`day`", "`week`", "`month`", "`bimonth`", "`season`", "`quarter`", "`halfyear`", "`year`").
@@ -194,16 +206,14 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
 #' ggplot(mtcars, aes(x = factor(cyl))) +
 #'   geom_epicurve()
 geom_epicurve <- function(mapping = NULL, data = NULL,
-                          stat = "epicurve", #or count for no outlines
+                          stat = "epicurve", # or count for no outlines
                           position = "stack",
                           date.resolution = NULL,
                           width = NULL, relative.width = 1,
                           week_start = getOption("lubridate.week.start", 1),
                           ..., na.rm = FALSE,
                           show.legend = NA, inherit.aes = TRUE) {
-
-  stat2 <- stat
-  #if (stat == "epicurve") stat <- StatEpicurve
+  stat_param <- stat
 
   layer(
     geom = GeomEpicurve,
@@ -215,7 +225,7 @@ geom_epicurve <- function(mapping = NULL, data = NULL,
     inherit.aes = inherit.aes,
     params = list(
       width = width,
-      stat = stat2,
+      stat = stat_param,
       relative.width = relative.width,
       date.resolution = date.resolution,
       week_start = week_start,

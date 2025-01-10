@@ -1,2 +1,1 @@
-
-#snake_class <- ggplot2:::snake_class
+# snake_class <- ggplot2:::snake_class

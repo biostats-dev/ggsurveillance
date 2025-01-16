@@ -24,7 +24,7 @@
 #'   * ISO dates "2024-03-09"
 #'   * Month "2024-03"
 #'   * Week "2024-W09" or "2024-W09-1"
-#' @param date.resolution Character string specifying the temporal resolution.
+#' @param date_resolution Character string specifying the temporal resolution.
 #'   One of:
 #'   * "week" or "isoweek" - Calendar weeks (ISO), reporting weeks according to the ECDC.
 #'   * "epiweek" - Epidemiological weeks (CDC), i.e. ISO weeks with Sunday as week start.
@@ -49,7 +49,7 @@
 #'
 #' influenza_germany |>
 #'   align_dates_seasonal(
-#'     dates_from = ReportingWeek, date.resolution = "epiweek", start = 28
+#'     dates_from = ReportingWeek, date_resolution = "epiweek", start = 28
 #'   ) -> df_flu_aligned
 #'
 #' ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence, color = season)) +
@@ -59,13 +59,18 @@
 #'
 #' @export
 
-align_dates_seasonal <- function(x, dates_from, date.resolution = "week", start = NULL, target_year = 2024) {
+align_dates_seasonal <- function(
+    x, dates_from, date_resolution = c("week", "isoweek", "epiweek", "day", "month"),
+    start = NULL, target_year = 2024) { #TODO: target_year = current year?
   # Enframe if vector supplied
   if (!is.data.frame(x) & rlang::is_vector(x)) {
     # TODO: try as_date()
     x <- data.frame(date = x)
     dates_from <- rlang::sym("date")
   }
+
+  date_resolution <- match.arg(date_resolution)
+
 
   df <- x |>
     mutate(
@@ -75,34 +80,34 @@ align_dates_seasonal <- function(x, dates_from, date.resolution = "week", start 
   # If not df error with typeof x?
 
   # Check for valid date resolution
-  if (!date.resolution %in% c("week", "epiweek", "month", "day")) {
+  if (!date_resolution %in% c("week", "epiweek", "month", "day")) {
     stop("Invalid date resolution. Choose from 'week', 'isoweek', 'epiweek', 'month', or 'day'.")
   }
 
   .check_align_df(df, {{ dates_from }})
 
-  if (date.resolution %in% c("week", "isoweek")) {
+  if (date_resolution %in% c("week", "isoweek")) {
     return(.align_dates_seasonal_week(
       df = df, dates_from = {{ dates_from }},
       start = start %||% 28, target_year = target_year
     ))
   }
 
-  if (date.resolution == "epiweek") {
+  if (date_resolution == "epiweek") {
     return(.align_dates_seasonal_epiweek(
       df = df, dates_from = {{ dates_from }},
       start = start %||% 28, target_year = target_year
     ))
   }
 
-  if (date.resolution == "month") {
+  if (date_resolution == "month") {
     return(.align_dates_seasonal_month(
       df = df, dates_from = {{ dates_from }},
       start = start %||% 7, target_year = target_year
     ))
   }
 
-  if (date.resolution == "day") {
+  if (date_resolution == "day") {
     return(.align_dates_seasonal_day(
       df = df, dates_from = {{ dates_from }},
       start = start %||% 150, target_year = target_year

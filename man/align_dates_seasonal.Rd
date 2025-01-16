@@ -7,7 +7,7 @@
 align_dates_seasonal(
   x,
   dates_from,
-  date.resolution = "week",
+  date_resolution = c("week", "isoweek", "epiweek", "day", "month"),
   start = NULL,
   target_year = 2024
 )
@@ -23,7 +23,7 @@ supported date formats are date and datetime and also commonly used character st
 \item Week "2024-W09" or "2024-W09-1"
 }}
 
-\item{date.resolution}{Character string specifying the temporal resolution.
+\item{date_resolution}{Character string specifying the temporal resolution.
 One of:
 \itemize{
 \item "week" or "isoweek" - Calendar weeks (ISO), reporting weeks according to the ECDC.
@@ -77,7 +77,7 @@ library(ggplot2)
 
 influenza_germany |>
   align_dates_seasonal(
-    dates_from = ReportingWeek, date.resolution = "epiweek", start = 28
+    dates_from = ReportingWeek, date_resolution = "epiweek", start = 28
   ) -> df_flu_aligned
 
 ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence, color = season)) +

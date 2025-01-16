@@ -27,7 +27,7 @@ library(ggplot2)
 
 influenza_germany |>
   align_dates_seasonal(
-    dates_from = ReportingWeek, date.resolution = "epiweek", start = 28
+    dates_from = ReportingWeek, date_resolution = "epiweek", start = 28
   ) -> df_flu_aligned
 
 ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence, color = season)) +
@@ -50,7 +50,7 @@ influenza_germany |>
 influenza_germany |>
   filter(AgeGroup != "00+") |>
   align_dates_seasonal(dates_from = ReportingWeek) |>
-  ggplot(aes(x = ReportingWeek, weight = Cases, fill = season)) + 
+  ggplot(aes(x = ReportingWeek, weight = Cases, fill = season)) +
   # Use stat = count for more efficient plotting
   geom_epicurve(color = NA, stat = "count") +
   theme_bw()

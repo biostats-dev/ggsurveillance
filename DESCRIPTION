@@ -28,6 +28,7 @@ Imports:
     rlang,
     stringr,
     tidyr,
-    tidyselect
+    tidyselect,
+    tsibble
 LazyData: true
 VignetteBuilder: knitr

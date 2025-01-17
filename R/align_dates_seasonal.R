@@ -19,6 +19,7 @@
 #' patterns or surveillance protocols.
 #'
 #' @param x A data frame with a date column or a date vector
+#' @param n Numeric column with case counts. Supports quoted and unqouted column names.
 #' @param dates_from Column name containing the dates to align. Used when x is a data.frame.
 #'   supported date formats are date and datetime and also commonly used character strings:
 #'   * ISO dates "2024-03-09"
@@ -26,7 +27,7 @@
 #'   * Week "2024-W09" or "2024-W09-1"
 #' @param date_resolution Character string specifying the temporal resolution.
 #'   One of:
-#'   * "week" or "isoweek" - Calendar weeks (ISO), reporting weeks according to the ECDC.
+#'   * "week" or "isoweek" - Calendar weeks (ISO), reporting weeks according tdevtoolo the ECDC.
 #'   * "epiweek" - Epidemiological weeks (CDC), i.e. ISO weeks with Sunday as week start.
 #'   * "month" - Calendar months
 #'   * "day" - Daily resolution
@@ -34,7 +35,15 @@
 #'   * For week/epiweek: week number (default: 28, approximately July)
 #'   * For month: month number (default: 7 for July)
 #'   * For day: day of year (default: 150, approximately June)
-#' @param target_year Numeric value for the reference year to align dates to (default: 2024).
+#' @param target_year Numeric value for the reference year to align dates to. The default target year
+#'  is the start of the most recent season in the data. This way the most recent dates stay unchanged.
+#' @param population A number or a numeric column with the population size. Used to calculate the incidence.
+#' @param fill_gaps Logical; If TRUE, gaps in the time series will be filled with 0 cases.
+#'
+#' @param drop_leap_week If TRUE and date_resolution is `week`, `isoweek` or `epiweek`, leap weeks (week 53)
+#' are dropped if they are not in the most recent season. Disable if data should be returned.
+#' Dropping week 53 from historical data is the most common approach. Otherwise historical data for week 53 would
+#' map to week 52 if the target season has no leap week, resulting in a doubling of the case counts.
 #'
 #' @return A data frame with standardized date columns:
 #'   * year: Calendar year from original date
@@ -42,6 +51,10 @@
 #'   * date_aligned: Date standardized to target year
 #'   * season: Epidemic season identifier (e.g., "2023/24")
 #'   * current_season: Logical flag for most recent season
+#'
+#' Binning also creates the columns:
+#'   * n: Sum of cases in bin
+#'   * incidence: Incidence calculated using n/population
 #'
 #' @examples
 #' # Sesonal Visualization of Germany Influenza Surveillance Data
@@ -58,49 +71,59 @@
 #'   theme_bw()
 #'
 #' @export
-
 align_dates_seasonal <- function(
-    x, dates_from, date_resolution = c("week", "isoweek", "epiweek", "day", "month"),
-    start = NULL, target_year = 2024) { # TODO: target_year = current year?
+    x, dates_from = NULL, date_resolution = c("week", "isoweek", "epiweek", "day", "month"),
+    start = NULL, target_year = NULL, drop_leap_week = TRUE) {
+  date_resolution <- match.arg(date_resolution)
+
   # Enframe if vector supplied
   if (!is.data.frame(x) & rlang::is_vector(x)) {
-    # TODO: try as_date()
+    # If vector, setup as data.frame
     x <- data.frame(date = x)
     dates_from <- rlang::sym("date")
   }
 
-  date_resolution <- match.arg(date_resolution)
-
+  # rlang check quo to detect character column names
+  if (!rlang::quo_is_symbol(rlang::enquo(dates_from))) dates_from <- rlang::sym(dates_from)
 
   df <- x |>
-    mutate(
+    dplyr::mutate(
       {{ dates_from }} := .coerce_to_date({{ dates_from }})
     )
 
-  # If not df error with typeof x?
-
-  # Check for valid date resolution
-  if (!date_resolution %in% c("week", "epiweek", "month", "day")) {
-    stop("Invalid date resolution. Choose from 'week', 'isoweek', 'epiweek', 'month', or 'day'.")
-  }
-
   .check_align_df(df, {{ dates_from }})
 
+  last_date <- df |>
+    dplyr::pull({{ dates_from }}) |>
+    max(na.rm = TRUE)
+
   if (date_resolution %in% c("week", "isoweek")) {
+    start <- start %||% 28
+    # Default target year is chosen to keep most recent dates unchanged.
+    target_year <- target_year %||% (
+      lubridate::isoyear(last_date) - ifelse(lubridate::isoweek(last_date) < start, 1, 0))
     return(.align_dates_seasonal_week(
       df = df, dates_from = {{ dates_from }},
-      start = start %||% 28, target_year = target_year
+      start = start, target_year = target_year, drop_leap_week = drop_leap_week
     ))
   }
 
   if (date_resolution == "epiweek") {
+    start <- start %||% 28
+    # Default target year is chosen to keep most recent dates unchanged.
+    target_year <- target_year %||% (
+      lubridate::epiyear(last_date) - ifelse(lubridate::epiweek(last_date) < start, 1, 0))
     return(.align_dates_seasonal_epiweek(
       df = df, dates_from = {{ dates_from }},
-      start = start %||% 28, target_year = target_year
+      start = start %||% 28, target_year = target_year, drop_leap_week = drop_leap_week
     ))
   }
 
   if (date_resolution == "month") {
+    start <- start %||% 7
+    # Default target year is chosen to keep most recent dates unchanged.
+    target_year <- target_year %||% (
+      lubridate::year(last_date) - ifelse(lubridate::month(last_date) < start, 1, 0))
     return(.align_dates_seasonal_month(
       df = df, dates_from = {{ dates_from }},
       start = start %||% 7, target_year = target_year
@@ -108,11 +131,69 @@ align_dates_seasonal <- function(
   }
 
   if (date_resolution == "day") {
+    start <- start %||% 150
+    # Default target year is chosen to keep most recent dates unchanged.
+    target_year <- target_year %||% (
+      lubridate::year(last_date) - ifelse(lubridate::yday(last_date) < start, 1, 0))
     return(.align_dates_seasonal_day(
       df = df, dates_from = {{ dates_from }},
       start = start %||% 150, target_year = target_year
     ))
   }
+}
+
+#' @rdname align_dates_seasonal
+#' @importFrom tsibble as_tsibble fill_gaps
+#' @export
+
+align_and_bin_dates_seasonal <- function(
+    x, n = 1, dates_from, population = 1, fill_gaps = FALSE,
+    date_resolution = c("week", "isoweek", "epiweek", "day", "month"),
+    start = NULL, target_year = NULL, drop_leap_week = TRUE) {
+  current_season <- wt <- incidence <- NULL
+
+  # rlang check quo to detect character column names
+  if (!rlang::quo_is_symbol(rlang::enquo(dates_from))) dates_from <- rlang::sym(dates_from)
+
+  if (!rlang::quo_is_symbol(rlang::enquo(n))) {
+    if (is.character(n)) n <- rlang::sym(n)
+  }
+
+  if (!rlang::quo_is_symbol(rlang::enquo(population))) {
+    if (is.character(population)) population <- rlang::sym(population)
+  }
+
+  # Save existing grouping of the df
+  grouping <- dplyr::group_vars(x)
+
+  # Calculate incidence
+  x |>
+    dplyr::mutate(
+      wt = !!rlang::enquo(n),
+      population = !!rlang::enquo(population)
+    ) |>
+    dplyr::mutate(incidence = wt / population) -> x
+
+  # Fill gaps in time series with 0
+  if (fill_gaps) {
+    suppressWarnings(x |>
+      tsibble::as_tsibble(index = {{ dates_from }}, key = grouping) |>
+      tsibble::fill_gaps(wt = 0, incidence = 0) |>
+      as.data.frame() |>
+      # TODO: Group by give a warning. How to fix?
+      dplyr::group_by(dplyr::pick(grouping)) -> x)
+  }
+
+  align_dates_seasonal(
+    x = x, dates_from = {{ dates_from }}, date_resolution = date_resolution,
+    start = start, target_year = target_year, drop_leap_week = drop_leap_week
+  ) |>
+    dplyr::group_by(dplyr::pick(year:current_season), .add = TRUE) |>
+    dplyr::summarise(
+      n = sum(wt, na.rm = TRUE),
+      incidence = sum(incidence, na.rm = TRUE),
+      .groups = "drop"
+    )
 }
 
 #' @import dplyr
@@ -136,9 +217,9 @@ align_dates_seasonal <- function(
   }
 }
 
-.align_dates_seasonal_week <- function(df, dates_from, start = 28, target_year = 2024) {
+.align_dates_seasonal_week <- function(df, dates_from, start = 28, target_year = 2024, drop_leap_week = TRUE) {
   # Make R CMD Check happy, prevent global var
-  season <- NULL
+  season <- current_season <- NULL
 
   df |>
     dplyr::mutate(
@@ -146,6 +227,7 @@ align_dates_seasonal <- function(
       week = lubridate::isoweek({{ dates_from }}) |>
         stringr::str_pad(width = 2, side = "left", pad = "0"),
       year_week = paste0(year, "-W", week),
+      # binned_date = ISOweek::ISOweek2date(paste(year_week, "-1)),
       date_aligned = paste0(ifelse(as.numeric(week) >= start, target_year, target_year + 1), "-W", week, "-1") |>
         ISOweek::ISOweek2date(),
       # if start <= 1
@@ -158,20 +240,22 @@ align_dates_seasonal <- function(
       # use arrange for current/last season
       current_season = .is_current_season(season),
       .after = {{ dates_from }}
-    )
+    ) |>
+    dplyr::filter(!(drop_leap_week & week == 53 & !current_season))
 }
 
-.align_dates_seasonal_epiweek <- function(df, dates_from, start = 28, target_year = 2024) {
+.align_dates_seasonal_epiweek <- function(df, dates_from, start = 28, target_year = 2024, drop_leap_week = TRUE) {
   # Make R CMD Check happy, prevent global var
-  season <- NULL
+  season <- current_season <- NULL
 
   df |>
     dplyr::mutate(
       year = lubridate::epiyear({{ dates_from }}),
       epiweek = lubridate::epiweek({{ dates_from }}) |>
         stringr::str_pad(width = 2, side = "left", pad = "0"),
+      # binned_date = ISOweek::ISOweek2date(paste(year_week, "-1)),
       year_week = paste0(year, "-W", epiweek),
-      date_aligned = paste0(ifelse(as.numeric(epiweek) >= start, target_year, target_year + 1), "-W", epiweek, "-2") |>
+      date_aligned = paste0(ifelse(as.numeric(epiweek) >= start, target_year, target_year + 1), "-W", epiweek, "-1") |>
         ISOweek::ISOweek2date(),
       # if start <= 1
       season = ifelse(as.numeric(epiweek) >= start,
@@ -183,7 +267,8 @@ align_dates_seasonal <- function(
       # use arrange for current/last season
       current_season = .is_current_season(season),
       .after = {{ dates_from }}
-    )
+    ) |>
+    dplyr::filter(!(drop_leap_week & epiweek == 53 & !current_season))
 }
 
 
@@ -197,6 +282,7 @@ align_dates_seasonal <- function(
       month = lubridate::month({{ dates_from }}) |>
         stringr::str_pad(width = 2, side = "left", pad = "0"),
       year_month = paste0(year, "-", month),
+      # binned_date = lubridate::as_date()(paste(year_month, "-1)),
       date_aligned = paste0(ifelse(as.numeric(month) >= start, target_year, target_year + 1), "-", month, "-1") |>
         lubridate::as_date(),
       # if start <= 1
@@ -236,40 +322,26 @@ align_dates_seasonal <- function(
 }
 
 
-.coerce_to_date <- function(dates_from) {
+.coerce_to_date <- function(dates) {
   date_iso_pattern <- "^\\d{4}-\\d{2}-\\d{2}$"
   year_month_pattern <- "^\\d{4}-\\d{2}$"
   year_week_day_pattern <- "^\\d{4}-W\\d{2}-\\d{1}$"
   year_week_pattern <- "^\\d{4}-W\\d{2}$"
 
 
-  if (lubridate::is.Date(dates_from)) {
-    return(dates_from)
-  } else if (all(lubridate::is.POSIXct(dates_from), na.rm = TRUE)) {
-    return(lubridate::as_date(dates_from))
-  } else if (is.character(dates_from) && all(stringr::str_detect(dates_from, date_iso_pattern), na.rm = TRUE)) {
-    return(lubridate::as_date(dates_from))
-  } else if (is.character(dates_from) && all(stringr::str_detect(dates_from, year_month_pattern), na.rm = TRUE)) {
-    return(lubridate::ym(dates_from))
-  } else if (is.character(dates_from) && all(stringr::str_detect(dates_from, year_week_day_pattern), na.rm = TRUE)) {
-    return(ISOweek::ISOweek2date(dates_from))
-  } else if (is.character(dates_from) && all(stringr::str_detect(dates_from, year_week_pattern), na.rm = TRUE)) {
-    return(ISOweek::ISOweek2date(paste0(dates_from, "-1")))
+  if (lubridate::is.Date(dates)) {
+    return(dates)
+  } else if (all(lubridate::is.POSIXct(dates), na.rm = TRUE)) {
+    return(lubridate::as_date(dates))
+  } else if (is.character(dates) && all(stringr::str_detect(dates, date_iso_pattern), na.rm = TRUE)) {
+    return(lubridate::as_date(dates))
+  } else if (is.character(dates) && all(stringr::str_detect(dates, year_month_pattern), na.rm = TRUE)) {
+    return(lubridate::ym(dates))
+  } else if (is.character(dates) && all(stringr::str_detect(dates, year_week_day_pattern), na.rm = TRUE)) {
+    return(ISOweek::ISOweek2date(dates))
+  } else if (is.character(dates) && all(stringr::str_detect(dates, year_week_pattern), na.rm = TRUE)) {
+    return(ISOweek::ISOweek2date(paste0(dates, "-1")))
   } else {
     cli::cli_abort("Not a valid date column.")
   }
 }
-
-
-
-# dplyr::group_by(dplyr::pick(PANEL:just)) |>
-
-
-# Given the specific use case for infectious disease surveillance, here are some suggested function names that might better reflect its purpose:
-# align_surveillance_seasons - Emphasizes the surveillance aspect and seasonal nature
-# create_disease_seasons - Focuses on the disease surveillance context
-# make_epi_seasons - Uses "epi" to indicate epidemiological context
-# align_flu_seasons - If it's specifically for influenza (though this might be too specific)
-# standardize_surveillance_dates - Emphasizes the date standardization aspect
-# 6. create_surveillance_timeline - Focuses on the timeline creation aspect
-# My top recommendation would be align_surveillance_seasons because it:

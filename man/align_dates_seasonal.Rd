@@ -2,14 +2,28 @@
 % Please edit documentation in R/align_dates_seasonal.R
 \name{align_dates_seasonal}
 \alias{align_dates_seasonal}
+\alias{align_and_bin_dates_seasonal}
 \title{Align dates for seasonal comparison}
 \usage{
 align_dates_seasonal(
   x,
-  dates_from,
+  dates_from = NULL,
   date_resolution = c("week", "isoweek", "epiweek", "day", "month"),
   start = NULL,
-  target_year = 2024
+  target_year = NULL,
+  drop_leap_week = TRUE
+)
+
+align_and_bin_dates_seasonal(
+  x,
+  n = 1,
+  dates_from,
+  population = 1,
+  fill_gaps = FALSE,
+  date_resolution = c("week", "isoweek", "epiweek", "day", "month"),
+  start = NULL,
+  target_year = NULL,
+  drop_leap_week = TRUE
 )
 }
 \arguments{
@@ -26,7 +40,7 @@ supported date formats are date and datetime and also commonly used character st
 \item{date_resolution}{Character string specifying the temporal resolution.
 One of:
 \itemize{
-\item "week" or "isoweek" - Calendar weeks (ISO), reporting weeks according to the ECDC.
+\item "week" or "isoweek" - Calendar weeks (ISO), reporting weeks according tdevtoolo the ECDC.
 \item "epiweek" - Epidemiological weeks (CDC), i.e. ISO weeks with Sunday as week start.
 \item "month" - Calendar months
 \item "day" - Daily resolution
@@ -39,7 +53,19 @@ One of:
 \item For day: day of year (default: 150, approximately June)
 }}
 
-\item{target_year}{Numeric value for the reference year to align dates to (default: 2024).}
+\item{target_year}{Numeric value for the reference year to align dates to. The default target year
+is the start of the most recent season in the data. This way the most recent dates stay unchanged.}
+
+\item{drop_leap_week}{If TRUE and date_resolution is \code{week}, \code{isoweek} or \code{epiweek}, leap weeks (week 53)
+are dropped if they are not in the most recent season. Disable if data should be returned.
+Dropping week 53 from historical data is the most common approach. Otherwise historical data for week 53 would
+map to week 52 if the target season has no leap week, resulting in a doubling of the case counts.}
+
+\item{n}{Numeric column with case counts. Supports quoted and unqouted column names.}
+
+\item{population}{A number or a numeric column with the population size. Used to calculate the incidence.}
+
+\item{fill_gaps}{Logical; If TRUE, gaps in the time series will be filled with 0 cases.}
 }
 \value{
 A data frame with standardized date columns:
@@ -49,6 +75,12 @@ A data frame with standardized date columns:
 \item date_aligned: Date standardized to target year
 \item season: Epidemic season identifier (e.g., "2023/24")
 \item current_season: Logical flag for most recent season
+}
+
+Binning also creates the columns:
+\itemize{
+\item n: Sum of cases in bin
+\item incidence: Incidence calculated using n/population
 }
 }
 \description{

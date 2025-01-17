@@ -1,0 +1,49 @@
+---
+title: "How to create epicurves in ggpplot with ggsurveillance"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{How to create epicurves in ggpplot with ggsurveillance}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(outbreaks)
+library(ggsurveillance)
+```
+
+```{r}
+ggplot(outbreaks::ebola_kikwit_1995, aes(x = date, weight = onset)) +
+  geom_epicurve(date_resolution = "week") +
+  scale_x_date(date_breaks = "2 weeks", date_labels = "%U'%g", name = "week") +
+  theme_bw()
+```
+
+```{r}
+outbreaks::sars_canada_2003 |>
+  pivot_longer(starts_with("cases"), names_prefix = "cases_", names_to = "origin") |>
+  ggplot(aes(x = date, weight = value, fill = origin)) +
+  geom_epicurve(date_resolution = "week") +
+  theme_bw()
+```
+
+```{r}
+influenza_germany |>
+  filter(AgeGroup != "00+") |>
+  # Calc Influenza Seasons
+  align_dates_seasonal(dates_from = ReportingWeek) |>
+  ggplot(aes(x = ReportingWeek, weight = Cases, fill = season)) + # , weight = Cases
+  geom_epicurve(color = NA, stat = "count") +
+  theme_bw()
+```
+

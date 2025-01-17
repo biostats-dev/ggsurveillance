@@ -27,11 +27,14 @@ Default: c(5, 10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 90)}
 \item{breaks_as_lower_bound}{Logical; if TRUE (default), breaks are treated as lower bounds of the intervals.
 If FALSE, as upper bounds.}
 
-\item{first_group_format}{Character string template for the first age group. Uses glue syntax. Default: "0-\{x\}"}
+\item{first_group_format}{Character string template for the first age group. Uses glue syntax.
+Default: "0-\{x\}", Other common styles: "≤\{x\}", "<\{x+1\}"}
 
-\item{interval_format}{Character string template for intermediate age groups. Uses glue syntax. Default: "\{x\}-\{y\}"}
+\item{interval_format}{Character string template for intermediate age groups. Uses glue syntax.
+Default: "\{x\}-\{y\}", Other common styles: "\{x\} to \{y\}"}
 
-\item{last_group_format}{Character string template for the last age group. Uses glue syntax. Default: "\{x\}+"}
+\item{last_group_format}{Character string template for the last age group. Uses glue syntax.
+Default: "\{x\}+", Other common styles: "≥\{x\}",">\{x-1\}"}
 
 \item{pad_numbers}{Logical or numeric; if numeric, pad numbers up to the specified length (Tip: use 2).
 Not compatible with calculations within glue formats. Default: FALSE}
@@ -57,13 +60,15 @@ create_agegroups(1:100)
 
 # Custom formatting with upper bounds
 create_agegroups(1:100,
-                 breaks_as_lower_bound = FALSE,
-                 interval_format = "{x} to {y}",
-                 first_group_format = "0 to {x}")
+  breaks_as_lower_bound = FALSE,
+  interval_format = "{x} to {y}",
+  first_group_format = "0 to {x}"
+)
 
 # Ages 1 to 5 are kept as numbers by collapsing single year groups
 create_agegroups(1:10,
-                 age_breaks = c(1,2,3,4,5,10),
-                 collapse_single_year_groups = TRUE)
+  age_breaks = c(1, 2, 3, 4, 5, 10),
+  collapse_single_year_groups = TRUE
+)
 
 }

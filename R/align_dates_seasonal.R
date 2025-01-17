@@ -61,7 +61,7 @@
 
 align_dates_seasonal <- function(
     x, dates_from, date_resolution = c("week", "isoweek", "epiweek", "day", "month"),
-    start = NULL, target_year = 2024) { #TODO: target_year = current year?
+    start = NULL, target_year = 2024) { # TODO: target_year = current year?
   # Enframe if vector supplied
   if (!is.data.frame(x) & rlang::is_vector(x)) {
     # TODO: try as_date()

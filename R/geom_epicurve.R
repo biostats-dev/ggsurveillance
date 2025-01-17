@@ -23,8 +23,7 @@ StatEpicurve <- ggproto("StatEpicurve", Stat,
   },
   compute_layer = function(data, scales, flipped_aes = FALSE) {
     data <- flip_data(data, flipped_aes)
-    # browser()
-    # TODO: handle weight
+
     weight <- data$weight %||% rep(1, length(data$x))
     data <- data |> expand_counts(weight)
 
@@ -45,11 +44,11 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
     aes(colour = "white", linewidth = 1, linetype = "solid"),
     GeomBar$default_aes
   ),
-  extra_params = c(GeomBar$extra_params, "date.resolution", "relative.width", "datetime", "week_start", "stat"),
+  extra_params = c(GeomBar$extra_params, "date_resolution", "relative.width", "datetime", "week_start", "stat"),
   setup_params = function(data, params) {
     params <- GeomBar$setup_params(data, params)
     # Disable date binning if not specified
-    params$date.resolution <- params$date.resolution %||% NA
+    params$date_resolution <- params$date_resolution %||% NA
     # Full (100%) width bars
     params$relative.width <- params$relative.width %||% 1
     # Check values of x are so large to be datetime
@@ -81,17 +80,17 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
       ))
     }
 
-    if (!is.na(params$date.resolution)) {
+    if (!is.na(params$date_resolution)) {
       # Try to infer if x was date or datetime and convert to date.
       data$date <- if (params$datetime) lubridate::as_datetime(data$x) else lubridate::as_date(data$x)
       # Round to specified resolution
       data$x <- as.numeric(lubridate::floor_date(data$date,
-        unit = params$date.resolution,
+        unit = params$date_resolution,
         week_start = params$week_start
       ))
       # Use ceiling to be able to infer resolution in days using ggplot2::resolution
       data$date <- as.numeric(lubridate::ceiling_date(data$date,
-        unit = params$date.resolution,
+        unit = params$date_resolution,
         week_start = params$week_start,
         change_on_boundary = TRUE
       ))
@@ -147,7 +146,7 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
     x_width <- diff(range(data$x)) / data[1, ]$width
     if (x_width > 300) {
       cli::cli_alert_warning(
-        "To many bars. If you experience problems, please change date.resolution to a lower resolution or use color = NA to disable outlines."
+        "To many bars. If you experience problems, please change date_resolution to a lower resolution or use color = NA to disable outlines."
       )
     }
 
@@ -175,7 +174,7 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
 #' @param stat either "`epicurve`" for outlines around cases or "`count`" for outlines around (fill) groups.
 #' For large numbers of cases please use "`count`".
 #' @param position Position adjustment. Currently supports "`stack`".
-#' @param date.resolution Character string specifying the time unit for date aggregation
+#' @param date_resolution Character string specifying the time unit for date aggregation
 #'        (e.g., "`day`", "`week`", "`month`", "`bimonth`", "`season`", "`quarter`", "`halfyear`", "`year`").
 #'        Set to \code{NULL} for no date aggregation
 #' @param width Numeric value specifying the width of the bars. If \code{NULL}, calculated
@@ -183,7 +182,7 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
 #' @param relative.width Numeric value between 0 and 1 adjusting the relative width
 #'        of bars. Defaults to 1
 #' @param week_start Integer specifying the start of the week (1 = Monday, 7 = Sunday).
-#'        Only used when date.resolution includes weeks. Defaults to 1 (Monday)
+#'        Only used when date_resolution includes weeks. Defaults to 1 (Monday)
 #' @param ... Other arguments passed to \code{\link[ggplot2]{layer}}
 #'   * \code{colour} Color of the observation borders. Disable with colour = NA. Defaults to "white".
 #'   * \code{linewidth}  Width of the outlines.
@@ -200,7 +199,7 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
 #' library(ggplot2)
 #' data <- data.frame(date = as.Date("2024-01-01") + 0:30)
 #' ggplot(data, aes(x = date)) +
-#'   geom_epicurve(date.resolution = "week")
+#'   geom_epicurve(date_resolution = "week")
 #'
 #' # Categorical epicurve
 #' ggplot(mtcars, aes(x = factor(cyl))) +
@@ -208,14 +207,14 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
 geom_epicurve <- function(mapping = NULL, data = NULL,
                           stat = "epicurve", # or count for no outlines
                           position = "stack",
-                          date.resolution = NULL,
+                          date_resolution = NULL,
                           width = NULL, relative.width = 1,
                           week_start = getOption("lubridate.week.start", 1),
                           ..., na.rm = FALSE,
                           show.legend = NA, inherit.aes = TRUE) {
   stat_param <- stat
 
-  layer(
+  ggplot2::layer(
     geom = GeomEpicurve,
     mapping = mapping,
     data = data,
@@ -227,7 +226,7 @@ geom_epicurve <- function(mapping = NULL, data = NULL,
       width = width,
       stat = stat_param,
       relative.width = relative.width,
-      date.resolution = date.resolution,
+      date_resolution = date_resolution,
       week_start = week_start,
       na.rm = na.rm,
       ...

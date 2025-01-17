@@ -9,7 +9,7 @@ geom_epicurve(
   data = NULL,
   stat = "epicurve",
   position = "stack",
-  date.resolution = NULL,
+  date_resolution = NULL,
   width = NULL,
   relative.width = 1,
   week_start = getOption("lubridate.week.start", 1),
@@ -34,7 +34,7 @@ For large numbers of cases please use "\code{count}".}
 
 \item{position}{Position adjustment. Currently supports "\code{stack}".}
 
-\item{date.resolution}{Character string specifying the time unit for date aggregation
+\item{date_resolution}{Character string specifying the time unit for date aggregation
 (e.g., "\code{day}", "\code{week}", "\code{month}", "\code{bimonth}", "\code{season}", "\code{quarter}", "\code{halfyear}", "\code{year}").
 Set to \code{NULL} for no date aggregation}
 
@@ -45,7 +45,7 @@ based on resolution and relative.width}
 of bars. Defaults to 1}
 
 \item{week_start}{Integer specifying the start of the week (1 = Monday, 7 = Sunday).
-Only used when date.resolution includes weeks. Defaults to 1 (Monday)}
+Only used when date_resolution includes weeks. Defaults to 1 (Monday)}
 
 \item{...}{Other arguments passed to \code{\link[ggplot2]{layer}}
 \itemize{
@@ -73,7 +73,7 @@ aggregation.
 library(ggplot2)
 data <- data.frame(date = as.Date("2024-01-01") + 0:30)
 ggplot(data, aes(x = date)) +
-  geom_epicurve(date.resolution = "week")
+  geom_epicurve(date_resolution = "week")
 
 # Categorical epicurve
 ggplot(mtcars, aes(x = factor(cyl))) +

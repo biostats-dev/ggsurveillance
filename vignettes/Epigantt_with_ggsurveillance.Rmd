@@ -1,0 +1,51 @@
+---
+title: "How to create epigantt charts in ggpplot with ggsurveillance"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{How to create epigantt charts in ggpplot with ggsurveillance}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(outbreaks)
+library(ggsurveillance)
+```
+
+
+```{r}
+outbreaks::varicella_sim_berlin |>
+  filter(center1 == "Platz der Luftbruecke") |>
+  arrange(onset) |>
+  slice_head(n = 20) |>
+  mutate(
+    fullname = paste(firstname, lastname),
+    fullname = factor(fullname, levels = rev(fullname))
+  ) |>
+  pivot_longer(
+    cols = starts_with(c("arrival", "leave", "center")),
+    names_to = c(".value", "group"),
+    names_pattern = "(\\w+)(\\d+)"
+  ) |>
+  ggplot(aes(y = fullname)) +
+  geom_epigantt(aes(xmin = arrival, xmax = leave, colour = center)) +
+  geom_point(aes(x = onset)) +
+  theme_bw()
+```
+
+```{r}
+ggplot(outbreaks::measles_hagelloch_1861, aes(y = case_ID, xmin = date_of_prodrome, xmax = date_of_rash, fill = class)) +
+  geom_epigantt(linewidth = 1) +
+  scale_x_date(date_breaks = "4 weeks", date_labels = "W%U'%g") +
+  theme_bw()
+```

@@ -1,8 +1,8 @@
- test_that("basic functionality works", {
+test_that("basic functionality works", {
   # Test default settings
   expect_identical(
     create_agegroups(1:10),
-    c("0-4", "0-4", "0-4", "0-4", "5-9", "5-9",  "5-9",  "5-9",  "5-9",  "10-14")
+    c("0-4", "0-4", "0-4", "0-4", "5-9", "5-9", "5-9", "5-9", "5-9", "10-14")
   )
 
   # Test with return_factor = TRUE
@@ -23,19 +23,21 @@ test_that("different formatting options work", {
   # Test upper bound formatting
   expect_identical(
     create_agegroups(1:5,
-                     age_breaks = c(2, 4),
-                     breaks_as_lower_bound = FALSE,
-                     first_group_format = "≤{x}",
-                     interval_format = "{x} to {y}",
-                     last_group_format = "≥{x}"),
+      age_breaks = c(2, 4),
+      breaks_as_lower_bound = FALSE,
+      first_group_format = "≤{x}",
+      interval_format = "{x} to {y}",
+      last_group_format = "≥{x}"
+    ),
     c("≤2", "≤2", "3 to 4", "3 to 4", "≥5")
   )
 
   # Test number padding
   expect_identical(
     create_agegroups(c(1:5, 10),
-                     age_breaks = c(2, 4, 10),
-                     pad_numbers = 2),
+      age_breaks = c(2, 4, 10),
+      pad_numbers = 2
+    ),
     c("0-01", "02-03", "02-03", "04-09", "04-09", "10+")
   )
 })
@@ -43,8 +45,9 @@ test_that("different formatting options work", {
 test_that("single year group collapsing works", {
   expect_identical(
     create_agegroups(1:5,
-                     age_breaks = 1:5,
-                     collapse_single_year_groups = TRUE),
+      age_breaks = 1:5,
+      collapse_single_year_groups = TRUE
+    ),
     c("1", "2", "3", "4", "5+")
   )
 })

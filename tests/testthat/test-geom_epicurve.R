@@ -7,7 +7,7 @@ test_that("geom_epicurve handles basic date inputs", {
 
   # Create plot
   p <- ggplot(test_dates, aes(x = date, fill = cat)) +
-    geom_epicurve(date.resolution = "day")
+    geom_epicurve(date_resolution = "day")
 
   # Test that the plot is created successfully
   expect_s3_class(p, "ggplot")
@@ -19,7 +19,7 @@ test_that("geom_epicurve handles datetime data", {
   )
 
   p <- ggplot(test_datetime, aes(x = datetime)) +
-    geom_epicurve(date.resolution = "day")
+    geom_epicurve(date_resolution = "day")
 
   expect_s3_class(p, "ggplot")
 })
@@ -33,7 +33,26 @@ test_that("geom_epicurve respects different date resolutions", {
   resolutions <- c("day", "week", "month")
   for (res in resolutions) {
     p <- ggplot(test_dates, aes(x = date)) +
-      geom_epicurve(date.resolution = res)
+      geom_epicurve(date_resolution = res)
     expect_s3_class(p, "ggplot")
   }
+})
+
+test_that("geom_epicurve handles NA values correctly", {
+  # Test data with NA values
+  test_dates <- data.frame(
+    date = c(as.Date("2024-01-01") + 0:5, NA, as.Date("2024-01-08") + 0:2),
+    cat = c(rep("A", 6), NA, rep("B", 3))
+  )
+
+  # Both plots should still render successfully
+  p1 <- suppressWarnings(
+    ggplot(test_dates, aes(x = date, fill = cat)) +
+      geom_epicurve(date_resolution = "day", na.rm = FALSE)
+  )
+  expect_s3_class(p1, "ggplot")
+
+  p2 <- ggplot(test_dates, aes(x = date, fill = cat)) +
+    geom_epicurve(date_resolution = "day", na.rm = TRUE)
+  expect_s3_class(p2, "ggplot")
 })

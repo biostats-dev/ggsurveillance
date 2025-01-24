@@ -56,3 +56,17 @@ test_that("geom_epicurve handles NA values correctly", {
     geom_epicurve(date_resolution = "day", na.rm = TRUE)
   expect_s3_class(p2, "ggplot")
 })
+
+
+test_that("geom_epicurve with stat = 'count'", {
+  plot_data_epicurve_imp <- data.frame(
+    date = rep(as.Date("2024-01-01") + ((0:300) * 1), times = rpois(301, 0.5))
+    # category = rep(c("A", "B"), times = 7)
+  )
+
+  expect_no_error({
+    ggplot(plot_data_epicurve_imp, aes(x = date, weight = 2)) +
+      geom_epicurve(date_resolution = "month", color = "black", just = 0.5, relative.width = 1, stat = "count")
+  })
+})
+

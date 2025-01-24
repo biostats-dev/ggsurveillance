@@ -5,8 +5,19 @@
 \alias{influenza_germany}
 \title{Germany Influenza (FLU) Surveillance data}
 \format{
-\subsection{\code{influenza_germany}}{
-
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 1029 rows and 4 columns.
+}
+\source{
+License CC-BY 4.0: Robert Koch-Institut (2025): Laborbestätigte Influenzafälle in Deutschland. Dataset. Zenodo.
+DOI:10.5281/zenodo.14619502. \url{https://github.com/robert-koch-institut/Influenzafaelle_in_Deutschland}
+}
+\usage{
+influenza_germany
+}
+\description{
+A subset of the weekly German influenza surveillance data from 2020 to 2024.
+}
+\details{
 A data frame with 1,029 rows and 4 columns:
 \describe{
 \item{ReportingWeek}{Reporting Week in "2024-W03" format}
@@ -14,16 +25,5 @@ A data frame with 1,029 rows and 4 columns:
 \item{Cases}{Year}
 \item{Incidence}{Calculated weekly incidence}
 }
-}
-}
-\source{
-https://github.com/robert-koch-institut/Influenzafaelle_in_Deutschland
-License: Robert Koch-Institut (2025): Laborbestätigte Influenzafälle in Deutschland. Dataset. Zenodo. DOI:10.5281/zenodo.14619502.
-}
-\usage{
-influenza_germany
-}
-\description{
-A subset of the weekly german influenza surveillance data.
 }
 \keyword{datasets}

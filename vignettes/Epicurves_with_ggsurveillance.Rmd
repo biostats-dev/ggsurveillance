@@ -1,8 +1,8 @@
 ---
-title: "How to create epicurves in ggpplot with ggsurveillance"
+title: "How to create epicurves in ggplot with ggsurveillance"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{How to create epicurves in ggpplot with ggsurveillance}
+  %\VignetteIndexEntry{How to create epicurves in ggplot with ggsurveillance}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

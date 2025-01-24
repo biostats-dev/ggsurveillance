@@ -71,11 +71,16 @@ aggregation.
 \examples{
 # Basic epicurve with dates
 library(ggplot2)
+
 data <- data.frame(date = as.Date("2024-01-01") + 0:30)
 ggplot(data, aes(x = date)) +
-  geom_epicurve(date_resolution = "week")
+  geom_epicurve(date_resolution = "week") +
+  scale_y_cases_5er()
 
 # Categorical epicurve
 ggplot(mtcars, aes(x = factor(cyl))) +
   geom_epicurve()
+}
+\seealso{
+\code{\link[=scale_y_cases_5er]{scale_y_cases_5er()}}
 }

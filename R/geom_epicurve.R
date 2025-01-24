@@ -102,7 +102,8 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
         dplyr::arrange(x) -> data_width
 
       # Adjust Bars to avoid jittering when using months
-      if (nrow(data_width) > 1) {
+      # TODO: Call this function only when needed?
+      if (nrow(data_width) > 1 & dplyr::n_distinct(data_width$width) != 1) {
         for (i in 2:nrow(data_width)) {
           # Check if there is a space between bars
           if ((data_width[i, ]$x - data_width[i - 1, ]$x) == data_width[i - 1, ]$width) {
@@ -119,15 +120,16 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
       # Recalc counts after binning if stat = "count"
       if (params$stat == "count") {
         data <- data |>
-          select(-date) |>
-          rename(weight = count) |>
+          dplyr::select(-date) |>
+          dplyr::mutate(weight = NULL) |> # delete to control position
+          dplyr::mutate(weight = count, .after = y) |>
           dplyr::group_by(dplyr::pick(-(y:flipped_aes))) |>
           dplyr::group_modify(~ StatCount$compute_group(data = .x)) |>
           dplyr::mutate(y = count) |>
           dplyr::ungroup()
       }
     } else if (params$datetime) {
-      cli::cli_alert_info("It seems you provided a datetime format. Column used as specified.
+      cli::cli_alert_info("geom_epicurve: It seems you provided a datetime format. Column used as specified.
                           Please use the resoultion = 'day' to round to date (geom_epicurve).")
       data$width <- params$width %||% (resolution(data$x) * params$relative.width)
     } else {
@@ -140,13 +142,20 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
       dplyr::pull(n)
     if (max_bar_height[1] > 200) {
       cli::cli_alert_warning(
-        "To many observations per date. If you experience problems, please use color = NA to disable outlines."
+        "To many observations per date. If you experience problems, please use color = NA to disable outlines (geom_epicurve)."
       )
     }
+
+    if ((max_bar_height[1] > 10000) & (params$stat != "count")) {
+      cli::cli_alert_warning(
+        "If you experience performance problems because of high case numbers, consider using stat = 'count' (geom_epicurve)."
+      )
+    }
+
     x_width <- diff(range(data$x)) / data[1, ]$width
     if (x_width > 300) {
       cli::cli_alert_warning(
-        "To many bars. If you experience problems, please change date_resolution to a lower resolution or use color = NA to disable outlines."
+        "To many bars. If you experience problems, please change date_resolution to a lower resolution or use color = NA to disable outlines (geom_epicurve)."
       )
     }
 
@@ -192,14 +201,17 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
 #' @param inherit.aes If FALSE, overrides the default aesthetics from the plot
 #'
 #' @return A ggplot2 layer that can be added to a plot
+#' @seealso [scale_y_cases_5er()]
 #' @export
 #'
 #' @examples
 #' # Basic epicurve with dates
 #' library(ggplot2)
+#'
 #' data <- data.frame(date = as.Date("2024-01-01") + 0:30)
 #' ggplot(data, aes(x = date)) +
-#'   geom_epicurve(date_resolution = "week")
+#'   geom_epicurve(date_resolution = "week") +
+#'   scale_y_cases_5er()
 #'
 #' # Categorical epicurve
 #' ggplot(mtcars, aes(x = factor(cyl))) +

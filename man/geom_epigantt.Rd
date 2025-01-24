@@ -2,7 +2,7 @@
 % Please edit documentation in R/geom_epigantt.R
 \name{geom_epigantt}
 \alias{geom_epigantt}
-\title{Epi Gantt Chart: Visualize Epidemilogical Time Intervalls}
+\title{Epi Gantt Chart: Visualize Epidemiological Time Intervals}
 \usage{
 geom_epigantt(
   mapping = NULL,

@@ -1,8 +1,8 @@
 ---
-title: "How to create epigantt charts in ggpplot with ggsurveillance"
+title: "How to create epigantt charts in ggplot with ggsurveillance"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{How to create epigantt charts in ggpplot with ggsurveillance}
+  %\VignetteIndexEntry{How to create epigantt charts in ggplot with ggsurveillance}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

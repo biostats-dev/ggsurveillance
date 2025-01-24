@@ -1,4 +1,4 @@
-#' Epi Gantt Chart: Visualize Epidemilogical Time Intervalls
+#' Epi Gantt Chart: Visualize Epidemiological Time Intervals
 #'
 #' Various ways of representing a vertical interval defined by `y`,
 #' `xmin` and `xmax`. Each case draws a single graphical object.

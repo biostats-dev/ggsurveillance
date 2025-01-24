@@ -19,7 +19,7 @@
 #' patterns or surveillance protocols.
 #'
 #' @param x A data frame with a date column or a date vector
-#' @param n Numeric column with case counts. Supports quoted and unqouted column names.
+#' @param n Numeric column with case counts. Supports quoted and unquoted column names.
 #' @param dates_from Column name containing the dates to align. Used when x is a data.frame.
 #'   supported date formats are date and datetime and also commonly used character strings:
 #'   * ISO dates "2024-03-09"
@@ -27,7 +27,7 @@
 #'   * Week "2024-W09" or "2024-W09-1"
 #' @param date_resolution Character string specifying the temporal resolution.
 #'   One of:
-#'   * "week" or "isoweek" - Calendar weeks (ISO), reporting weeks according tdevtoolo the ECDC.
+#'   * "week" or "isoweek" - Calendar weeks (ISO 8601), reporting weeks as used by the ECDC.
 #'   * "epiweek" - Epidemiological weeks (CDC), i.e. ISO weeks with Sunday as week start.
 #'   * "month" - Calendar months
 #'   * "day" - Daily resolution

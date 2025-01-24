@@ -21,31 +21,31 @@ create_agegroups(
 \arguments{
 \item{values}{Numeric vector of ages to be grouped}
 
-\item{age_breaks}{Numeric vector of break points for age groups.
-Default: c(5, 10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 90)}
+\item{age_breaks}{Numeric vector of break points for age groups. \cr
+Default: \code{c(5, 10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 90)}}
 
-\item{breaks_as_lower_bound}{Logical; if TRUE (default), breaks are treated as lower bounds of the intervals.
-If FALSE, as upper bounds.}
+\item{breaks_as_lower_bound}{Logical; if \code{TRUE} (default), breaks are treated as lower bounds of the intervals.
+If \code{FALSE}, as upper bounds.}
 
-\item{first_group_format}{Character string template for the first age group. Uses glue syntax.
-Default: "0-\{x\}", Other common styles: "≤\{x\}", "<\{x+1\}"}
+\item{first_group_format}{Character string template for the first age group. Uses glue syntax. \cr
+Default: \code{"0-\{x\}"}, Other common styles: \code{"≤\{x\}", "<\{x+1\}"}}
 
-\item{interval_format}{Character string template for intermediate age groups. Uses glue syntax.
-Default: "\{x\}-\{y\}", Other common styles: "\{x\} to \{y\}"}
+\item{interval_format}{Character string template for intermediate age groups. Uses glue syntax.\cr
+Default: \code{"\{x\}-\{y\}"}, Other common styles: \code{"\{x\} to \{y\}"}}
 
-\item{last_group_format}{Character string template for the last age group. Uses glue syntax.
-Default: "\{x\}+", Other common styles: "≥\{x\}",">\{x-1\}"}
+\item{last_group_format}{Character string template for the last age group. Uses glue syntax. \cr
+Default: \code{"\{x\}+"}, Other common styles: \code{"≥\{x\}",">\{x-1\}"}}
 
-\item{pad_numbers}{Logical or numeric; if numeric, pad numbers up to the specified length (Tip: use 2).
-Not compatible with calculations within glue formats. Default: FALSE}
+\item{pad_numbers}{Logical or numeric; if numeric, pad numbers up to the specified length (Tip: use \code{2}).
+Not compatible with calculations within glue formats. Default: \code{FALSE}}
 
-\item{pad_with}{Character to use for padding numbers. Default: "0"}
+\item{pad_with}{Character to use for padding numbers. Default: \code{"0"}}
 
-\item{collapse_single_year_groups}{Logical; if TRUE, groups spanning single years are collapsed. Default: FALSE}
+\item{collapse_single_year_groups}{Logical; if \code{TRUE}, groups spanning single years are collapsed. Default: \code{FALSE}}
 
-\item{na_label}{Label for NA values. If NA, keeps default NA handling. Default: NA}
+\item{na_label}{Label for \code{NA} values. If \code{NA}, keeps default \code{NA} handling. Default: \code{NA}}
 
-\item{return_factor}{Logical; if TRUE, returns a factor, if FALSE returns character vector. Default: FALSE}
+\item{return_factor}{Logical; if \code{TRUE}, returns a factor, if \code{FALSE} returns character vector. Default: \code{FALSE}}
 }
 \value{
 Vector of age group labels (character or factor depending on return_factor)
@@ -53,6 +53,10 @@ Vector of age group labels (character or factor depending on return_factor)
 \description{
 Creates age groups from numeric values using customizable break points and formatting options.
 The function allows for flexible formatting and customization of age group labels.
+
+If a factor is returned, this factor includes factor levels of unobserved age groups.
+This allows for reproducible age groups, which can be used for joining data
+(e.g. adding age grouped population numbers for incidence calculation).
 }
 \examples{
 # Basic usage

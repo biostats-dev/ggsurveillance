@@ -22,9 +22,9 @@ geom_epicurve(
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2]{aes}}. Commonly used mappings:
 \itemize{
-\item x or y
-\item fill for colouring groups
-\item weight
+\item \strong{x or y}: date or datetime. Numeric is technically supported.
+\item \strong{fill}: for colouring groups
+\item \strong{weight}: if data is already aggregated (e.g. case counts)
 }}
 
 \item{data}{The data frame containing the variables for the plot}
@@ -34,9 +34,9 @@ For large numbers of cases please use "\code{count}".}
 
 \item{position}{Position adjustment. Currently supports "\code{stack}".}
 
-\item{date_resolution}{Character string specifying the time unit for date aggregation
-(e.g., "\code{day}", "\code{week}", "\code{month}", "\code{bimonth}", "\code{season}", "\code{quarter}", "\code{halfyear}", "\code{year}").
-Set to \code{NULL} for no date aggregation}
+\item{date_resolution}{Character string specifying the time unit for date aggregation.
+Set to \code{NULL} for no date aggregation \cr
+Possible values are: "\code{day}", "\code{week}", "\code{month}", "\code{bimonth}", "\code{season}", "\code{quarter}", "\code{halfyear}", "\code{year}".}
 
 \item{width}{Numeric value specifying the width of the bars. If \code{NULL}, calculated
 based on resolution and relative.width}
@@ -44,29 +44,38 @@ based on resolution and relative.width}
 \item{relative.width}{Numeric value between 0 and 1 adjusting the relative width
 of bars. Defaults to 1}
 
-\item{week_start}{Integer specifying the start of the week (1 = Monday, 7 = Sunday).
-Only used when date_resolution includes weeks. Defaults to 1 (Monday)}
+\item{week_start}{Integer specifying the start of the week (1 = Monday, 7 = Sunday). \cr
+Only used when date_resolution includes weeks. Defaults to 1 (Monday). \cr
+For isoweek use \code{week_start = 1} and for epiweek use \code{week_start = 7}.}
 
-\item{...}{Other arguments passed to \code{\link[ggplot2]{layer}}
+\item{...}{Other arguments passed to \code{\link[ggplot2]{layer}}. For example:
 \itemize{
-\item \code{colour} Color of the observation borders. Disable with colour = NA. Defaults to "white".
-\item \code{linewidth}  Width of the outlines.
+\item \code{colour} Colour of the outlines around cases. Disable with colour = NA. Defaults to "white".
+\item \code{linewidth}  Width of the case outlines.
 }}
 
-\item{na.rm}{If FALSE, missing values are removed with a warning.
-If TRUE, missing values are silently removed}
+\item{na.rm}{If \code{FALSE}, the default, missing values are removed with
+a warning. If \code{TRUE}, missing values are silently removed.}
 
-\item{show.legend}{logical. Should this layer be included in the legends?}
+\item{show.legend}{logical. Should this layer be included in the legends?
+\code{NA}, the default, includes if any aesthetics are mapped.
+\code{FALSE} never includes, and \code{TRUE} always includes.
+It can also be a named logical vector to finely select the aesthetics to
+display.}
 
-\item{inherit.aes}{If FALSE, overrides the default aesthetics from the plot}
+\item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
+rather than combining with them. This is most useful for helper functions
+that define both data and aesthetics and shouldn't inherit behaviour from
+the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 }
 \value{
 A ggplot2 layer that can be added to a plot
 }
 \description{
-Creates a bar plot specifically designed for visualizing epidemic curves (epicurves).
-Supports both date/datetime and categorical data, with special handling for date-based
-aggregation.
+Creates a epicurve plot for visualizing epidemic case counts in outbreaks (epidemiological curves).
+An epicurve is a bar plot, where every case is outlined. \code{geom_epicurve} additionally provides
+date-based aggregation of cases (e.g. per week or month and many more).
+For week aggregation both isoweek (World + ECDC) and epiweek (US CDC) are supported.
 }
 \examples{
 # Basic epicurve with dates
@@ -75,11 +84,20 @@ library(ggplot2)
 data <- data.frame(date = as.Date("2024-01-01") + 0:30)
 ggplot(data, aes(x = date)) +
   geom_epicurve(date_resolution = "week") +
-  scale_y_cases_5er()
+  scale_y_cases_5er() +
+  scale_x_date(date_labels = "W\%V'\%g") # Correct ISOWeek labels week'year
 
 # Categorical epicurve
-ggplot(mtcars, aes(x = factor(cyl))) +
-  geom_epicurve()
+library(tidyr)
+library(outbreaks)
+
+sars_canada_2003 |> # Sars dataset from outbreaks
+  pivot_longer(starts_with("cases"), names_prefix = "cases_", names_to = "origin") |>
+  ggplot(aes(x = date, weight = value, fill = origin)) +
+  geom_epicurve(date_resolution = "week") +
+  scale_x_date(date_labels = "W\%V'\%g", date_breaks = "2 weeks") +
+  scale_y_cases_5er() +
+  theme_bw()
 }
 \seealso{
 \code{\link[=scale_y_cases_5er]{scale_y_cases_5er()}}

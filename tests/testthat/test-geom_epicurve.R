@@ -69,4 +69,3 @@ test_that("geom_epicurve with stat = 'count'", {
       geom_epicurve(date_resolution = "month", color = "black", just = 0.5, relative.width = 1, stat = "count")
   })
 })
-

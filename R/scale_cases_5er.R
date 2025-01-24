@@ -42,20 +42,20 @@ scale_y_cases_5er <- function(
     position = "left",
     sec.axis = waiver(),
     guide = waiver(),
-    ...
-) {
-
+    ...) {
   scale_y_continuous(
     name = name,
     # Pass Pretty arguments
-    breaks = function(x) pretty(
-      x,
-      n = if (max(x) < n) ceiling(max(x)) else n,
-      n.min = if (max(x) < n.min) ceiling(max(x)) else n.min,
-      u5.bias = u5.bias,
-      ...
-    ),
-    #minor_breaks = waiver(),
+    breaks = function(x) {
+      pretty(
+        x,
+        n = if (max(x) < n) ceiling(max(x)) else n,
+        n.min = if (max(x) < n.min) ceiling(max(x)) else n.min,
+        u5.bias = u5.bias,
+        ...
+      )
+    },
+    # minor_breaks = waiver(),
     labels = labels,
     limits = limits,
     expand = expand %||% expansion(mult = c(0, 0.1)),
@@ -86,20 +86,20 @@ scale_x_cases_5er <- function(
     position = "bottom",
     sec.axis = waiver(),
     guide = waiver(),
-    ...
-) {
-
+    ...) {
   scale_x_continuous(
     name = name,
     # Pass Pretty arguments
-    breaks = function(x) {pretty(
-      x,
-      n = n,
-      n.min = if (max(x) < n.min) ceiling(max(x)) else n.min,
-      u5.bias = u5.bias,
-      ...
-    )},
-    #minor_breaks = waiver(),
+    breaks = function(x) {
+      pretty(
+        x,
+        n = n,
+        n.min = if (max(x) < n.min) ceiling(max(x)) else n.min,
+        u5.bias = u5.bias,
+        ...
+      )
+    },
+    # minor_breaks = waiver(),
     labels = labels,
     limits = limits,
     expand = expand %||% expansion(mult = c(0, 0.1)),

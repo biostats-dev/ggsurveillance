@@ -1,3 +1,89 @@
+#' Create an epidemic curve plot
+#'
+#' Creates a epicurve plot for visualizing epidemic case counts in outbreaks (epidemiological curves).
+#' An epicurve is a bar plot, where every case is outlined. \code{geom_epicurve} additionally provides
+#' date-based aggregation of cases (e.g. per week or month and many more).
+#' For week aggregation both isoweek (World + ECDC) and epiweek (US CDC) are supported.
+#'
+#' @param mapping Set of aesthetic mappings created by \code{\link[ggplot2]{aes}}. Commonly used mappings:
+#'   * **x or y**: date or datetime. Numeric is technically supported.
+#'   * **fill**: for colouring groups
+#'   * **weight**: if data is already aggregated (e.g. case counts)
+#' @param data The data frame containing the variables for the plot
+#' @param stat either "`epicurve`" for outlines around cases or "`count`" for outlines around (fill) groups.
+#' For large numbers of cases please use "`count`".
+#' @param position Position adjustment. Currently supports "`stack`".
+#' @param date_resolution Character string specifying the time unit for date aggregation.
+#' Set to \code{NULL} for no date aggregation \cr
+#' Possible values are: "`day`", "`week`", "`month`", "`bimonth`", "`season`", "`quarter`", "`halfyear`", "`year`".
+#'
+#' @param width Numeric value specifying the width of the bars. If \code{NULL}, calculated
+#'        based on resolution and relative.width
+#' @param relative.width Numeric value between 0 and 1 adjusting the relative width
+#'        of bars. Defaults to 1
+#' @param week_start Integer specifying the start of the week (1 = Monday, 7 = Sunday). \cr
+#'        Only used when date_resolution includes weeks. Defaults to 1 (Monday). \cr
+#'        For isoweek use \code{week_start = 1} and for epiweek use \code{week_start = 7}.
+#' @param ... Other arguments passed to \code{\link[ggplot2]{layer}}. For example:
+#'   * \code{colour} Colour of the outlines around cases. Disable with colour = NA. Defaults to "white".
+#'   * \code{linewidth}  Width of the case outlines.
+#' @inheritParams ggplot2::geom_bar
+#'
+#' @return A ggplot2 layer that can be added to a plot
+#' @seealso [scale_y_cases_5er()]
+#' @export
+#'
+#' @examples
+#' # Basic epicurve with dates
+#' library(ggplot2)
+#'
+#' data <- data.frame(date = as.Date("2024-01-01") + 0:30)
+#' ggplot(data, aes(x = date)) +
+#'   geom_epicurve(date_resolution = "week") +
+#'   scale_y_cases_5er() +
+#'   scale_x_date(date_labels = "W%V'%g") # Correct ISOWeek labels week'year
+#'
+#' # Categorical epicurve
+#' library(tidyr)
+#' library(outbreaks)
+#'
+#' sars_canada_2003 |> # SARS dataset from outbreaks
+#'   pivot_longer(starts_with("cases"), names_prefix = "cases_", names_to = "origin") |>
+#'   ggplot(aes(x = date, weight = value, fill = origin)) +
+#'   geom_epicurve(date_resolution = "week") +
+#'   scale_x_date(date_labels = "W%V'%g", date_breaks = "2 weeks") +
+#'   scale_y_cases_5er() +
+#'   theme_classic()
+geom_epicurve <- function(mapping = NULL, data = NULL,
+                          stat = "epicurve", # or count for no outlines
+                          position = "stack",
+                          date_resolution = NULL,
+                          width = NULL, relative.width = 1,
+                          week_start = getOption("lubridate.week.start", 1),
+                          ..., na.rm = FALSE,
+                          show.legend = NA, inherit.aes = TRUE) {
+  stat_param <- stat
+
+  ggplot2::layer(
+    geom = GeomEpicurve,
+    mapping = mapping,
+    data = data,
+    stat = stat,
+    position = position,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+    params = list(
+      width = width,
+      stat = stat_param,
+      relative.width = relative.width,
+      date_resolution = date_resolution,
+      week_start = week_start,
+      na.rm = na.rm,
+      ...
+    )
+  )
+}
+
 #' @import ggplot2
 #' @import dplyr
 #' @import rlang
@@ -41,7 +127,7 @@ StatEpicurve <- ggproto("StatEpicurve", Stat,
 GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
   default_aes = ggplot2:::defaults(
     # colour = from_theme(paper), linewidth = from_theme(borderwidth)
-    aes(colour = "white", linewidth = 1, linetype = "solid"),
+    aes(colour = "white", linewidth = 0.6, linetype = "solid"),
     GeomBar$default_aes
   ),
   extra_params = c(GeomBar$extra_params, "date_resolution", "relative.width", "datetime", "week_start", "stat"),
@@ -168,80 +254,3 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
   },
   rename_size = TRUE
 )
-
-#' Create an epidemic curve plot
-#'
-#' Creates a bar plot specifically designed for visualizing epidemic curves (epicurves).
-#' Supports both date/datetime and categorical data, with special handling for date-based
-#' aggregation.
-#'
-#' @param mapping Set of aesthetic mappings created by \code{\link[ggplot2]{aes}}. Commonly used mappings:
-#'   * x or y
-#'   * fill for colouring groups
-#'   * weight
-#' @param data The data frame containing the variables for the plot
-#' @param stat either "`epicurve`" for outlines around cases or "`count`" for outlines around (fill) groups.
-#' For large numbers of cases please use "`count`".
-#' @param position Position adjustment. Currently supports "`stack`".
-#' @param date_resolution Character string specifying the time unit for date aggregation
-#'        (e.g., "`day`", "`week`", "`month`", "`bimonth`", "`season`", "`quarter`", "`halfyear`", "`year`").
-#'        Set to \code{NULL} for no date aggregation
-#' @param width Numeric value specifying the width of the bars. If \code{NULL}, calculated
-#'        based on resolution and relative.width
-#' @param relative.width Numeric value between 0 and 1 adjusting the relative width
-#'        of bars. Defaults to 1
-#' @param week_start Integer specifying the start of the week (1 = Monday, 7 = Sunday).
-#'        Only used when date_resolution includes weeks. Defaults to 1 (Monday)
-#' @param ... Other arguments passed to \code{\link[ggplot2]{layer}}
-#'   * \code{colour} Color of the observation borders. Disable with colour = NA. Defaults to "white".
-#'   * \code{linewidth}  Width of the outlines.
-#' @param na.rm If FALSE, missing values are removed with a warning.
-#'        If TRUE, missing values are silently removed
-#' @param show.legend logical. Should this layer be included in the legends?
-#' @param inherit.aes If FALSE, overrides the default aesthetics from the plot
-#'
-#' @return A ggplot2 layer that can be added to a plot
-#' @seealso [scale_y_cases_5er()]
-#' @export
-#'
-#' @examples
-#' # Basic epicurve with dates
-#' library(ggplot2)
-#'
-#' data <- data.frame(date = as.Date("2024-01-01") + 0:30)
-#' ggplot(data, aes(x = date)) +
-#'   geom_epicurve(date_resolution = "week") +
-#'   scale_y_cases_5er()
-#'
-#' # Categorical epicurve
-#' ggplot(mtcars, aes(x = factor(cyl))) +
-#'   geom_epicurve()
-geom_epicurve <- function(mapping = NULL, data = NULL,
-                          stat = "epicurve", # or count for no outlines
-                          position = "stack",
-                          date_resolution = NULL,
-                          width = NULL, relative.width = 1,
-                          week_start = getOption("lubridate.week.start", 1),
-                          ..., na.rm = FALSE,
-                          show.legend = NA, inherit.aes = TRUE) {
-  stat_param <- stat
-
-  ggplot2::layer(
-    geom = GeomEpicurve,
-    mapping = mapping,
-    data = data,
-    stat = stat,
-    position = position,
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-    params = list(
-      width = width,
-      stat = stat_param,
-      relative.width = relative.width,
-      date_resolution = date_resolution,
-      week_start = week_start,
-      na.rm = na.rm,
-      ...
-    )
-  )
-}

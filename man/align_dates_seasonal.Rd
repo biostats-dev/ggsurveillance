@@ -27,36 +27,36 @@ align_and_bin_dates_seasonal(
 )
 }
 \arguments{
-\item{x}{A data frame with a date column or a date vector}
-
-\item{dates_from}{Column name containing the dates to align. Used when x is a data.frame.
-supported date formats are date and datetime and also commonly used character strings:
+\item{x}{Either a data frame with a date column, or a date vector.\cr
+Supported date formats are \code{date} and \code{datetime} and also commonly used character strings:
 \itemize{
-\item ISO dates "2024-03-09"
-\item Month "2024-03"
-\item Week "2024-W09" or "2024-W09-1"
+\item ISO dates \code{"2024-03-09"}
+\item Month \code{"2024-03"}
+\item Week \code{"2024-W09"} or \code{"2024-W09-1"}
 }}
+
+\item{dates_from}{Column name containing the dates to align. Used when x is a data.frame.}
 
 \item{date_resolution}{Character string specifying the temporal resolution.
 One of:
 \itemize{
-\item "week" or "isoweek" - Calendar weeks (ISO 8601), reporting weeks as used by the ECDC.
-\item "epiweek" - Epidemiological weeks (CDC), i.e. ISO weeks with Sunday as week start.
-\item "month" - Calendar months
-\item "day" - Daily resolution
+\item \code{"week"} or \code{"isoweek"} - Calendar weeks (ISO 8601), reporting weeks as used by the ECDC.
+\item \code{"epiweek"} - Epidemiological weeks (US CDC), i.e. ISO weeks with Sunday as week start.
+\item \code{"month"} - Calendar months
+\item \code{"day"} - Daily resolution
 }}
 
 \item{start}{Numeric value indicating epidemic season start:
 \itemize{
-\item For week/epiweek: week number (default: 28, approximately July)
-\item For month: month number (default: 7 for July)
-\item For day: day of year (default: 150, approximately June)
+\item For \code{week/epiweek}: week number (default: 28, approximately July)
+\item For \code{month}: month number (default: 7 for July)
+\item For \code{day}: day of year (default: 150, approximately June)
 }}
 
 \item{target_year}{Numeric value for the reference year to align dates to. The default target year
 is the start of the most recent season in the data. This way the most recent dates stay unchanged.}
 
-\item{drop_leap_week}{If TRUE and date_resolution is \code{week}, \code{isoweek} or \code{epiweek}, leap weeks (week 53)
+\item{drop_leap_week}{If \code{TRUE} and date_resolution is \code{week}, \code{isoweek} or \code{epiweek}, leap weeks (week 53)
 are dropped if they are not in the most recent season. Disable if data should be returned.
 Dropping week 53 from historical data is the most common approach. Otherwise historical data for week 53 would
 map to week 52 if the target season has no leap week, resulting in a doubling of the case counts.}
@@ -65,22 +65,22 @@ map to week 52 if the target season has no leap week, resulting in a doubling of
 
 \item{population}{A number or a numeric column with the population size. Used to calculate the incidence.}
 
-\item{fill_gaps}{Logical; If TRUE, gaps in the time series will be filled with 0 cases.}
+\item{fill_gaps}{Logical; If \code{TRUE}, gaps in the time series will be filled with 0 cases.}
 }
 \value{
 A data frame with standardized date columns:
 \itemize{
-\item year: Calendar year from original date
-\item week/month/day: Time unit based on chosen resolution
-\item date_aligned: Date standardized to target year
-\item season: Epidemic season identifier (e.g., "2023/24")
-\item current_season: Logical flag for most recent season
+\item \code{year}: Calendar year from original date
+\item \code{week/month/day}: Time unit based on chosen resolution
+\item \code{date_aligned}: Date standardized to target year
+\item \code{season}: Epidemic season identifier (e.g., "2023/24")
+\item \code{current_season}: Logical flag for most recent season
 }
 
 Binning also creates the columns:
 \itemize{
-\item n: Sum of cases in bin
-\item incidence: Incidence calculated using n/population
+\item \code{n}: Sum of cases in bin
+\item \code{incidence}: Incidence calculated using n/population
 }
 }
 \description{

@@ -6,7 +6,7 @@
 #' \describe{
 #'   \item{ReportingWeek}{Reporting Week in "2024-W03" format}
 #'   \item{AgeGroup}{Age groups: `00+` for all and `00-14`, `15-59` and `60+` for age stratified cases.}
-#'   \item{Cases}{Year}
+#'   \item{Cases}{Weekly case count}
 #'   \item{Incidence}{Calculated weekly incidence}
 #' }
 #' @source License CC-BY 4.0: Robert Koch-Institut (2025): Laborbestätigte Influenzafälle in Deutschland. Dataset. Zenodo.

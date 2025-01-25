@@ -1,8 +1,8 @@
 ---
-title: "How to create epicurves in ggplot with ggsurveillance"
+title: "EpiCurves: epicurves in ggplot with ggsurveillance"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{How to create epicurves in ggplot with ggsurveillance}
+  %\VignetteIndexEntry{EpiCurves: epicurves in ggplot with ggsurveillance}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -26,6 +26,7 @@ library(ggsurveillance)
 ggplot(outbreaks::ebola_kikwit_1995, aes(x = date, weight = onset)) +
   geom_epicurve(date_resolution = "week") +
   scale_x_date(date_breaks = "2 weeks", date_labels = "%U'%g", name = "week") +
+  scale_y_cases_5er() +
   theme_bw()
 ```
 
@@ -34,6 +35,7 @@ outbreaks::sars_canada_2003 |>
   pivot_longer(starts_with("cases"), names_prefix = "cases_", names_to = "origin") |>
   ggplot(aes(x = date, weight = value, fill = origin)) +
   geom_epicurve(date_resolution = "week") +
+  scale_y_cases_5er() +
   theme_bw()
 ```
 
@@ -44,6 +46,7 @@ influenza_germany |>
   align_dates_seasonal(dates_from = ReportingWeek) |>
   ggplot(aes(x = ReportingWeek, weight = Cases, fill = season)) + # , weight = Cases
   geom_epicurve(color = NA, stat = "count") +
+  scale_y_cases_5er() +
   theme_bw()
 ```
 

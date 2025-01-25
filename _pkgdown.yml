@@ -1,4 +1,13 @@
-url: ~
+url: https://ggsurveillance.biostats.dev
 template:
   bootstrap: 5
+  math-rendering: mathjax
 
+authors:
+  Alexander Bartel:
+    href: https://github.com/ndevln
+
+navbar:
+  structure:
+    left:  [intro, reference, articles, tutorials, news]
+    right: [search, github, lightswitch]

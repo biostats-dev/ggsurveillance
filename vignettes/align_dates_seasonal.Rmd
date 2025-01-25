@@ -1,8 +1,8 @@
 ---
-title: "Align a bin case data for seasonal analysis for surveillance"
+title: "Seasonal Plots: Align case data for seasonal analysis"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Align a bin case data for seasonal analysis for surveillance}
+  %\VignetteIndexEntry{Seasonal Plots: Align case data for seasonal analysis}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

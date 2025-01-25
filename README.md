@@ -6,15 +6,15 @@
 
 <!-- badges: end -->
 
-**ggsurveillance** is an R package with helpful tools and ggplot extensions for epidemiology, especially infectious disease surveillance and outbreak investigation. All functions provide tidy functional interfaces for easy integration with the tidyverse. For documentation and vignettes see: [ggsurveillance.biostats.dev](ggsurveillance.biostats.dev)
+**ggsurveillance** is an R package with helpful tools and ggplot extensions for epidemiology, especially infectious disease surveillance and outbreak investigation. All functions provide tidy functional interfaces for easy integration with the tidyverse. For documentation and vignettes see: <a href="https://ggsurveillance.biostats.dev" target="_blank">ggsurveillance.biostats.dev</a>
 
 This packages provides:
 
 -   `geom_epicurve()` : A ggplot geom for plotting epicurves, includes date aggregation
 
-    -   including `scale_y|x_cases_5er()` for better (case) count axis breaks and positioning.
+    -   including `scale_y_cases_5er()` for better (case) count axis breaks and positioning.
 
--   `align_dates_sesonal()` : Align surveillance data for seasonal plots (e.g. flu season).
+-   `align_dates_seasonal()` : Align surveillance data for seasonal plots (e.g. flu season).
 
 -   `create_agegroups()`: Create reproducible age groups with highly customizable labels.
 

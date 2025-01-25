@@ -1,8 +1,8 @@
 ---
-title: "How to create epigantt charts in ggplot with ggsurveillance"
+title: "EpiGantt: epigantt charts in ggplot with ggsurveillance"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{How to create epigantt charts in ggplot with ggsurveillance}
+  %\VignetteIndexEntry{EpiGantt: epigantt charts in ggplot with ggsurveillance}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -38,14 +38,15 @@ outbreaks::varicella_sim_berlin |>
     names_pattern = "(\\w+)(\\d+)"
   ) |>
   ggplot(aes(y = fullname)) +
-  geom_epigantt(aes(xmin = arrival, xmax = leave, colour = center)) +
+  geom_epigantt(aes(xmin = arrival, xmax = leave, colour = center), linewidth = 4) +
   geom_point(aes(x = onset)) +
-  theme_bw()
+  theme_bw() +
+  theme(legend.position = "top")
 ```
 
 ```{r}
 ggplot(outbreaks::measles_hagelloch_1861, aes(y = case_ID, xmin = date_of_prodrome, xmax = date_of_rash, fill = class)) +
   geom_epigantt(linewidth = 1) +
-  scale_x_date(date_breaks = "4 weeks", date_labels = "W%U'%g") +
+  scale_x_date(date_breaks = "2 weeks", date_labels = "W%U'%G") +
   theme_bw()
 ```

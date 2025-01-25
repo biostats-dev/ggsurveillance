@@ -91,13 +91,13 @@ ggplot(data, aes(x = date)) +
 library(tidyr)
 library(outbreaks)
 
-sars_canada_2003 |> # Sars dataset from outbreaks
+sars_canada_2003 |> # SARS dataset from outbreaks
   pivot_longer(starts_with("cases"), names_prefix = "cases_", names_to = "origin") |>
   ggplot(aes(x = date, weight = value, fill = origin)) +
   geom_epicurve(date_resolution = "week") +
   scale_x_date(date_labels = "W\%V'\%g", date_breaks = "2 weeks") +
   scale_y_cases_5er() +
-  theme_bw()
+  theme_classic()
 }
 \seealso{
 \code{\link[=scale_y_cases_5er]{scale_y_cases_5er()}}

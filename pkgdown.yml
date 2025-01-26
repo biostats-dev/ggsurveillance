@@ -5,7 +5,7 @@ articles:
   align_dates_seasonal: align_dates_seasonal.html
   Epicurves_with_ggsurveillance: Epicurves_with_ggsurveillance.html
   Epigantt_with_ggsurveillance: Epigantt_with_ggsurveillance.html
-last_built: 2025-01-26T21:41Z
+last_built: 2025-01-26T22:07Z
 urls:
   reference: https://ggsurveillance.biostats.dev/reference
   article: https://ggsurveillance.biostats.dev/articles

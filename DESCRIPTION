@@ -1,24 +1,19 @@
 Package: ggsurveillance
-Title: Tools And ggplot Extensions For Infectious Disease Surveillance And Outbreak Investigation
+Title: Tools And ggplot Extensions For Infectious Disease Surveillance And
+    Outbreak Investigation
 Version: 0.0.1.9000
 Authors@R: 
-    person("Alexander", "Bartel", email = "alexander.bartel@fu-berlin.de", role = c("aut", "cre"), comment = c(ORCID = '0000-0002-1280-6138'))
-Description: Create epicurves or epigantt charts in ggplot. Prepare data for visualisation or 
-    other reporting for infectious disease surveillance and outbreak investigation.
-URL: https://ggsurveillance.biostats.dev, https://github.com/biostats-dev/ggsurveillance
-BugReports: https://github.com/biostats-dev/ggsurveillance/issues
+    person("Alexander", "Bartel", , "alexander.bartel@fu-berlin.de", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-1280-6138"))
+Description: Create epicurves or epigantt charts in ggplot. Prepare data
+    for visualisation or other reporting for infectious disease
+    surveillance and outbreak investigation.
 License: GPL (>= 3)
-Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
-Depends: R (>= 4.1.0)
-Suggests:
-    spelling, 
-    outbreaks,
-    knitr,
-    rmarkdown,
-    testthat (>= 3.0.0)
-Config/testthat/edition: 3
+URL: https://ggsurveillance.biostats.dev,
+    https://github.com/biostats-dev/ggsurveillance
+BugReports: https://github.com/biostats-dev/ggsurveillance/issues
+Depends: 
+    R (>= 4.1.0)
 Imports: 
     cli,
     dplyr,
@@ -33,7 +28,18 @@ Imports:
     tidyr,
     tidyselect,
     tsibble
+Suggests:
+    knitr,
+    outbreaks,
+    rmarkdown,
+    spelling,
+    testthat (>= 3.0.0)
+VignetteBuilder: 
+    knitr
+Config/testthat/edition: 3
+Encoding: UTF-8
+Language: en-GB
 LazyData: true
 NeedsCompilation: no
-VignetteBuilder: knitr
-Language: en-GB
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2

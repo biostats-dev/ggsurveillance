@@ -14,11 +14,11 @@
 #' @param breaks_as_lower_bound Logical; if \code{TRUE} (default), breaks are treated as lower bounds of the intervals.
 #' If \code{FALSE}, as upper bounds.
 #' @param first_group_format Character string template for the first age group. Uses glue syntax. \cr
-#' Default: \code{"0-\{x\}"}, Other common styles: \code{"≤\{x\}", "<\{x+1\}"}
+#' Default: \code{"0-\{x\}"}, Other common styles: \code{"<={x}", "<{x+1}"}
 #' @param interval_format Character string template for intermediate age groups. Uses glue syntax.\cr
-#' Default: \code{"\{x\}-\{y\}"}, Other common styles: \code{"\{x\} to \{y\}"}
+#' Default: \code{"\{x\}-\{y\}"}, Other common styles: \code{"{x} to {y}"}
 #' @param last_group_format Character string template for the last age group. Uses glue syntax. \cr
-#' Default: \code{"\{x\}+"}, Other common styles: \code{"≥\{x\}",">\{x-1\}"}
+#' Default: \code{"\{x\}+"}, Other common styles: \code{">={x}",">{x-1}"}
 #' @param pad_numbers Logical or numeric; if numeric, pad numbers up to the specified length (Tip: use \code{2}).
 #' Not compatible with calculations within glue formats. Default: \code{FALSE}
 #' @param pad_with Character to use for padding numbers. Default: \code{"0"}

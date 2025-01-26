@@ -58,11 +58,9 @@ create_agegroups <- function(
     first_group_format = "0-{x}", # "≤{x}", "<{x+1}"
     interval_format = "{x}-{y}", # "{x} to {y}"
     last_group_format = "{x}+", # "≥{x}",">{x-1}"
-    pad_numbers = FALSE,
-    pad_with = "0",
+    pad_numbers = FALSE, pad_with = "0",
     collapse_single_year_groups = FALSE,
-    na_label = NA,
-    return_factor = FALSE) {
+    na_label = NA, return_factor = FALSE) {
   if (!is.numeric(age_breaks)) {
     cli::cli_abort("{.arg age_breaks} must be numeric.")
   }

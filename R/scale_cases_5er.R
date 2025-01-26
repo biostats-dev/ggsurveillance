@@ -30,19 +30,12 @@
 
 scale_y_cases_5er <- function(
     name = waiver(),
-    n = 8,
-    n.min = 5,
-    u5.bias = 4,
+    n = 8, n.min = 5, u5.bias = 4,
     expand = NULL,
-    labels = waiver(),
-    limits = NULL,
-    oob = scales::censor,
-    na.value = NA_real_,
-    trans = "identity",
-    position = "left",
-    sec.axis = waiver(),
-    guide = waiver(),
-    ...) {
+    labels = waiver(), limits = NULL,
+    oob = scales::censor, na.value = NA_real_,
+    trans = "identity", position = "left",
+    sec.axis = waiver(), guide = waiver(), ...) {
   scale_y_continuous(
     name = name,
     # Pass Pretty arguments
@@ -74,19 +67,12 @@ scale_y_cases_5er <- function(
 
 scale_x_cases_5er <- function(
     name = waiver(),
-    n = 8,
-    n.min = 5,
-    u5.bias = 4,
+    n = 8, n.min = 5, u5.bias = 4,
     expand = NULL,
-    labels = waiver(),
-    limits = NULL,
-    oob = scales::censor,
-    na.value = NA_real_,
-    trans = "identity",
-    position = "bottom",
-    sec.axis = waiver(),
-    guide = waiver(),
-    ...) {
+    labels = waiver(), limits = NULL,
+    oob = scales::censor, na.value = NA_real_,
+    trans = "identity", position = "bottom",
+    sec.axis = waiver(), guide = waiver(), ...) {
   scale_x_continuous(
     name = name,
     # Pass Pretty arguments

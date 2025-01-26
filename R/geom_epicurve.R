@@ -62,13 +62,11 @@
 #'   scale_y_cases_5er() +
 #'   theme_classic()
 geom_epicurve <- function(mapping = NULL, data = NULL,
-                          stat = "epicurve", # or count for no outlines
-                          position = "stack",
+                          stat = "epicurve", position = "stack",
                           date_resolution = NULL,
                           width = NULL, relative.width = 1,
                           week_start = getOption("lubridate.week.start", 1),
-                          ..., na.rm = FALSE,
-                          show.legend = NA, inherit.aes = TRUE) {
+                          ..., na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
   stat_param <- stat
 
   ggplot2::layer(

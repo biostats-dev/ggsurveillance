@@ -40,12 +40,9 @@
 #'   theme_bw()
 #'
 #' @export
-geom_vline_year <- function(mapping = NULL, # data = NULL,
-                            position = "identity",
-                            year_break = "01-01",
-                            just = -0.5,
-                            ...,
-                            show.legend = NA) {
+geom_vline_year <- function(mapping = NULL, position = "identity",
+                            year_break = "01-01", just = -0.5,
+                            ..., show.legend = NA) {
   layer(
     data = data.frame(x = 1),
     mapping = mapping,
@@ -66,12 +63,9 @@ geom_vline_year <- function(mapping = NULL, # data = NULL,
 
 #' @rdname geom_vline_year
 #' @export
-geom_hline_year <- function(mapping = NULL, # data = NULL,
-                            position = "identity",
-                            year_break = "01-01",
-                            just = -0.5,
-                            ...,
-                            show.legend = NA) {
+geom_hline_year <- function(mapping = NULL, position = "identity",
+                            year_break = "01-01", just = -0.5,
+                            ..., show.legend = NA) {
   layer(
     data = data.frame(y = 1),
     mapping = NULL,

@@ -37,12 +37,14 @@ test_that("geometric_mean handles zero replacement with replace = 'zero'", {
 })
 
 test_that("geometric_mean handles 'all' replacement below threshold", {
-  x <- c(0.1, 0.2, 0.7, 1, 5)
+  x <- c(0.1, 0.2, -1, 1, 5)
   # With replace = 'all' and replace_value = 0.5, we replace anything < 0.5.
   # So x becomes c(0.5, 0.5, 0.7, 1, 5)
-  expected <- exp(mean(log(c(0.5, 0.5, 0.7, 1, 5))))
-
-  gm <- geometric_mean(x, replace_value = 0.5, replace = "all")
+  expected <- exp(mean(log(c(0.5, 0.5, 0.5, 1, 5))))
+  expect_message(
+    gm <- geometric_mean(x, replace_value = 0.5, replace = "all"),
+    regexp = "3 values were substituted with 0.5"
+  )
   expect_identical(gm, expected)
 })
 
@@ -50,8 +52,10 @@ test_that("geometric_mean handles non-positive replacement with replace = 'non-p
   x <- c(-1, 0, 0.1, 1, 2)
   # Replace all non-positives with 0.5
   expected <- exp(mean(log(c(0.5, 0.5, 0.1, 1, 2))))
-
-  gm <- geometric_mean(x, replace_value = 0.5, replace = "non-positive")
+  expect_message(
+    gm <- geometric_mean(x, replace_value = 0.5, replace = "non-positive"),
+    regexp = "2 values were substituted with 0.5"
+  )
   expect_identical(gm, expected)
 })
 

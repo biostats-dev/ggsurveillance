@@ -94,7 +94,7 @@ StatEpicurve <- ggproto("StatEpicurve", Stat,
   required_aes = "x|y",
   default_aes = aes(x = after_stat(count), y = after_stat(count), group = row_number, weight = 1),
   setup_params = function(self, data, params) {
-    params$flipped_aes <- has_flipped_aes(data, params, main_is_orthogonal = FALSE)
+    params$flipped_aes <- ggplot2::has_flipped_aes(data, params, main_is_orthogonal = FALSE)
 
     has_x <- !(is.null(data$x) && is.null(params$x))
     has_y <- !(is.null(data$y) && is.null(params$y))
@@ -107,14 +107,19 @@ StatEpicurve <- ggproto("StatEpicurve", Stat,
 
     params
   },
-  compute_layer = function(data, scales, flipped_aes = FALSE) {
-    data <- flip_data(data, flipped_aes)
+  compute_layer = function(self, data, params, panel) {
+    data <- ggplot2::flip_data(data, params$flipped_aes)
 
     weight <- data$weight %||% rep(1, length(data$x))
     data <- data |> expand_counts(weight)
 
-    bars <- data |> dplyr::mutate(row_number = dplyr::row_number(data), count = 1)
-    flip_data(bars, flipped_aes)
+    bars <- data |>
+      dplyr::mutate(
+        row_number = dplyr::row_number(data),
+        count = 1,
+        flipped_aes = params$flipped_aes
+      )
+    ggplot2::flip_data(bars, params$flipped_aes)
   },
   dropped_aes = "weight"
 )
@@ -137,8 +142,6 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
     params$date_resolution <- params$date_resolution %||% NA
     # Full (100%) width bars
     params$relative.width <- params$relative.width %||% 1
-    # Check values of x are so large to be datetime
-    params$datetime <- params$datetime %||% (max(data$x, na.rm = TRUE) > 10^6)
     # Week_start defaults to Monday
     params$week_start <- params$week_start %||% 1
 
@@ -165,6 +168,9 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
         "Removed {sum(!complete)} row{?s} containing missing values (geom_epicurve)."
       ))
     }
+
+    # Check values of x are so large to be datetime (Cave: flipped_aes)
+    params$datetime <- params$datetime %||% (max(data$x, na.rm = TRUE) > 10^6)
 
     if (!is.na(params$date_resolution)) {
       # Try to infer if x was date or datetime and convert to date.

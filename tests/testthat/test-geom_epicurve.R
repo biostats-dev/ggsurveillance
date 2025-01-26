@@ -7,7 +7,25 @@ test_that("geom_epicurve handles basic date inputs", {
 
   # Create plot
   p <- ggplot(test_dates, aes(x = date, fill = cat)) +
-    geom_epicurve(date_resolution = "day")
+    geom_epicurve(date_resolution = "day") +
+    scale_y_cases_5er()
+
+  # Test that the plot is created successfully
+  expect_s3_class(p, "ggplot")
+})
+
+test_that("geom_epicurve handles flipped aes", {
+  # Test data
+  test_dates <- data.frame(
+    date = as.Date("2024-01-01") + 0:10,
+    cat = c(rep("A", 5), rep("B", 6))
+  )
+
+  # Create plot
+  p <- ggplot(test_dates, aes(y = date, fill = cat)) +
+    # geom_hline_year() +
+    geom_epicurve(date_resolution = "day") +
+    scale_x_cases_5er()
 
   # Test that the plot is created successfully
   expect_s3_class(p, "ggplot")
@@ -19,7 +37,9 @@ test_that("geom_epicurve handles datetime data", {
   )
 
   p <- ggplot(test_datetime, aes(x = datetime)) +
-    geom_epicurve(date_resolution = "day")
+    geom_vline_year() +
+    geom_epicurve(date_resolution = "day") +
+    scale_y_cases_5er()
 
   expect_s3_class(p, "ggplot")
 })

@@ -22,7 +22,7 @@ A data frame with 1,029 rows and 4 columns:
 \describe{
 \item{ReportingWeek}{Reporting Week in "2024-W03" format}
 \item{AgeGroup}{Age groups: \verb{00+} for all and \code{00-14}, \code{15-59} and \verb{60+} for age stratified cases.}
-\item{Cases}{Year}
+\item{Cases}{Weekly case count}
 \item{Incidence}{Calculated weekly incidence}
 }
 }

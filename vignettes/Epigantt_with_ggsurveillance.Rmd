@@ -48,6 +48,6 @@ outbreaks::varicella_sim_berlin |>
 ggplot(outbreaks::measles_hagelloch_1861, aes(y = case_ID, xmin = date_of_prodrome, xmax = date_of_rash, fill = class)) +
   geom_vline_year(color = "grey50") +
   geom_epigantt(linewidth = 1) +
-  scale_x_date(date_breaks = "2 weeks", date_labels = "W%U'%G") +
+  scale_x_date(date_breaks = "2 weeks", date_labels = "W%V'%G") +
   theme_bw()
 ```

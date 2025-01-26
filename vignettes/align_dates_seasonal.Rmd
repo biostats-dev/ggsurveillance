@@ -51,8 +51,10 @@ influenza_germany |>
   filter(AgeGroup != "00+") |>
   align_dates_seasonal(dates_from = ReportingWeek) |>
   ggplot(aes(x = ReportingWeek, weight = Cases, fill = season)) +
+  geom_vline_year(color = "grey50") +
   # Use stat = count for more efficient plotting
   geom_epicurve(color = NA, stat = "count") +
+  scale_y_cases_5er() +
   theme_bw()
 ```
 

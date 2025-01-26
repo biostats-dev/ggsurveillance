@@ -25,7 +25,7 @@ library(ggsurveillance)
 ```{r}
 ggplot(outbreaks::ebola_kikwit_1995, aes(x = date, weight = onset)) +
   geom_epicurve(date_resolution = "week") +
-  scale_x_date(date_breaks = "2 weeks", date_labels = "%U'%g", name = "week") +
+  scale_x_date(date_breaks = "2 weeks", date_labels = "%V'%g", name = "week") +
   scale_y_cases_5er() +
   theme_bw()
 ```

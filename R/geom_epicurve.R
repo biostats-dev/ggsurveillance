@@ -36,12 +36,19 @@
 #' @examples
 #' # Basic epicurve with dates
 #' library(ggplot2)
+#' set.seed(1)
 #'
-#' data <- data.frame(date = as.Date("2024-01-01") + 0:30)
-#' ggplot(data, aes(x = date)) +
+#' plot_data_epicurve_imp <- data.frame(
+#'   date = rep(as.Date("2023-12-01") + ((0:300) * 1), times = rpois(301, 0.5))
+#' )
+#'
+#' ggplot(plot_data_epicurve_imp, aes(x = date, weight = 2)) +
+#'   geom_vline_year(year_break = "01-01", show.legend = TRUE) +
 #'   geom_epicurve(date_resolution = "week") +
+#'   labs(title = "Epicurve Example") +
 #'   scale_y_cases_5er() +
-#'   scale_x_date(date_labels = "W%V'%g") # Correct ISOWeek labels week'year
+#'   scale_x_date(date_breaks = "4 weeks", date_labels = "W%V'%g") + # Correct ISOWeek labels week'year
+#'   theme_bw()
 #'
 #' # Categorical epicurve
 #' library(tidyr)

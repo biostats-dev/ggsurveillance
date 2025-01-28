@@ -89,9 +89,23 @@
 <span><span class="co">#&gt;   method               from </span></span>
 <span><span class="co">#&gt;   as_tibble.grouped_df dplyr</span></span></code></pre></div>
 <div class="section level2">
+<h2 id="the-seasonal-plot">The seasonal plot<a class="anchor" aria-label="anchor" href="#the-seasonal-plot"></a>
+</h2>
+<pre><code><span><span class="co">#&gt; Warning: A numeric `legend.position` argument in `theme()` was deprecated in ggplot2</span></span>
+<span><span class="co">#&gt; 3.5.0.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use the `legend.position.inside` argument of `theme()` instead.</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
+<span><span class="co">#&gt; Warning: Computation failed in `stat_summary()`.</span></span>
+<span><span class="co">#&gt; Caused by error in `fun.data()`:</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> The package "Hmisc" is required.</span></span></code></pre>
+<p><img src="align_dates_seasonal_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
+</div>
+<div class="section level2">
 <h2 id="seasonal-alignment-and-plot">Seasonal alignment and plot<a class="anchor" aria-label="anchor" href="#seasonal-alignment-and-plot"></a>
 </h2>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">influenza_germany</span> <span class="op">|&gt;</span></span>
@@ -103,8 +117,8 @@
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">AgeGroup</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="align_dates_seasonal_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<p><img src="align_dates_seasonal_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">influenza_germany</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/align_dates_seasonal.html">align_dates_seasonal</a></span><span class="op">(</span>dates_from <span class="op">=</span> <span class="va">ReportingWeek</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">AgeGroup</span>, <span class="va">season</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -117,13 +131,41 @@
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 2020/21    683     132     267   283</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 2021/22  <span style="text-decoration: underline;">18</span>980    <span style="text-decoration: underline;">7</span>176    <span style="text-decoration: underline;">9</span>580  <span style="text-decoration: underline;">2</span>206</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 2022/23 <span style="text-decoration: underline;">299</span>167   <span style="text-decoration: underline;">93</span>343  <span style="text-decoration: underline;">149</span>590 <span style="text-decoration: underline;">55</span>944</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 2023/24 <span style="text-decoration: underline;">217</span>233   <span style="text-decoration: underline;">57</span>542   <span style="text-decoration: underline;">97</span>618 <span style="text-decoration: underline;">61</span>878</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 2024/25  <span style="text-decoration: underline;">19</span>931    <span style="text-decoration: underline;">5</span>540    <span style="text-decoration: underline;">8</span>421  <span style="text-decoration: underline;">5</span>957</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 2023/24 <span style="text-decoration: underline;">217</span>235   <span style="text-decoration: underline;">57</span>544   <span style="text-decoration: underline;">97</span>617 <span style="text-decoration: underline;">61</span>879</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 2024/25  <span style="text-decoration: underline;">48</span>427   <span style="text-decoration: underline;">12</span>438   <span style="text-decoration: underline;">22</span>063 <span style="text-decoration: underline;">13</span>882</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="combining-everything-for-the-seasonal-plot">Combining everything for the seasonal plot<a class="anchor" aria-label="anchor" href="#combining-everything-for-the-seasonal-plot"></a>
+</h2>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">influenza_germany</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">AgeGroup</span> <span class="op">==</span> <span class="st">"00+"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/align_dates_seasonal.html">align_dates_seasonal</a></span><span class="op">(</span>dates_from <span class="op">=</span> <span class="va">ReportingWeek</span>,</span>
+<span>                       date_resolution <span class="op">=</span> <span class="st">"isoweek"</span>,</span>
+<span>                       start <span class="op">=</span> <span class="fl">28</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">df_flu_aligned</span></span>
+<span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df_flu_aligned</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">date_aligned</span>, y <span class="op">=</span> <span class="va">Incidence</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/stat_summary.html" class="external-link">stat_summary</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>linetype <span class="op">=</span> <span class="st">"Historical Median (Min-Max)"</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">.</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="va">current_season</span><span class="op">)</span>, </span>
+<span>    fun.data <span class="op">=</span> <span class="va">median_hilow</span>, geom <span class="op">=</span> <span class="st">"ribbon"</span>, alpha <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/stat_summary.html" class="external-link">stat_summary</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>linetype <span class="op">=</span> <span class="st">"Historical Median (Min-Max)"</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">.</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="va">current_season</span><span class="op">)</span>, </span>
+<span>    fun <span class="op">=</span> <span class="va">median</span>, geom <span class="op">=</span> <span class="st">"line"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>linetype <span class="op">=</span> <span class="st">"2024/25"</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">.</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">current_season</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"dodgerblue4"</span>, linewidth <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>linetype <span class="op">=</span> <span class="st">""</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_date.html" class="external-link">scale_x_date</a></span><span class="op">(</span>date_labels <span class="op">=</span> <span class="st">"%b'%y"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>,<span class="fl">0.8</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: Computation failed in `stat_summary()`.</span></span>
+<span><span class="co">#&gt; Caused by error in `fun.data()`:</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> The package "Hmisc" is required.</span></span></code></pre></div>
+<p><img src="align_dates_seasonal_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="other-visualisations">Other visualisations<a class="anchor" aria-label="anchor" href="#other-visualisations"></a>
 </h2>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">influenza_germany</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">AgeGroup</span> <span class="op">!=</span> <span class="st">"00+"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/align_dates_seasonal.html">align_dates_seasonal</a></span><span class="op">(</span>dates_from <span class="op">=</span> <span class="va">ReportingWeek</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -135,7 +177,7 @@
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning in geom_epicurve(color = NA, stat = "count"): Ignoring unknown</span></span>
 <span><span class="co">#&gt; parameters: `week_start`</span></span></code></pre></div>
-<p><img src="align_dates_seasonal_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
+<p><img src="align_dates_seasonal_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

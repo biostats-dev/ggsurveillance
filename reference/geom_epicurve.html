@@ -3,14 +3,14 @@
 An epicurve is a bar plot, where every case is outlined. geom_epicurve additionally provides
 date-based aggregation of cases (e.g. per week or month and many more).
 For week aggregation both isoweek (World + ECDC) and epiweek (US CDC) are supported.
-stat_bin_dates and its alias stat_count_dates provide date based binning only. After binning the by date, these
+stat_bin_date and its alias stat_date_count provide date based binning only. After binning the by date, these
 stats behave like ggplot2::stat_count.
 
 "><meta property="og:description" content="Creates a epicurve plot for visualizing epidemic case counts in outbreaks (epidemiological curves).
 An epicurve is a bar plot, where every case is outlined. geom_epicurve additionally provides
 date-based aggregation of cases (e.g. per week or month and many more).
 For week aggregation both isoweek (World + ECDC) and epiweek (US CDC) are supported.
-stat_bin_dates and its alias stat_count_dates provide date based binning only. After binning the by date, these
+stat_bin_date and its alias stat_date_count provide date based binning only. After binning the by date, these
 stats behave like ggplot2::stat_count.
 
 "><meta property="og:image" content="https://ggsurveillance.biostats.dev/logo.svg"></head><body>
@@ -56,7 +56,7 @@ stats behave like ggplot2::stat_count.
     <p>Creates a epicurve plot for visualizing epidemic case counts in outbreaks (epidemiological curves).
 An epicurve is a bar plot, where every case is outlined. <code>geom_epicurve</code> additionally provides
 date-based aggregation of cases (e.g. per week or month and many more).</p><ul><li><p>For week aggregation both isoweek (World + ECDC) and epiweek (US CDC) are supported.</p></li>
-<li><p><code>stat_bin_dates</code> and its alias <code>stat_count_dates</code> provide date based binning only. After binning the by date, these
+<li><p><code>stat_bin_date</code> and its alias <code>stat_date_count</code> provide date based binning only. After binning the by date, these
 stats behave like <a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">ggplot2::stat_count</a>.</p></li>
 </ul></div>
 
@@ -77,7 +77,7 @@ stats behave like <a href="https://ggplot2.tidyverse.org/reference/geom_bar.html
 <span>  inherit.aes <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">stat_bin_dates</span><span class="op">(</span></span>
+<span><span class="fu">stat_bin_date</span><span class="op">(</span></span>
 <span>  mapping <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  geom <span class="op">=</span> <span class="st">"line"</span>,</span>
@@ -90,7 +90,7 @@ stats behave like <a href="https://ggplot2.tidyverse.org/reference/geom_bar.html
 <span>  inherit.aes <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">stat_count_dates</span><span class="op">(</span></span>
+<span><span class="fu">stat_date_count</span><span class="op">(</span></span>
 <span>  mapping <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  geom <span class="op">=</span> <span class="st">"line"</span>,</span>
@@ -132,7 +132,7 @@ For large numbers of cases please use "<code>date_bin</code>" to reduce number o
 <dd><p>Character string specifying the time unit for date aggregation.
 Set to <code>NULL</code> or <code>NA</code> for no date aggregation <br>
 Possible values are: <code>"day"</code>, <code>"week"</code>, <code>"month"</code>, <code>"bimonth"</code>, <code>"season"</code>, <code>"quarter"</code>, <code>"halfyear"</code>, <code>"year"</code>.
-To special values enforce ISO or US week standard:</p><ul><li><p><code>isoweek</code> will force <code>date_resolution = week</code> and <code>week_start = 1</code> (ISO and ECDC Standard)</p></li>
+To special values enforce ISO or US week standard:</p><ul><li><p><code>isoweek</code> will force <code>dadte_resolution = week</code> and <code>week_start = 1</code> (ISO and ECDC Standard)</p></li>
 <li><p><code>epiweek</code> will force <code>date_resolution = week</code> and <code>week_start = 7</code> (US CDC Standard)</p></li>
 </ul></dd>
 

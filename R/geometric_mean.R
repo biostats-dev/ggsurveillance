@@ -26,11 +26,11 @@
 #'
 #' @details
 #' \strong{Replacement Considerations}:
-#' The geometric mean is only defined for strictly positive numbers (\eqn{x > 0}). Despite this, the geometric mean can be
-#' useful for laboratory measurements which can contain 0 or negative values. If these values are treated as NA
-#' and are removed, this results in an upward bias due to missingness. To reduce this, values below the
-#' limit of detection (LOD) or limit of quantification (LOQ) are often replaced with the chosen limit,
-#' making this limit the practical lower limit of the measurement scale.
+#' The geometric mean is only defined for strictly positive numbers (\eqn{x > 0}). 
+#' Despite this, the geometric mean can be useful for laboratory measurements which can contain 0 or negative values. 
+#' If these values are treated as NA and are removed, this results in an upward bias due to missingness. 
+#' To reduce this, values below the limit of detection (LOD) or limit of quantification (LOQ) 
+#' are often replaced with the chosen limit, making this limit the practical lower limit of the measurement scale.
 #' This is therefore an often recommended approach.
 #'
 #' There are also alternatives approaches, where values are replaced by
@@ -83,7 +83,7 @@ geometric_mean <- function(x, na.rm = FALSE, replace_value = NULL, replace = c("
   if (!is.null(replace_value)) {
     n_replaced <- sum(f_replace(x), na.rm = TRUE)
     x[f_replace(x)] <- as.numeric(replace_value)
-    cli::cli_inform("{n_replaced} value{?s} were substituted with {as.numeric(replace_value)}.")
+    cli::cli_warn("{n_replaced} value{?s} were substituted with {as.numeric(replace_value)}.")
   }
 
   # Check if x is 0 or smaller

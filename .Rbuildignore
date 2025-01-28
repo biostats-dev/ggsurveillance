@@ -9,3 +9,4 @@
 ^pkgdown$
 ^data-raw$
 ^codecov\.yml$
+^cran-comments.md

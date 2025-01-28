@@ -45,7 +45,7 @@
 #'
 #' @references
 #' -  Centers for Disease Control and Prevention. Quick-Learn Lesson:
-#'  Using an Epi Curve to Determine Mode of Spread. USA. \url{https://www.cdc.gov/training/quicklearns/epimode}
+#'  Using an Epi Curve to Determine Mode of Spread. USA. \url{https://www.cdc.gov/training/quicklearns/epimode/}
 #' -  Dicker, Richard C., Fátima Coronado, Denise Koo, and R. Gibson Parrish. 2006.
 #'  Principles of Epidemiology in Public Health Practice; an Introduction to Applied Epidemiology and Biostatistics.
 #'  3rd ed. USA. \url{https://stacks.cdc.gov/view/cdc/6914}

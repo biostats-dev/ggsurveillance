@@ -60,7 +60,7 @@ Additionally, the first tick (i.e. zero) is aligned to the lower left corner.</p
 <span>  limits <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  oob <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/oob.html" class="external-link">censor</a></span>,</span>
 <span>  na.value <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
-<span>  trans <span class="op">=</span> <span class="st">"identity"</span>,</span>
+<span>  transform <span class="op">=</span> <span class="st">"identity"</span>,</span>
 <span>  position <span class="op">=</span> <span class="st">"left"</span>,</span>
 <span>  sec.axis <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
@@ -77,7 +77,7 @@ Additionally, the first tick (i.e. zero) is aligned to the lower left corner.</p
 <span>  limits <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  oob <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/oob.html" class="external-link">censor</a></span>,</span>
 <span>  na.value <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
-<span>  trans <span class="op">=</span> <span class="st">"identity"</span>,</span>
+<span>  transform <span class="op">=</span> <span class="st">"identity"</span>,</span>
 <span>  position <span class="op">=</span> <span class="st">"bottom"</span>,</span>
 <span>  sec.axis <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
@@ -154,9 +154,18 @@ bounds values with <code>NA</code>.</p></li>
 <dd><p>Missing values will be replaced with this value.</p></dd>
 
 
-<dt id="arg-trans">trans<a class="anchor" aria-label="anchor" href="#arg-trans"></a></dt>
-<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Deprecated in favour of
-<code>transform</code>.</p></dd>
+<dt id="arg-transform">transform<a class="anchor" aria-label="anchor" href="#arg-transform"></a></dt>
+<dd><p>For continuous scales, the name of a transformation object
+or the object itself. Built-in transformations include "asn", "atanh",
+"boxcox", "date", "exp", "hms", "identity", "log", "log10", "log1p", "log2",
+"logit", "modulus", "probability", "probit", "pseudo_log", "reciprocal",
+"reverse", "sqrt" and "time".</p>
+<p>A transformation object bundles together a transform, its inverse,
+and methods for generating breaks and labels. Transformation objects
+are defined in the scales package, and are called <code>transform_&lt;name&gt;</code>. If
+transformations require arguments, you can call them from the scales
+package, e.g. <code><a href="https://scales.r-lib.org/reference/transform_boxcox.html" class="external-link">scales::transform_boxcox(p = 2)</a></code>.
+You can create your own transformation with <code><a href="https://scales.r-lib.org/reference/new_transform.html" class="external-link">scales::new_transform()</a></code>.</p></dd>
 
 
 <dt id="arg-position">position<a class="anchor" aria-label="anchor" href="#arg-position"></a></dt>

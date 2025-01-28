@@ -164,6 +164,6 @@ Principles of Epidemiology in Public Health Practice; an Introduction to Applied
 }
 }
 \seealso{
-\code{\link[=scale_y_cases_5er]{scale_y_cases_5er()}}
+\code{\link[=scale_y_cases_5er]{scale_y_cases_5er()}}, \code{\link[=geom_vline_year]{geom_vline_year()}}
 }
 \keyword{datasets}

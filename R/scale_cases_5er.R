@@ -34,7 +34,7 @@ scale_y_cases_5er <- function(
     expand = NULL,
     labels = waiver(), limits = NULL,
     oob = scales::censor, na.value = NA_real_,
-    trans = "identity", position = "left",
+    transform = "identity", position = "left",
     sec.axis = waiver(), guide = waiver(), ...) {
   scale_y_continuous(
     name = name,
@@ -54,7 +54,7 @@ scale_y_cases_5er <- function(
     expand = expand %||% expansion(mult = c(0, 0.1)),
     oob = oob,
     na.value = na.value,
-    trans = trans,
+    transform = transform,
     position = position,
     sec.axis = sec.axis,
     guide = guide
@@ -71,7 +71,7 @@ scale_x_cases_5er <- function(
     expand = NULL,
     labels = waiver(), limits = NULL,
     oob = scales::censor, na.value = NA_real_,
-    trans = "identity", position = "bottom",
+    transform = "identity", position = "bottom",
     sec.axis = waiver(), guide = waiver(), ...) {
   scale_x_continuous(
     name = name,
@@ -91,7 +91,7 @@ scale_x_cases_5er <- function(
     expand = expand %||% expansion(mult = c(0, 0.1)),
     oob = oob,
     na.value = na.value,
-    trans = trans,
+    transform = transform,
     position = position,
     sec.axis = sec.axis,
     guide = guide

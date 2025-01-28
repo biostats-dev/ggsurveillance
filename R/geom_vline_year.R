@@ -6,7 +6,7 @@
 #'
 #' @param mapping Mapping created using [ggplot2::aes()]. Can be used to add the lines to the legend.
 #' E.g. `aes(linetype = 'End of Year')`. Cannot access data specified in [ggplot2::ggplot()].
-#' Panels created by [ggplot2::facet_wrap()] [ggplot2::facet_grid()] are available with `aes(linetype = PANEL)`.
+#' Panels created by [ggplot2::facet_wrap()] or [ggplot2::facet_grid()] are available with `aes(linetype = PANEL)`.
 #' @param position Position adjustment, either as a string, or the result of a call to
 #'   a position adjustment function.
 #' @param year_break String specifying the month and day of the year break ("MM-DD").
@@ -23,6 +23,7 @@
 #'   includes if any aesthetics are mapped. `FALSE` never includes, and `TRUE` always includes.
 #'
 #' @return A ggplot2 layer that can be added to a plot.
+#' @seealso [geom_epicurve()], [ggplot2::geom_vline()]
 #' @examples
 #' library(ggplot2)
 #' set.seed(1)

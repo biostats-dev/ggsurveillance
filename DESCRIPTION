@@ -9,7 +9,7 @@ Description: Create epicurves or epigantt charts in ggplot. Prepare data
     for visualisation or other reporting for infectious disease
     surveillance and outbreak investigation. Includes functions to solve date based transformations for common reporting tasks, like 
     (A) seasonal date alignment for respiratory disease surveillance, 
-    (B) date-based case binning based on specified time intervalls like isoweek, epiweek, month and more, 
+    (B) date-based case binning based on specified time intervals like isoweek, epiweek, month and more, 
     (C) automated detection and marking of the new year based on the date/datetime axis of the ggplot.
 License: GPL (>= 3)
 URL: https://ggsurveillance.biostats.dev,
@@ -32,6 +32,7 @@ Imports:
     tidyselect,
     tsibble
 Suggests:
+    Hmisc,
     knitr,
     outbreaks,
     rmarkdown,

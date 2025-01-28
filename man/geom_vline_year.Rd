@@ -26,7 +26,7 @@ geom_hline_year(
 \arguments{
 \item{mapping}{Mapping created using \code{\link[ggplot2:aes]{ggplot2::aes()}}. Can be used to add the lines to the legend.
 E.g. \code{aes(linetype = 'End of Year')}. Cannot access data specified in \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}}.
-Panels created by \code{\link[ggplot2:facet_wrap]{ggplot2::facet_wrap()}} \code{\link[ggplot2:facet_grid]{ggplot2::facet_grid()}} are available with \code{aes(linetype = PANEL)}.}
+Panels created by \code{\link[ggplot2:facet_wrap]{ggplot2::facet_wrap()}} or \code{\link[ggplot2:facet_grid]{ggplot2::facet_grid()}} are available with \code{aes(linetype = PANEL)}.}
 
 \item{position}{Position adjustment, either as a string, or the result of a call to
 a position adjustment function.}
@@ -75,4 +75,7 @@ ggplot(plot_data_epicurve_imp, aes(x = date, weight = 2)) +
   scale_x_date(date_breaks = "4 weeks", date_labels = "W\%V'\%g") + # Correct ISOWeek labels week'year
   theme_bw()
 
+}
+\seealso{
+\code{\link[=geom_epicurve]{geom_epicurve()}}, \code{\link[ggplot2:geom_abline]{ggplot2::geom_vline()}}
 }

@@ -10,11 +10,13 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  warning = FALSE, 
+  message = FALSE
 )
 ```
 
-```{r setup}
+```{r setup, echo = FALSE}
 library(ggplot2)
 library(dplyr)
 library(tidyr)
@@ -22,6 +24,11 @@ library(outbreaks)
 library(ggsurveillance)
 ```
 
+## EpiGantt examples
+This vignette is still work in progress. But the examples are hopefully already helpful and inspiring.
+
+Epi Gantt plots are used to visualize exposure times in infectious disease outbreaks. Hospital outbreaks are a common example for their use.
+Lying times of patients on different wards can be visualized and potential transmission routes identified. 
 
 ```{r}
 outbreaks::varicella_sim_berlin |>

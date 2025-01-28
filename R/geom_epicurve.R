@@ -40,7 +40,7 @@
 #' Epi Curves are a public health tool for outbreak investigation. For more details see the references.
 #'
 #' @return A ggplot2 layer that can be added to a plot
-#' @seealso [scale_y_cases_5er()]
+#' @seealso [scale_y_cases_5er()], [geom_vline_year()]
 #' @export
 #'
 #' @references

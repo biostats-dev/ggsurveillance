@@ -7,22 +7,26 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r, echo = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  warning = FALSE, 
+  message = FALSE
 )
 ```
 
-```{r setup}
+```{r setup, echo = FALSE}
 library(ggplot2)
 library(dplyr)
 library(tidyr)
 library(ggsurveillance)
 ```
 
-# The seasonal plot
+## The seasonal plot
+This vignette is still work in progress. But the examples are hopefully already helpful and inspiring.
 
+The seasonal plot is a commonly used plot for seasonal respiratory pathogens like Influenza and RSV. For seasons covering the turn of the year have to be defined. In a second step the previous seasons have to be aligned to the current season to allow for a comparison. Here we show how this is automated using `ggsurveillance`.
 ```{r echo=FALSE}
 influenza_germany |>
   filter(AgeGroup == "00+") |>
@@ -47,7 +51,7 @@ ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence)) +
 
 
 
-# Seasonal alignment and plot
+## Seasonal alignment and plot
 ```{r}
 library(ggplot2)
 
@@ -70,7 +74,7 @@ influenza_germany |>
   pivot_wider(names_from = AgeGroup, values_from = n)
 ```
 
-# Combining everything for the seasonal plot
+## Combining everything for the seasonal plot
 
 ```{r}
 influenza_germany |>
@@ -95,7 +99,7 @@ ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence)) +
 ```
 
 
-# Other visualisations
+## Other visualisations
 ```{r}
 influenza_germany |>
   filter(AgeGroup != "00+") |>

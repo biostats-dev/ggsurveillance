@@ -48,27 +48,3 @@ ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence)) +
 
 ggsave("man/figures/seasonal_plot_readme.png", width = 6, height = 3.5, dpi = 600)
 
-
-ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence)) +
-  # Ribbon for historical data
-  stat_summary(
-    aes(),
-    data = subset(df_flu_aligned, !current_season),
-    fun.data = median_hilow,
-    geom = "ribbon", alpha = 0.3
-  ) +
-  # Line for historical data
-  stat_summary(
-    aes(color = "All"), # Same label as above
-    data = subset(df_flu_aligned, !current_season),
-    fun = median,
-    geom = "line"
-  ) +
-  # Line for the 2024/25 season
-  geom_line(
-    aes(color = season, fill = season), # <- Another label
-    data = subset(df_flu_aligned, current_season),
-    linewidth = 2
-  ) +
-  scale_x_date(date_labels = "%b'%y") +
-  theme_bw()

@@ -10,11 +10,13 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  warning = FALSE, 
+  message = FALSE
 )
 ```
 
-```{r setup}
+```{r setup, echo = FALSE}
 library(ggplot2)
 library(dplyr)
 library(tidyr)
@@ -22,6 +24,11 @@ library(outbreaks)
 library(ggsurveillance)
 ```
 
+
+## Epi Curve examples
+This vignette is still work in progress. But the examples are hopefully already helpful and inspiring.
+
+### Ebola Outbreak in Kikwit, Democratic Republic of the Congo 1995
 ```{r}
 ggplot(outbreaks::ebola_kikwit_1995, aes(x = date, weight = onset)) +
   geom_epicurve(date_resolution = "week") +
@@ -30,6 +37,7 @@ ggplot(outbreaks::ebola_kikwit_1995, aes(x = date, weight = onset)) +
   theme_bw()
 ```
 
+### SARS Outbreak in Canada 2003
 ```{r}
 outbreaks::sars_canada_2003 |>
   pivot_longer(starts_with("cases"), names_prefix = "cases_", names_to = "origin") |>
@@ -39,6 +47,10 @@ outbreaks::sars_canada_2003 |>
   theme_bw()
 ```
 
+## Influenza Data from Germany 2020-2025
+ - `align_dates_seasonal()` defines the influenza seasons
+ - `geom_vline_year()` marks the turn of the years
+ - `scale_y_cases_5er()` creates a y-axis with more ticks and aligns 0 with the x-axis.
 ```{r}
 influenza_germany |>
   # Keep Age Groups 00-14, 15-59, 60+
@@ -46,12 +58,12 @@ influenza_germany |>
   # Calc Influenza Seasons
   align_dates_seasonal(dates_from = ReportingWeek) |>
   ggplot(aes(x = ReportingWeek, weight = Cases, fill = season)) + # , weight = Cases
+  geom_vline_year(color = "grey50") +
   geom_epicurve(color = NA, stat = "bin_date", date_resolution = "week") +
   scale_y_cases_5er() +
   theme_bw()
 ```
-
-
+## Extra
 ```{r}
 influenza_germany |>
   # Calc Influenza Seasons

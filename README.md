@@ -20,7 +20,7 @@ This packages provides:
 
 -   `create_agegroups()`: Create reproducible age groups with highly customizable labels.
 
--   `geom_epigantt()` : A geom for epigantt plots. Helpful to visualize overlapping time intervals for contact tracing. (Beta)
+-   `geom_epigantt()` : A geom for epigantt plots. Helpful to visualize overlapping time intervals for contact tracing (i.e. hospital outbreaks). (Beta)
 
 -   and more: `geometric_mean()` , `expand_counts()`,
 

@@ -1,8 +1,8 @@
 #' Germany Influenza (FLU) Surveillance data
 #'
-#' A subset of the weekly German influenza surveillance data from 2020 to 2024.
+#' A subset of the weekly German influenza surveillance data from January 2020 to January 2025.
 #'
-#' A data frame with 1,029 rows and 4 columns:
+#' A data frame with 1,037 rows and 4 columns:
 #' \describe{
 #'   \item{ReportingWeek}{Reporting Week in "2024-W03" format}
 #'   \item{AgeGroup}{Age groups: `00+` for all and `00-14`, `15-59` and `60+` for age stratified cases.}

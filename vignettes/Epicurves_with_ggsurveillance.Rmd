@@ -60,5 +60,5 @@ influenza_germany |>
   geom_line(stat = "bin_date", date_resolution = "month") +
   scale_y_cases_5er() +
   facet_wrap(~AgeGroup) +
-  theme_bw() 
+  theme_bw()
 ```

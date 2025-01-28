@@ -18,6 +18,7 @@ ggsave("man/figures/epicurve_readme.svg", width = 7, height = 4, dpi = 600)
 ## Influenza
 
 influenza_germany |>
+  filter(AgeGroup == "00+") |>
   align_dates_seasonal(
     dates_from = ReportingWeek,
     date_resolution = "isoweek",
@@ -26,16 +27,48 @@ influenza_germany |>
 
 ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence)) +
   stat_summary(
+    aes(linetype = "Historical Median (Min-Max)"),
     data = . %>% filter(!current_season), fun.data = median_hilow,
-    geom = "ribbon", alpha = 0.3
+    geom = "ribbon", alpha = 0.3,
   ) +
   stat_summary(
+    aes(linetype = "Historical Median (Min-Max)"),
     data = . %>% filter(!current_season), fun = median,
     geom = "line"
   ) +
-  geom_line(data = . %>% filter(current_season), color = "dodgerblue4", linewidth = 2) +
+  geom_line(
+    aes(linetype = "2024/25"),
+    colour = "dodgerblue4",
+    data = . %>% filter(current_season), linewidth = 2
+  ) +
+  labs(linetype = "") +
   scale_x_date(date_labels = "%b'%y") +
-  facet_wrap(~AgeGroup, labeller = label_both) +
-  theme_bw()
+  theme_bw() +
+  theme(legend.position = c(0.2, 0.8))
 
-ggsave("man/figures/seasonal_plot_readme.png", width = 8, height = 4, dpi = 600)
+ggsave("man/figures/seasonal_plot_readme.png", width = 6, height = 3.5, dpi = 600)
+
+
+ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence)) +
+  # Ribbon for historical data
+  stat_summary(
+    aes(),
+    data = subset(df_flu_aligned, !current_season),
+    fun.data = median_hilow,
+    geom = "ribbon", alpha = 0.3
+  ) +
+  # Line for historical data
+  stat_summary(
+    aes(color = "All"), # Same label as above
+    data = subset(df_flu_aligned, !current_season),
+    fun = median,
+    geom = "line"
+  ) +
+  # Line for the 2024/25 season
+  geom_line(
+    aes(color = season, fill = season), # <- Another label
+    data = subset(df_flu_aligned, current_season),
+    linewidth = 2
+  ) +
+  scale_x_date(date_labels = "%b'%y") +
+  theme_bw()

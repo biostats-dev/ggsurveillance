@@ -67,12 +67,11 @@ test_that("geom_epicurve handles NA values correctly", {
   )
 
   # Both plots should still render successfully
-  expect_no_error(
-    {p1 <- ggplot(test_dates, aes(x = date, fill = cat)) +
+  expect_no_error({
+    p1 <- ggplot(test_dates, aes(x = date, fill = cat)) +
       geom_epicurve(date_resolution = "day", na.rm = FALSE)
     p1
-    }
-  )
+  })
   expect_s3_class(p1, "ggplot")
 
   p2 <- ggplot(test_dates, aes(x = date, fill = cat)) +
@@ -91,10 +90,9 @@ test_that("geom_epicurve with stat = 'bin_date'", {
     ggplot(plot_data_epicurve_imp, aes(x = date, weight = 2)) +
       geom_epicurve(date_resolution = "month", color = "black", just = 0.5, relative.width = 1, stat = "bin_date")
   })
-  
+
   expect_no_error({
     ggplot(plot_data_epicurve_imp, aes(x = date, weight = 2)) +
       geom_epicurve(color = "black", just = 0.5, relative.width = 1, stat = "bin_date")
   })
-  
 })

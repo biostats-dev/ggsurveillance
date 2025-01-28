@@ -11,9 +11,10 @@
 
 This packages provides:
 
--   `geom_epicurve()` : A ggplot geom for plotting epicurves, includes date aggregation
-
+-   `geom_epicurve()` : A ggplot geom for plotting epicurves
+    -   including `state_bin_date()` for date interval (week, month etc.) based binning of case numbers with perfect alignment with i.e. reporting week. 
     -   including `scale_y_cases_5er()` for better (case) count axis breaks and positioning.
+    -   including `geom_vline_year()`, which automatically detects the turn of the year(s) from the date or datetime axis and draws a vertical line.
 
 -   `align_dates_seasonal()` : Align surveillance data for seasonal plots (e.g. flu season).
 
@@ -52,20 +53,24 @@ library(ggplot2)
 library(ggsurveillance)
 
 influenza_germany |>
+  filter(AgeGroup == "00+") |>
   align_dates_seasonal(dates_from = ReportingWeek,
                        date_resolution = "isoweek",
                        start = 28) -> df_flu_aligned
 
 ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence)) +
-  stat_summary(data = . %>% filter(!current_season), fun.data = median_hilow,
-               geom = "ribbon", alpha = 0.3) +
-  stat_summary(data = . %>% filter(!current_season), fun = median,
-               geom = "line") +
-  geom_line(data = . %>% filter(current_season), color = "dodgerblue4", 
-            linewidth = 2) +
+  stat_summary(
+    aes(linetype = "Historical Median (Min-Max)"), data = . %>% filter(!current_season), 
+    fun.data = median_hilow, geom = "ribbon", alpha = 0.3) +
+  stat_summary(
+    aes(linetype = "Historical Median (Min-Max)"), data = . %>% filter(!current_season), 
+    fun = median, geom = "line") +
+  geom_line(
+    aes(linetype = "2024/25"), data = . %>% filter(current_season), colour = "dodgerblue4", linewidth = 2) +
+  labs(linetype = "") +
   scale_x_date(date_labels = "%b'%y") +
-  facet_wrap(~AgeGroup, labeller = label_both) +
-  theme_bw()
+  theme_bw() +
+  theme(legend.position = c(0.2,0.8))
 ```
 
 ![Seasonal influenza data from Germany by Age Group](man/figures/seasonal_plot_readme.png)

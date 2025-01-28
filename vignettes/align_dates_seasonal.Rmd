@@ -21,6 +21,32 @@ library(tidyr)
 library(ggsurveillance)
 ```
 
+# The seasonal plot
+
+```{r echo=FALSE}
+influenza_germany |>
+  filter(AgeGroup == "00+") |>
+  align_dates_seasonal(dates_from = ReportingWeek,
+                       date_resolution = "isoweek",
+                       start = 28) -> df_flu_aligned
+
+ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence)) +
+  stat_summary(
+    aes(linetype = "Historical Median (Min-Max)"), data = . %>% filter(!current_season), 
+    fun.data = median_hilow, geom = "ribbon", alpha = 0.3) +
+  stat_summary(
+    aes(linetype = "Historical Median (Min-Max)"), data = . %>% filter(!current_season), 
+    fun = median, geom = "line") +
+  geom_line(
+    aes(linetype = "2024/25"), data = . %>% filter(current_season), colour = "dodgerblue4", linewidth = 2) +
+  labs(linetype = "") +
+  scale_x_date(date_labels = "%b'%y") +
+  theme_bw() +
+  theme(legend.position = c(0.2,0.8))
+```
+
+
+
 # Seasonal alignment and plot
 ```{r}
 library(ggplot2)
@@ -42,6 +68,30 @@ influenza_germany |>
   group_by(AgeGroup, season) |>
   tally(wt = Cases) |>
   pivot_wider(names_from = AgeGroup, values_from = n)
+```
+
+# Combining everything for the seasonal plot
+
+```{r}
+influenza_germany |>
+  filter(AgeGroup == "00+") |>
+  align_dates_seasonal(dates_from = ReportingWeek,
+                       date_resolution = "isoweek",
+                       start = 28) -> df_flu_aligned
+
+ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence)) +
+  stat_summary(
+    aes(linetype = "Historical Median (Min-Max)"), data = . %>% filter(!current_season), 
+    fun.data = median_hilow, geom = "ribbon", alpha = 0.3) +
+  stat_summary(
+    aes(linetype = "Historical Median (Min-Max)"), data = . %>% filter(!current_season), 
+    fun = median, geom = "line") +
+  geom_line(
+    aes(linetype = "2024/25"), data = . %>% filter(current_season), colour = "dodgerblue4", linewidth = 2) +
+  labs(linetype = "") +
+  scale_x_date(date_labels = "%b'%y") +
+  theme_bw() +
+  theme(legend.position = c(0.2,0.8))
 ```
 
 

@@ -3,11 +3,11 @@
 \docType{data}
 \name{geom_epicurve}
 \alias{geom_epicurve}
-\alias{stat_bin_dates}
-\alias{stat_count_dates}
+\alias{stat_bin_date}
+\alias{stat_date_count}
 \alias{StatEpicurve}
 \alias{StatBinDate}
-\alias{StatCountDate}
+\alias{StatDateCount}
 \title{Create an epidemic curve plot or used date binning of observations}
 \usage{
 geom_epicurve(
@@ -25,7 +25,7 @@ geom_epicurve(
   inherit.aes = TRUE
 )
 
-stat_bin_dates(
+stat_bin_date(
   mapping = NULL,
   data = NULL,
   geom = "line",
@@ -38,7 +38,7 @@ stat_bin_dates(
   inherit.aes = TRUE
 )
 
-stat_count_dates(
+stat_date_count(
   mapping = NULL,
   data = NULL,
   geom = "line",
@@ -71,7 +71,7 @@ Set to \code{NULL} or \code{NA} for no date aggregation \cr
 Possible values are: \code{"day"}, \code{"week"}, \code{"month"}, \code{"bimonth"}, \code{"season"}, \code{"quarter"}, \code{"halfyear"}, \code{"year"}.
 To special values enforce ISO or US week standard:
 \itemize{
-\item \code{isoweek} will force \code{date_resolution = week} and \code{week_start = 1} (ISO and ECDC Standard)
+\item \code{isoweek} will force \code{dadte_resolution = week} and \code{week_start = 1} (ISO and ECDC Standard)
 \item \code{epiweek} will force \code{date_resolution = week} and \code{week_start = 7} (US CDC Standard)
 }}
 
@@ -118,7 +118,7 @@ An epicurve is a bar plot, where every case is outlined. \code{geom_epicurve} ad
 date-based aggregation of cases (e.g. per week or month and many more).
 \itemize{
 \item For week aggregation both isoweek (World + ECDC) and epiweek (US CDC) are supported.
-\item \code{stat_bin_dates} and its alias \code{stat_count_dates} provide date based binning only. After binning the by date, these
+\item \code{stat_bin_date} and its alias \code{stat_date_count} provide date based binning only. After binning the by date, these
 stats behave like \link[ggplot2:geom_bar]{ggplot2::stat_count}.
 }
 }

@@ -4,9 +4,9 @@
 #' An epicurve is a bar plot, where every case is outlined. \code{geom_epicurve} additionally provides
 #' date-based aggregation of cases (e.g. per week or month and many more).
 #' - For week aggregation both isoweek (World + ECDC) and epiweek (US CDC) are supported.
-#' - `stat_bin_dates` and its alias `stat_count_dates` provide date based binning only. After binning the by date, these
+#' - `stat_bin_date` and its alias `stat_date_count` provide date based binning only. After binning the by date, these
 #' stats behave like [ggplot2::stat_count].
-#'  
+#'
 #' @param mapping Set of aesthetic mappings created by \code{\link[ggplot2]{aes}}. Commonly used mappings:
 #'   * **x or y**: date or datetime. Numeric is technically supported.
 #'   * **fill**: for colouring groups
@@ -84,7 +84,6 @@ geom_epicurve <- function(mapping = NULL, data = NULL,
                           week_start = getOption("lubridate.week.start", 1),
                           width = NULL, relative.width = 1,
                           ..., na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
-
   ggplot2::layer(
     geom = GeomEpicurve,
     mapping = mapping,
@@ -106,14 +105,14 @@ geom_epicurve <- function(mapping = NULL, data = NULL,
 
 #' @rdname geom_epicurve
 #' @export
-stat_bin_dates <- function(mapping = NULL, data = NULL,
-                           geom = "line", position = "stack",
-                           date_resolution = NULL,
-                           week_start = getOption("lubridate.week.start", 1),
-                           ...,
-                           na.rm = FALSE,
-                           show.legend = NA,
-                           inherit.aes = TRUE) {
+stat_bin_date <- function(mapping = NULL, data = NULL,
+                          geom = "line", position = "stack",
+                          date_resolution = NULL,
+                          week_start = getOption("lubridate.week.start", 1),
+                          ...,
+                          na.rm = FALSE,
+                          show.legend = NA,
+                          inherit.aes = TRUE) {
   layer(
     data = data,
     mapping = mapping,
@@ -133,7 +132,7 @@ stat_bin_dates <- function(mapping = NULL, data = NULL,
 
 #' @rdname geom_epicurve
 #' @export
-stat_count_dates <- stat_bin_dates
+stat_date_count <- stat_bin_date
 
 #' @import ggplot2
 #' @import dplyr
@@ -162,16 +161,20 @@ StatEpicurve <- ggproto("StatEpicurve", Stat,
 
     params
   },
-
   compute_layer = function(self, data, params, scales, ...) {
-    
     date_resolution <- params$date_resolution %||% NA
     week_start <- params$week_start %||% 1
     flipped_aes <- params$flipped_aes %||% any(data$flipped_aes) %||% FALSE
-    
-    if (date_resolution == "isoweek") {date_resolution <- "week"; week_start <- 1} # ISO
-    if (date_resolution == "epiweek") {date_resolution <- "week"; week_start <- 7} # US
-    
+
+    if (date_resolution == "isoweek") {
+      date_resolution <- "week"
+      week_start <- 1
+    } # ISO
+    if (date_resolution == "epiweek") {
+      date_resolution <- "week"
+      week_start <- 7
+    } # US
+
     data <- ggplot2::flip_data(data, params$flipped_aes)
     # Check for CoordFlip since it flips some thing and not others
     if (!flipped_aes) {
@@ -269,13 +272,18 @@ StatBinDate <- ggproto("StatBinDate", Stat,
     params
   },
   compute_group = function(self, data, scales, flipped_aes = FALSE, date_resolution = NA, week_start = 1) {
-    
     date_resolution <- date_resolution %||% NA
     week_start <- week_start %||% 1
     flipped_aes <- flipped_aes %||% any(data$flipped_aes) %||% FALSE
-    
-    if (date_resolution == "isoweek") {date_resolution <- "week"; week_start <- 1} # ISO
-    if (date_resolution == "epiweek") {date_resolution <- "week"; week_start <- 7} # US
+
+    if (date_resolution == "isoweek") {
+      date_resolution <- "week"
+      week_start <- 1
+    } # ISO
+    if (date_resolution == "epiweek") {
+      date_resolution <- "week"
+      week_start <- 7
+    } # US
 
     data <- ggplot2::flip_data(data, flipped_aes)
     # Check for CoordFlip since it flips some thing and not others
@@ -307,23 +315,23 @@ StatBinDate <- ggproto("StatBinDate", Stat,
     }
 
     if (!is.na(date_resolution)) {
-    if (is_date) data$x <- lubridate::as_date(data$x) else data$x <- lubridate::as_datetime(data$x)
+      if (is_date) data$x <- lubridate::as_date(data$x) else data$x <- lubridate::as_datetime(data$x)
 
-    data$x_ll <- as.numeric(lubridate::floor_date(data$x,
-      unit = date_resolution,
-      week_start = week_start
-    ))
-    # Use ceiling to be able to infer resolution in days
-    data$x_ul <- as.numeric(lubridate::ceiling_date(data$x,
-      unit = date_resolution,
-      week_start = week_start,
-      change_on_boundary = TRUE
-    )) 
+      data$x_ll <- as.numeric(lubridate::floor_date(data$x,
+        unit = date_resolution,
+        week_start = week_start
+      ))
+      # Use ceiling to be able to infer resolution in days
+      data$x_ul <- as.numeric(lubridate::ceiling_date(data$x,
+        unit = date_resolution,
+        week_start = week_start,
+        change_on_boundary = TRUE
+      ))
     } else {
       data$x_ll <- data$x
       data$x_ul <- data$x
     }
-    
+
     if (is.na(date_resolution)) {
       cli::cli_warn("It seems you provided no date_resolution. Column used as specified.
                           Please use date_resolution = 'week' to round to week (stat_date_bin/count).")
@@ -356,7 +364,7 @@ StatBinDate <- ggproto("StatBinDate", Stat,
 #' @format NULL
 #' @usage NULL
 #' @export
-StatCountDate <- ggproto("StatCountDate", StatBinDate)
+StatDateCount <- ggproto("StatDateCount", StatBinDate)
 
 #' @import ggplot2
 #' @import dplyr
@@ -454,4 +462,3 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
   },
   rename_size = TRUE
 )
-

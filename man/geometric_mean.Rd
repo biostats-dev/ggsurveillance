@@ -48,11 +48,11 @@ or values below a user-specified threshold) before computation.
 }
 \details{
 \strong{Replacement Considerations}:
-The geometric mean is only defined for strictly positive numbers (\eqn{x > 0}). Despite this, the geometric mean can be
-useful for laboratory measurements which can contain 0 or negative values. If these values are treated as NA
-and are removed, this results in an upward bias due to missingness. To reduce this, values below the
-limit of detection (LOD) or limit of quantification (LOQ) are often replaced with the chosen limit,
-making this limit the practical lower limit of the measurement scale.
+The geometric mean is only defined for strictly positive numbers (\eqn{x > 0}).
+Despite this, the geometric mean can be useful for laboratory measurements which can contain 0 or negative values.
+If these values are treated as NA and are removed, this results in an upward bias due to missingness.
+To reduce this, values below the limit of detection (LOD) or limit of quantification (LOQ)
+are often replaced with the chosen limit, making this limit the practical lower limit of the measurement scale.
 This is therefore an often recommended approach.
 
 There are also alternatives approaches, where values are replaced by

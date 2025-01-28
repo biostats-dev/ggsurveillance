@@ -1,37 +1,54 @@
-#' Create an epidemic curve plot
+#' Create an epidemic curve plot or used date binning of observations
 #'
 #' Creates a epicurve plot for visualizing epidemic case counts in outbreaks (epidemiological curves).
 #' An epicurve is a bar plot, where every case is outlined. \code{geom_epicurve} additionally provides
 #' date-based aggregation of cases (e.g. per week or month and many more).
-#' For week aggregation both isoweek (World + ECDC) and epiweek (US CDC) are supported.
-#'
+#' - For week aggregation both isoweek (World + ECDC) and epiweek (US CDC) are supported.
+#' - `stat_bin_dates` and its alias `stat_count_dates` provide date based binning only. After binning the by date, these
+#' stats behave like [ggplot2::stat_count].
+#'  
 #' @param mapping Set of aesthetic mappings created by \code{\link[ggplot2]{aes}}. Commonly used mappings:
 #'   * **x or y**: date or datetime. Numeric is technically supported.
 #'   * **fill**: for colouring groups
 #'   * **weight**: if data is already aggregated (e.g. case counts)
 #' @param data The data frame containing the variables for the plot
-#' @param stat either "`epicurve`" for outlines around cases or "`count`" for outlines around (fill) groups.
-#' For large numbers of cases please use "`count`".
+#' @param stat either "`epicurve`" for outlines around cases or "`date_bin`" for outlines around (fill) groups.
+#' For large numbers of cases please use "`date_bin`" to reduce number of drawn rectangles.
 #' @param position Position adjustment. Currently supports "`stack`".
 #' @param date_resolution Character string specifying the time unit for date aggregation.
-#' Set to \code{NULL} for no date aggregation \cr
-#' Possible values are: "`day`", "`week`", "`month`", "`bimonth`", "`season`", "`quarter`", "`halfyear`", "`year`".
-#'
+#' Set to \code{NULL} or `NA` for no date aggregation \cr
+#' Possible values are: `"day"`, `"week"`, `"month"`, `"bimonth"`, `"season"`, `"quarter"`, `"halfyear"`, `"year"`.
+#' To special values enforce ISO or US week standard:
+#'  - `isoweek` will force `dadte_resolution = week` and `week_start = 1` (ISO and ECDC Standard)
+#'  - `epiweek` will force `date_resolution = week` and `week_start = 7` (US CDC Standard)
+#' @param week_start Integer specifying the start of the week (1 = Monday, 7 = Sunday). \cr
+#'        Only used when date_resolution includes weeks. Defaults to 1 (Monday). \cr
+#'        For isoweek use \code{week_start = 1} and for epiweek use \code{week_start = 7}.
 #' @param width Numeric value specifying the width of the bars. If \code{NULL}, calculated
 #'        based on resolution and relative.width
 #' @param relative.width Numeric value between 0 and 1 adjusting the relative width
 #'        of bars. Defaults to 1
-#' @param week_start Integer specifying the start of the week (1 = Monday, 7 = Sunday). \cr
-#'        Only used when date_resolution includes weeks. Defaults to 1 (Monday). \cr
-#'        For isoweek use \code{week_start = 1} and for epiweek use \code{week_start = 7}.
+#' @param geom  The geometric object to use to display the data for this layer.
+#'   When using a `stat_*()` function to construct a layer, the `geom` argument
+#'   can be used to override the default coupling between stats and geoms.
 #' @param ... Other arguments passed to \code{\link[ggplot2]{layer}}. For example:
 #'   * \code{colour} Colour of the outlines around cases. Disable with colour = NA. Defaults to "white".
 #'   * \code{linewidth}  Width of the case outlines.
 #' @inheritParams ggplot2::geom_bar
 #'
+#' @details
+#' Epi Curves are a public health tool for outbreak investigation. For more details see the references.
+#'
 #' @return A ggplot2 layer that can be added to a plot
 #' @seealso [scale_y_cases_5er()]
 #' @export
+#'
+#' @references
+#' -  Centers for Disease Control and Prevention. Quick-Learn Lesson:
+#'  Using an Epi Curve to Determine Mode of Spread. USA. \url{https://www.cdc.gov/training/quicklearns/epimode}
+#' -  Dicker, Richard C., Fátima Coronado, Denise Koo, and R. Gibson Parrish. 2006.
+#'  Principles of Epidemiology in Public Health Practice; an Introduction to Applied Epidemiology and Biostatistics.
+#'  3rd ed. USA. \url{https://stacks.cdc.gov/view/cdc/6914}
 #'
 #' @examples
 #' # Basic epicurve with dates
@@ -64,10 +81,9 @@
 geom_epicurve <- function(mapping = NULL, data = NULL,
                           stat = "epicurve", position = "stack",
                           date_resolution = NULL,
-                          width = NULL, relative.width = 1,
                           week_start = getOption("lubridate.week.start", 1),
+                          width = NULL, relative.width = 1,
                           ..., na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
-  stat_param <- stat
 
   ggplot2::layer(
     geom = GeomEpicurve,
@@ -79,7 +95,6 @@ geom_epicurve <- function(mapping = NULL, data = NULL,
     inherit.aes = inherit.aes,
     params = list(
       width = width,
-      stat = stat_param,
       relative.width = relative.width,
       date_resolution = date_resolution,
       week_start = week_start,
@@ -89,15 +104,50 @@ geom_epicurve <- function(mapping = NULL, data = NULL,
   )
 }
 
+#' @rdname geom_epicurve
+#' @export
+stat_bin_dates <- function(mapping = NULL, data = NULL,
+                           geom = "line", position = "stack",
+                           date_resolution = NULL,
+                           week_start = getOption("lubridate.week.start", 1),
+                           ...,
+                           na.rm = FALSE,
+                           show.legend = NA,
+                           inherit.aes = TRUE) {
+  layer(
+    data = data,
+    mapping = mapping,
+    stat = StatCount,
+    geom = geom,
+    position = position,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+    params = list(
+      date_resolution = date_resolution,
+      week_start = week_start,
+      na.rm = na.rm,
+      ...
+    )
+  )
+}
+
+#' @rdname geom_epicurve
+#' @export
+stat_count_dates <- stat_bin_dates
+
 #' @import ggplot2
 #' @import dplyr
 #' @import rlang
 #' @importFrom cli cli_abort
+#' @rdname geom_epicurve
+#' @format NULL
+#' @usage NULL
+#' @export
 
-# Rename to match ggplot2 pattern
 StatEpicurve <- ggproto("StatEpicurve", Stat,
   required_aes = "x|y",
   default_aes = aes(x = after_stat(count), y = after_stat(count), group = row_number, weight = 1),
+  extra_params = c("na.rm", "date_resolution", "week_start"),
   setup_params = function(self, data, params) {
     params$flipped_aes <- ggplot2::has_flipped_aes(data, params, main_is_orthogonal = FALSE)
 
@@ -112,14 +162,76 @@ StatEpicurve <- ggproto("StatEpicurve", Stat,
 
     params
   },
-  compute_layer = function(self, data, params, panel) {
+
+  compute_layer = function(self, data, params, scales, ...) {
+    
+    date_resolution <- params$date_resolution %||% NA
+    week_start <- params$week_start %||% 1
+    flipped_aes <- params$flipped_aes %||% any(data$flipped_aes) %||% FALSE
+    
+    if (date_resolution == "isoweek") {date_resolution <- "week"; week_start <- 1} # ISO
+    if (date_resolution == "epiweek") {date_resolution <- "week"; week_start <- 7} # US
+    
     data <- ggplot2::flip_data(data, params$flipped_aes)
+    # Check for CoordFlip since it flips some thing and not others
+    if (!flipped_aes) {
+      sel_scale <- scales$panel_scales_x[[1]]
+      sel_axis <- "x-axis"
+    } else {
+      sel_scale <- scales$panel_scales_y[[1]]
+      sel_axis <- "y-axis"
+    }
+
+    # Check scale class to detect date or datetime
+    if (inherits(sel_scale, "ScaleContinuousDate")) {
+      is_date <- TRUE
+    } else if (inherits(sel_scale, "ScaleContinuousDatetime")) {
+      is_date <- FALSE
+    } else {
+      is_date <- TRUE
+      cli::cli_warn("{sel_axis} is not date or datetime. Assuming date scale.")
+    }
+
+    # Drop missing x
+    complete <- stats::complete.cases(data$x)
+    data <- data |> dplyr::filter(complete)
+    if (!all(complete) && !params$na.rm) {
+      cli::cli_warn(paste0(
+        "Removed {sum(!complete)} row{?s} containing missing values (geom_epicurve)."
+      ))
+    }
+
+    if (!is.na(date_resolution)) {
+      if (is_date) data$x <- lubridate::as_date(data$x) else data$x <- lubridate::as_datetime(data$x)
+
+      data$x_ll <- as.numeric(lubridate::floor_date(data$x,
+        unit = date_resolution,
+        week_start = week_start
+      ))
+      # Use ceiling to be able to infer resolution in days
+      data$x_ul <- as.numeric(lubridate::ceiling_date(data$x,
+        unit = date_resolution,
+        week_start = week_start,
+        change_on_boundary = TRUE
+      ))
+    } else {
+      data$x_ll <- data$x
+      data$x_ul <- data$x
+    }
+
+    if (is.na(date_resolution) & !is_date) {
+      cli::cli_warn("It seems you provided a datetime format. Column used as specified.
+                          Please use date_resolution = 'day' to round to day (stat_epicurve).")
+    }
 
     weight <- data$weight %||% rep(1, length(data$x))
     data <- data |> expand_counts(weight)
 
     bars <- data |>
       dplyr::mutate(
+        x = x_ll,
+        x_ul = x_ul,
+        width = if (!is.na(date_resolution)) x_ul - x_ll else NULL,
         row_number = dplyr::row_number(data),
         count = 1,
         flipped_aes = params$flipped_aes
@@ -132,6 +244,123 @@ StatEpicurve <- ggproto("StatEpicurve", Stat,
 #' @import ggplot2
 #' @import dplyr
 #' @import rlang
+#' @importFrom cli cli_abort cli_warn
+#' @rdname geom_epicurve
+#' @format NULL
+#' @usage NULL
+#' @export
+
+StatBinDate <- ggproto("StatBinDate", Stat,
+  required_aes = "x|y",
+  default_aes = aes(!!!StatCount$default_aes),
+  extra_params = c("na.rm", "date_resolution", "week_start"),
+  setup_params = function(self, data, params) {
+    params$flipped_aes <- ggplot2::has_flipped_aes(data, params, main_is_orthogonal = FALSE)
+
+    has_x <- !(is.null(data$x) && is.null(params$x))
+    has_y <- !(is.null(data$y) && is.null(params$y))
+    if (!has_x && !has_y) {
+      cli::cli_abort("stat_epicurve requires an x or y aesthetic.")
+    }
+    if (has_x && has_y) {
+      cli::cli_abort("stat_epicurve must only have an x or y aesthetic.")
+    }
+
+    params
+  },
+  compute_group = function(self, data, scales, flipped_aes = FALSE, date_resolution = NA, week_start = 1) {
+    
+    date_resolution <- date_resolution %||% NA
+    week_start <- week_start %||% 1
+    flipped_aes <- flipped_aes %||% any(data$flipped_aes) %||% FALSE
+    
+    if (date_resolution == "isoweek") {date_resolution <- "week"; week_start <- 1} # ISO
+    if (date_resolution == "epiweek") {date_resolution <- "week"; week_start <- 7} # US
+
+    data <- ggplot2::flip_data(data, flipped_aes)
+    # Check for CoordFlip since it flips some thing and not others
+    if (!flipped_aes) {
+      sel_scale <- scales$x
+      sel_axis <- "x-axis"
+    } else {
+      sel_scale <- scales$y
+      sel_axis <- "y-axis"
+    }
+
+    # Check scale class to detect date or datetime
+    if (inherits(sel_scale, "ScaleContinuousDate")) {
+      is_date <- TRUE
+    } else if (inherits(sel_scale, "ScaleContinuousDatetime")) {
+      is_date <- FALSE
+    } else {
+      is_date <- TRUE
+      cli::cli_warn("{sel_axis} is not date or datetime. Assuming date scale.")
+    }
+
+    # Drop missing x
+    complete <- stats::complete.cases(data$x)
+    data <- data |> dplyr::filter(complete)
+    if (!all(complete) && !params$na.rm) {
+      cli::cli_warn(paste0(
+        "Removed {sum(!complete)} row{?s} containing missing values (geom_epicurve)."
+      ))
+    }
+
+    if (!is.na(date_resolution)) {
+    if (is_date) data$x <- lubridate::as_date(data$x) else data$x <- lubridate::as_datetime(data$x)
+
+    data$x_ll <- as.numeric(lubridate::floor_date(data$x,
+      unit = date_resolution,
+      week_start = week_start
+    ))
+    # Use ceiling to be able to infer resolution in days
+    data$x_ul <- as.numeric(lubridate::ceiling_date(data$x,
+      unit = date_resolution,
+      week_start = week_start,
+      change_on_boundary = TRUE
+    )) 
+    } else {
+      data$x_ll <- data$x
+      data$x_ul <- data$x
+    }
+    
+    if (is.na(date_resolution)) {
+      cli::cli_warn("It seems you provided no date_resolution. Column used as specified.
+                          Please use date_resolution = 'week' to round to week (stat_date_bin/count).")
+    }
+
+    data$weight <- data$weight %||% rep(1, length(data$x))
+
+    data <- data |>
+      dplyr::arrange(x_ll) |>
+      dplyr::group_by(x_ll, x_ul) |>
+      dplyr::tally(wt = weight)
+
+    bars <- data |>
+      dplyr::transmute(
+        count = n,
+        prop = n / sum(abs(n)), # abs? negative weights?
+        # TODO: incidence
+        x = x_ll,
+        x_ul = x_ul,
+        width = if (!is.na(date_resolution)) x_ul - x_ll else NULL,
+        .size = length(data$n),
+        flipped_aes = flipped_aes
+      )
+    ggplot2::flip_data(bars, flipped_aes)
+  },
+  dropped_aes = "weight"
+)
+
+#' @rdname geom_epicurve
+#' @format NULL
+#' @usage NULL
+#' @export
+StatCountDate <- ggproto("StatCountDate", StatBinDate)
+
+#' @import ggplot2
+#' @import dplyr
+#' @import rlang
 #' @import lubridate
 #' @importFrom cli cli_alert_info cli_alert_warning
 GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
@@ -140,15 +369,13 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
     aes(colour = "white", linewidth = 0.6, linetype = "solid"),
     GeomBar$default_aes
   ),
-  extra_params = c(GeomBar$extra_params, "date_resolution", "relative.width", "datetime", "week_start", "stat"),
+  extra_params = c(GeomBar$extra_params, "date_resolution", "relative.width"),
   setup_params = function(data, params) {
     params <- GeomBar$setup_params(data, params)
     # Disable date binning if not specified
     params$date_resolution <- params$date_resolution %||% NA
     # Full (100%) width bars
     params$relative.width <- params$relative.width %||% 1
-    # Week_start defaults to Monday
-    params$week_start <- params$week_start %||% 1
 
     if (!is.null(params$colour)) {
       data$colour <- params$colour
@@ -165,34 +392,9 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
     data <- flip_data(data, params$flipped_aes)
     data$just <- params$just %||% 0.5
 
-    # Drop missing x
-    complete <- stats::complete.cases(data$x)
-    data <- data |> dplyr::filter(complete)
-    if (!all(complete) && !params$na.rm) {
-      cli::cli_warn(paste0(
-        "Removed {sum(!complete)} row{?s} containing missing values (geom_epicurve)."
-      ))
-    }
-
-    # Check values of x are so large to be datetime (Cave: flipped_aes)
-    params$datetime <- params$datetime %||% (max(data$x, na.rm = TRUE) > 10^6)
-
     if (!is.na(params$date_resolution)) {
-      # Try to infer if x was date or datetime and convert to date.
-      data$date <- if (params$datetime) lubridate::as_datetime(data$x) else lubridate::as_date(data$x)
-      # Round to specified resolution
-      data$x <- as.numeric(lubridate::floor_date(data$date,
-        unit = params$date_resolution,
-        week_start = params$week_start
-      ))
-      # Use ceiling to be able to infer resolution in days using ggplot2::resolution
-      data$date <- as.numeric(lubridate::ceiling_date(data$date,
-        unit = params$date_resolution,
-        week_start = params$week_start,
-        change_on_boundary = TRUE
-      ))
       # Calculate width of bar in days based on specified rounding
-      data$width <- (data$date - data$x)
+      # data$width <- (data$date - data$x) #Here or in stat?
 
       data |>
         dplyr::distinct(x, width, just) |>
@@ -209,43 +411,30 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
           }
         }
       }
+      # What about data width?
       data |>
         dplyr::select(-just, -width) |>
         dplyr::left_join(data_width, by = "x") |>
         dplyr::mutate(width = params$width %||% width * params$relative.width) -> data
-
-      # Recalc counts after binning if stat = "count"
-      if (params$stat == "count") {
-        data <- data |>
-          dplyr::select(-date) |>
-          dplyr::mutate(weight = NULL) |> # delete to control position
-          dplyr::mutate(weight = count, .after = y) |>
-          dplyr::group_by(dplyr::pick(-(y:flipped_aes))) |>
-          dplyr::group_modify(~ StatCount$compute_group(data = .x)) |>
-          dplyr::mutate(y = count) |>
-          dplyr::ungroup()
-      }
-    } else if (params$datetime) {
-      cli::cli_alert_info("geom_epicurve: It seems you provided a datetime format. Column used as specified.
-                          Please use the resoultion = 'day' to round to date (geom_epicurve).")
-      data$width <- params$width %||% (resolution(data$x) * params$relative.width)
     } else {
       data$width <- params$width %||% (resolution(data$x) * params$relative.width)
     }
 
+    # Plotting Checks
     max_bar_height <- data |>
       dplyr::count(x) |>
       dplyr::slice_max(n, n = 1, with_ties = FALSE) |>
       dplyr::pull(n)
+
     if (max_bar_height[1] > 200) {
       cli::cli_alert_warning(
         "To many observations per date. If you experience problems, please use color = NA to disable outlines (geom_epicurve)."
       )
     }
 
-    if ((max_bar_height[1] > 10000) & (params$stat != "count")) {
+    if ((max_bar_height[1] > 10000)) {
       cli::cli_alert_warning(
-        "If you experience performance problems because of high case numbers, consider using stat = 'count' (geom_epicurve)."
+        "If you experience performance problems because of high case numbers, consider using stat = 'date_bin' (geom_epicurve)."
       )
     }
 
@@ -265,3 +454,4 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
   },
   rename_size = TRUE
 )
+

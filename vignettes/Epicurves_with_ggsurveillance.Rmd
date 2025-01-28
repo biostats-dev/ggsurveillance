@@ -41,12 +41,24 @@ outbreaks::sars_canada_2003 |>
 
 ```{r}
 influenza_germany |>
+  # Keep Age Groups 00-14, 15-59, 60+
   filter(AgeGroup != "00+") |>
   # Calc Influenza Seasons
   align_dates_seasonal(dates_from = ReportingWeek) |>
   ggplot(aes(x = ReportingWeek, weight = Cases, fill = season)) + # , weight = Cases
-  geom_epicurve(color = NA, stat = "count") +
+  geom_epicurve(color = NA, stat = "bin_date", date_resolution = "week") +
   scale_y_cases_5er() +
   theme_bw()
 ```
 
+
+```{r}
+influenza_germany |>
+  # Calc Influenza Seasons
+  align_dates_seasonal(dates_from = ReportingWeek) |>
+  ggplot(aes(x = ReportingWeek, weight = Cases, color = AgeGroup)) + # , weight = Cases
+  geom_line(stat = "bin_date", date_resolution = "month") +
+  scale_y_cases_5er() +
+  facet_wrap(~AgeGroup) +
+  theme_bw() 
+```

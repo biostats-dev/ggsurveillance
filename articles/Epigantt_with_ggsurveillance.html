@@ -72,6 +72,15 @@
 
     
     
+<div class="section level2">
+<h2 id="epigantt-examples">EpiGantt examples<a class="anchor" aria-label="anchor" href="#epigantt-examples"></a>
+</h2>
+<p>This vignette is still work in progress. But the examples are
+hopefully already helpful and inspiring.</p>
+<p>Epi Gantt plots are used to visualize exposure times in infectious
+disease outbreaks. Hospital outbreaks are a common example for their
+use. Lying times of patients on different wards can be visualized and
+potential transmission routes identified.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">outbreaks</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/outbreaks/man/varicella_sim_berlin.html" class="external-link">varicella_sim_berlin</a></span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">center1</span> <span class="op">==</span> <span class="st">"Platz der Luftbruecke"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -99,6 +108,7 @@
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_date.html" class="external-link">scale_x_date</a></span><span class="op">(</span>date_breaks <span class="op">=</span> <span class="st">"2 weeks"</span>, date_labels <span class="op">=</span> <span class="st">"W%V'%G"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Epigantt_with_ggsurveillance_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
+</div>
   </main>
 </div>
 

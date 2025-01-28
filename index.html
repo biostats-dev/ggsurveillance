@@ -17,8 +17,8 @@
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><script src="deps/MathJax-3.2.2/tex-chtml.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Tools And Ggplot Extensions For Infectious Disease Surveillance And Outbreak Investigation">
-<meta name="description" content="Create epicurves or epigantt charts in ggplot. Prepare data for visualisation or other reporting for infectious disease surveillance and outbreak investigation.">
-<meta property="og:description" content="Create epicurves or epigantt charts in ggplot. Prepare data for visualisation or other reporting for infectious disease surveillance and outbreak investigation.">
+<meta name="description" content="Create epicurves or epigantt charts in ggplot. Prepare data for visualisation or other reporting for infectious disease surveillance and outbreak investigation. Includes functions to solve date based transformations for common reporting tasks, like (A) seasonal date alignment for respiratory disease surveillance, (B) date-based case binning based on specified time intervalls like isoweek, epiweek, month and more, (C) automated detection and marking of the new year based on the date/datetime axis of the ggplot.">
+<meta property="og:description" content="Create epicurves or epigantt charts in ggplot. Prepare data for visualisation or other reporting for infectious disease surveillance and outbreak investigation. Includes functions to solve date based transformations for common reporting tasks, like (A) seasonal date alignment for respiratory disease surveillance, (B) date-based case binning based on specified time intervalls like isoweek, epiweek, month and more, (C) automated detection and marking of the new year based on the date/datetime axis of the ggplot.">
 <meta property="og:image" content="https://ggsurveillance.biostats.dev/logo.svg">
 </head>
 <body>
@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="index.html">ggsurveillance</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -72,9 +72,11 @@
 <p>This packages provides:</p>
 <ul>
 <li>
-<p><code><a href="reference/geom_epicurve.html">geom_epicurve()</a></code> : A ggplot geom for plotting epicurves, includes date aggregation</p>
+<p><code><a href="reference/geom_epicurve.html">geom_epicurve()</a></code> : A ggplot geom for plotting epicurves</p>
 <ul>
+<li>including <code>state_bin_date()</code> for date interval (week, month etc.) based binning of case numbers with perfect alignment with i.e. reporting week.</li>
 <li>including <code><a href="reference/scale_y_cases_5er.html">scale_y_cases_5er()</a></code> for better (case) count axis breaks and positioning.</li>
+<li>including <code><a href="reference/geom_vline_year.html">geom_vline_year()</a></code>, which automatically detects the turn of the year(s) from the date or datetime axis and draws a vertical line.</li>
 </ul>
 </li>
 <li><p><code><a href="reference/align_dates_seasonal.html">align_dates_seasonal()</a></code> : Align surveillance data for seasonal plots (e.g. flu season).</p></li>

@@ -83,7 +83,7 @@ geometric_mean <- function(x, na.rm = FALSE, replace_value = NULL, replace = c("
   if (!is.null(replace_value)) {
     n_replaced <- sum(f_replace(x), na.rm = TRUE)
     x[f_replace(x)] <- as.numeric(replace_value)
-    cli::cli_warn("{n_replaced} value{?s} were substituted with {as.numeric(replace_value)}.")
+    if (n_replaced != 0) cli::cli_warn("{n_replaced} value{?s} were substituted with {as.numeric(replace_value)}.")
   }
 
   # Check if x is 0 or smaller

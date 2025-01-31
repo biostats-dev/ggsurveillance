@@ -12,8 +12,8 @@
 #'   * **fill**: for colouring groups
 #'   * **weight**: if data is already aggregated (e.g. case counts)
 #' @param data The data frame containing the variables for the plot
-#' @param stat either "`epicurve`" for outlines around cases or "`date_bin`" for outlines around (fill) groups.
-#' For large numbers of cases please use "`date_bin`" to reduce number of drawn rectangles.
+#' @param stat either "`epicurve`" for outlines around cases or "`bin_date`" for outlines around (fill) groups.
+#' For large numbers of cases please use "`bin_date`" to reduce number of drawn rectangles.
 #' @param position Position adjustment. Currently supports "`stack`".
 #' @param date_resolution Character string specifying the time unit for date aggregation.
 #' Set to \code{NULL} or `NA` for no date aggregation \cr
@@ -335,7 +335,7 @@ StatBinDate <- ggproto("StatBinDate", Stat,
 
     if (is.na(date_resolution)) {
       cli::cli_warn("It seems you provided no date_resolution. Column used as specified.
-                          Please use date_resolution = 'week' to round to week (stat_date_bin/count).")
+                          Please use date_resolution = 'week' to round to week (stat_bin_date/date_count).")
     }
 
     data$weight <- data$weight %||% rep(1, length(data$x))
@@ -443,7 +443,7 @@ GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
 
     if ((max_bar_height[1] > 10000)) {
       cli::cli_alert_warning(
-        "If you experience performance problems because of high case numbers, consider using stat = 'date_bin' (geom_epicurve)."
+        "If you experience performance problems because of high case numbers, consider using stat = 'bin_date' (geom_epicurve)."
       )
     }
 

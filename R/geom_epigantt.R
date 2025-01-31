@@ -4,6 +4,7 @@
 #' `xmin` and `xmax`. Each case draws a single graphical object.
 #'
 #' @inheritParams ggplot2::geom_linerange
+#' @return A `ggplot2` geom layer that can be added to a plot
 #'
 #' @export
 geom_epigantt <- function(mapping = NULL, data = NULL,

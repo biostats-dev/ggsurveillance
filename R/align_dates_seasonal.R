@@ -144,6 +144,13 @@ align_dates_seasonal <- function(
 
 #' @rdname align_dates_seasonal
 #' @importFrom tsibble as_tsibble fill_gaps
+#' @import dplyr
+#' @import lubridate
+#' @import ISOweek
+#' @import rlang
+#' @importFrom tidyselect eval_select
+#' @importFrom stringr str_pad
+#' @importFrom utils tail
 #' @export
 
 align_and_bin_dates_seasonal <- function(
@@ -195,14 +202,6 @@ align_and_bin_dates_seasonal <- function(
       .groups = "drop"
     )
 }
-
-#' @import dplyr
-#' @import lubridate
-#' @import ISOweek
-#' @import rlang
-#' @importFrom tidyselect eval_select
-#' @importFrom stringr str_pad
-#' @importFrom utils tail
 
 .is_current_season <- function(season) (season == (sort(season) |> utils::tail(n = 1)))
 
@@ -320,7 +319,6 @@ align_and_bin_dates_seasonal <- function(
       .after = {{ dates_from }}
     )
 }
-
 
 .coerce_to_date <- function(dates) {
   date_iso_pattern <- "^\\d{4}-\\d{2}-\\d{2}$"

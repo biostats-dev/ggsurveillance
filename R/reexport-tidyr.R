@@ -12,7 +12,7 @@
 #'
 #' @inheritParams tidyr::uncount
 #'
-#' @return A data frame with rows duplicated according to weights.
+#' @return A `data.frame` with rows duplicated according to weights.
 #' @examples
 #' df <- data.frame(x = c("a", "b"), n = c(2, 3))
 #' df |> uncount(n)

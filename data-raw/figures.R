@@ -47,4 +47,3 @@ ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence)) +
   theme(legend.position = c(0.2, 0.8))
 
 ggsave("man/figures/seasonal_plot_readme.png", width = 6, height = 3.5, dpi = 600)
-

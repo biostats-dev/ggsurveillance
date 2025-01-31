@@ -24,7 +24,7 @@ then this column is removed.}
 identifier for each created row.}
 }
 \value{
-A data frame with rows duplicated according to weights.
+A \code{data.frame} with rows duplicated according to weights.
 }
 \description{
 \code{uncount()} is provided by the tidyr package, and re-exported

@@ -39,7 +39,7 @@
 #' @details
 #' Epi Curves are a public health tool for outbreak investigation. For more details see the references.
 #'
-#' @return A ggplot2 layer that can be added to a plot
+#' @return A `ggplot2` geom layer that can be added to a plot
 #' @seealso [scale_y_cases_5er()], [geom_vline_year()]
 #' @export
 #'
@@ -65,6 +65,7 @@
 #'   labs(title = "Epicurve Example") +
 #'   scale_y_cases_5er() +
 #'   scale_x_date(date_breaks = "4 weeks", date_labels = "W%V'%g") + # Correct ISOWeek labels week'year
+#'   coord_equal(ratio = 7) + # Use coord_equal for square boxes. 'ratio' are the days per week.
 #'   theme_bw()
 #'
 #' # Categorical epicurve

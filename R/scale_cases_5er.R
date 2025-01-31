@@ -13,18 +13,16 @@
 #' or [ggplot2::expansion()] to modify
 #' @param ... Additional arguments passed on to [base::pretty()].
 #'
-#' @return A **ggplot2** scale object that can be added to a plot.
+#' @return A `ggplot2` scale object that can be added to a plot.
 #' @seealso [geom_epicurve()], [ggplot2::scale_y_continuous()], [base::pretty()]
 #'
 #' @examples
-#' \dontrun{
 #' library(ggplot2)
 #'
 #' data <- data.frame(date = as.Date("2024-01-01") + 0:30)
 #' ggplot(data, aes(x = date)) +
 #'   geom_epicurve(date_resolution = "week") +
 #'   scale_y_cases_5er()
-#' }
 #' @importFrom scales censor
 #' @export
 

@@ -11,7 +11,7 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  warning = FALSE, 
+  warning = FALSE,
   message = FALSE
 )
 ```
@@ -30,23 +30,31 @@ The seasonal plot is a commonly used plot for seasonal respiratory pathogens lik
 ```{r echo=FALSE}
 influenza_germany |>
   filter(AgeGroup == "00+") |>
-  align_dates_seasonal(dates_from = ReportingWeek,
-                       date_resolution = "isoweek",
-                       start = 28) -> df_flu_aligned
+  align_dates_seasonal(
+    dates_from = ReportingWeek,
+    date_resolution = "isoweek",
+    start = 28
+  ) -> df_flu_aligned
 
 ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence)) +
   stat_summary(
-    aes(linetype = "Historical Median (Min-Max)"), data = . %>% filter(!current_season), 
-    fun.data = median_hilow, geom = "ribbon", alpha = 0.3) +
+    aes(linetype = "Historical Median (Min-Max)"),
+    data = . %>% filter(!current_season),
+    fun.data = median_hilow, geom = "ribbon", alpha = 0.3
+  ) +
   stat_summary(
-    aes(linetype = "Historical Median (Min-Max)"), data = . %>% filter(!current_season), 
-    fun = median, geom = "line") +
+    aes(linetype = "Historical Median (Min-Max)"),
+    data = . %>% filter(!current_season),
+    fun = median, geom = "line"
+  ) +
   geom_line(
-    aes(linetype = "2024/25"), data = . %>% filter(current_season), colour = "dodgerblue4", linewidth = 2) +
+    aes(linetype = "2024/25"),
+    data = . %>% filter(current_season), colour = "dodgerblue4", linewidth = 2
+  ) +
   labs(linetype = "") +
   scale_x_date(date_labels = "%b'%y") +
   theme_bw() +
-  theme(legend.position = c(0.2,0.8))
+  theme(legend.position = c(0.2, 0.8))
 ```
 
 
@@ -79,23 +87,31 @@ influenza_germany |>
 ```{r}
 influenza_germany |>
   filter(AgeGroup == "00+") |>
-  align_dates_seasonal(dates_from = ReportingWeek,
-                       date_resolution = "isoweek",
-                       start = 28) -> df_flu_aligned
+  align_dates_seasonal(
+    dates_from = ReportingWeek,
+    date_resolution = "isoweek",
+    start = 28
+  ) -> df_flu_aligned
 
 ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence)) +
   stat_summary(
-    aes(linetype = "Historical Median (Min-Max)"), data = . %>% filter(!current_season), 
-    fun.data = median_hilow, geom = "ribbon", alpha = 0.3) +
+    aes(linetype = "Historical Median (Min-Max)"),
+    data = . %>% filter(!current_season),
+    fun.data = median_hilow, geom = "ribbon", alpha = 0.3
+  ) +
   stat_summary(
-    aes(linetype = "Historical Median (Min-Max)"), data = . %>% filter(!current_season), 
-    fun = median, geom = "line") +
+    aes(linetype = "Historical Median (Min-Max)"),
+    data = . %>% filter(!current_season),
+    fun = median, geom = "line"
+  ) +
   geom_line(
-    aes(linetype = "2024/25"), data = . %>% filter(current_season), colour = "dodgerblue4", linewidth = 2) +
+    aes(linetype = "2024/25"),
+    data = . %>% filter(current_season), colour = "dodgerblue4", linewidth = 2
+  ) +
   labs(linetype = "") +
   scale_x_date(date_labels = "%b'%y") +
   theme_bw() +
-  theme(legend.position = c(0.2,0.8))
+  theme(legend.position = c(0.2, 0.8))
 ```
 
 

@@ -110,7 +110,7 @@ When using a \verb{stat_*()} function to construct a layer, the \code{geom} argu
 can be used to override the default coupling between stats and geoms.}
 }
 \value{
-A ggplot2 layer that can be added to a plot
+A \code{ggplot2} geom layer that can be added to a plot
 }
 \description{
 Creates a epicurve plot for visualizing epidemic case counts in outbreaks (epidemiological curves).
@@ -140,6 +140,7 @@ ggplot(plot_data_epicurve_imp, aes(x = date, weight = 2)) +
   labs(title = "Epicurve Example") +
   scale_y_cases_5er() +
   scale_x_date(date_breaks = "4 weeks", date_labels = "W\%V'\%g") + # Correct ISOWeek labels week'year
+  coord_equal(ratio = 7) + # Use coord_equal for square boxes. 'ratio' are the days per week.
   theme_bw()
 
 # Categorical epicurve

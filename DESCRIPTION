@@ -12,7 +12,9 @@ Description: Create epicurves or epigantt charts in 'ggplot2'. Prepare
     (A) seasonal date alignment for respiratory disease surveillance, 
     (B) date-based case binning based on specified time intervals like
     isoweek, epiweek, month and more, (C) automated detection and marking
-    of the new year based on the date/datetime axis of the 'ggplot2'.
+    of the new year based on the date/datetime axis of the 'ggplot2'. 
+    An introduction on how to use epicurves can be found on the US CDC website 
+    (2012, <https://www.cdc.gov/training/quicklearns/epimode/index.html>).
 License: GPL (>= 3)
 URL: https://ggsurveillance.biostats.dev,
     https://github.com/biostats-dev/ggsurveillance

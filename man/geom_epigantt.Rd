@@ -104,6 +104,9 @@ rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 }
+\value{
+A \code{ggplot2} geom layer that can be added to a plot
+}
 \description{
 Various ways of representing a vertical interval defined by \code{y},
 \code{xmin} and \code{xmax}. Each case draws a single graphical object.

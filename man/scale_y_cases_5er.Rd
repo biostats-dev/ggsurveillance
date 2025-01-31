@@ -117,7 +117,7 @@ You can create your own transformation with \code{\link[scales:new_transform]{sc
 \item{...}{Additional arguments passed on to \code{\link[base:pretty]{base::pretty()}}.}
 }
 \value{
-A \strong{ggplot2} scale object that can be added to a plot.
+A \code{ggplot2} scale object that can be added to a plot.
 }
 \description{
 A continuous ggplot scale for count data with sane defaults for breaks.
@@ -125,14 +125,12 @@ It uses \code{\link[base:pretty]{base::pretty()}} to increase the default number
 Additionally, the first tick (i.e. zero) is aligned to the lower left corner.
 }
 \examples{
-\dontrun{
 library(ggplot2)
 
 data <- data.frame(date = as.Date("2024-01-01") + 0:30)
 ggplot(data, aes(x = date)) +
   geom_epicurve(date_resolution = "week") +
   scale_y_cases_5er()
-}
 }
 \seealso{
 \code{\link[=geom_epicurve]{geom_epicurve()}}, \code{\link[ggplot2:scale_continuous]{ggplot2::scale_y_continuous()}}, \code{\link[base:pretty]{base::pretty()}}

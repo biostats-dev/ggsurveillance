@@ -1,7 +1,7 @@
 # ggsurveillance <img src="man/figures/logo.svg" alt="logo" align="right" width="120" height="139" style="border: none; float: right;"/>
 
 <!-- badges: start -->
-
+[![CRAN status](https://www.r-pkg.org/badges/version/ggsurveillance)](https://CRAN.R-project.org/package=ggsurveillance)
 [![](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![R-CMD-check](https://github.com/biostats-dev/ggsurveillance/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/biostats-dev/ggsurveillance/actions/workflows/R-CMD-check.yaml)
 [![Codecov test coverage](https://codecov.io/gh/biostats-dev/ggsurveillance/graph/badge.svg)](https://app.codecov.io/gh/biostats-dev/ggsurveillance)

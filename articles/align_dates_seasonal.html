@@ -82,7 +82,7 @@ pathogens like Influenza and RSV. For seasons covering the turn of the
 year have to be defined. In a second step the previous seasons have to
 be aligned to the current season to allow for a comparison. Here we show
 how this is automated using <code>ggsurveillance</code>.
-<img src="align_dates_seasonal_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
+<img src="align_dates_seasonal_files/figure-html/unnamed-chunk-2-1.png" width="672"></p>
 </div>
 <div class="section level2">
 <h2 id="seasonal-alignment-and-plot">Seasonal alignment and plot<a class="anchor" aria-label="anchor" href="#seasonal-alignment-and-plot"></a>
@@ -99,7 +99,7 @@ how this is automated using <code>ggsurveillance</code>.
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">AgeGroup</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="align_dates_seasonal_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
+<p><img src="align_dates_seasonal_files/figure-html/unnamed-chunk-3-1.png" width="672"></p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">influenza_germany</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/align_dates_seasonal.html">align_dates_seasonal</a></span><span class="op">(</span>dates_from <span class="op">=</span> <span class="va">ReportingWeek</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -147,7 +147,7 @@ how this is automated using <code>ggsurveillance</code>.
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_date.html" class="external-link">scale_x_date</a></span><span class="op">(</span>date_labels <span class="op">=</span> <span class="st">"%b'%y"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.8</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="align_dates_seasonal_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
+<p><img src="align_dates_seasonal_files/figure-html/unnamed-chunk-5-1.png" width="672"></p>
 </div>
 <div class="section level2">
 <h2 id="other-visualisations">Other visualisations<a class="anchor" aria-label="anchor" href="#other-visualisations"></a>
@@ -162,7 +162,7 @@ how this is automated using <code>ggsurveillance</code>.
 <span>  <span class="fu"><a href="../reference/geom_epicurve.html">geom_epicurve</a></span><span class="op">(</span>color <span class="op">=</span> <span class="cn">NA</span>, stat <span class="op">=</span> <span class="st">"count"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/scale_y_cases_5er.html">scale_y_cases_5er</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="align_dates_seasonal_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
+<p><img src="align_dates_seasonal_files/figure-html/unnamed-chunk-6-1.png" width="672"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

@@ -95,11 +95,11 @@ test_that("align_dates_seasonal handles custom start points", {
 test_that("align_dates_seasonal handles custom target years", {
   dates <- seq(as.Date("2020-01-01"), as.Date("2024-03-01"), by = "week")
 
-  result <- align_dates_seasonal(
+  expect_no_error(result <- align_dates_seasonal(
     dates,
     date_resolution = "week",
     target_year = 2020
-  )
+  ))
 
   # Check that aligned dates are in target year or target year + 1
   expect_true(all(

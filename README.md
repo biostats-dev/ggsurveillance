@@ -12,7 +12,7 @@
 This packages provides:
 
 -   `geom_epicurve()` : A ggplot geom for plotting epicurves
-    -   including `state_bin_date()` for date interval (week, month etc.) based binning of case numbers with perfect alignment with i.e. reporting week. 
+    -   including `stat_bin_date()` for date interval (week, month etc.) based binning of case numbers with perfect alignment with i.e. reporting week. 
     -   including `scale_y_cases_5er()` for better (case) count axis breaks and positioning.
     -   including `geom_vline_year()`, which automatically detects the turn of the year(s) from the date or datetime axis and draws a vertical line.
 

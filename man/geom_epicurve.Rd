@@ -8,7 +8,7 @@
 \alias{StatEpicurve}
 \alias{StatBinDate}
 \alias{StatDateCount}
-\title{Create an epidemic curve plot or used date binning of observations}
+\title{Create an epidemic curve plot or bin/count observations by date periods}
 \usage{
 geom_epicurve(
   mapping = NULL,

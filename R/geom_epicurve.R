@@ -1,4 +1,4 @@
-#' Create an epidemic curve plot or used date binning of observations
+#' Create an epidemic curve plot or bin/count observations by date periods
 #'
 #' Creates a epicurve plot for visualizing epidemic case counts in outbreaks (epidemiological curves).
 #' An epicurve is a bar plot, where every case is outlined. \code{geom_epicurve} additionally provides

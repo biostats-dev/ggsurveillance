@@ -226,7 +226,7 @@ align_and_bin_dates_seasonal <- function(
       week = lubridate::isoweek({{ dates_from }}) |>
         stringr::str_pad(width = 2, side = "left", pad = "0"),
       year_week = paste0(year, "-W", week),
-      # binned_date = ISOweek::ISOweek2date(paste(year_week, "-1)),
+      # binned_date = ISOweek::ISOweek2date(paste(year_week, "-1))),
       date_aligned = paste0(ifelse(as.numeric(week) >= start, target_year, target_year + 1), "-W", week, "-1") |>
         ISOweek::ISOweek2date(),
       # if start <= 1
@@ -252,7 +252,7 @@ align_and_bin_dates_seasonal <- function(
       year = lubridate::epiyear({{ dates_from }}),
       epiweek = lubridate::epiweek({{ dates_from }}) |>
         stringr::str_pad(width = 2, side = "left", pad = "0"),
-      # binned_date = ISOweek::ISOweek2date(paste(year_week, "-1)),
+      # binned_date = ISOweek::ISOweek2date(paste(year_week, "-1))),
       year_week = paste0(year, "-W", epiweek),
       date_aligned = paste0(ifelse(as.numeric(epiweek) >= start, target_year, target_year + 1), "-W", epiweek, "-1") |>
         ISOweek::ISOweek2date(),
@@ -281,7 +281,7 @@ align_and_bin_dates_seasonal <- function(
       month = lubridate::month({{ dates_from }}) |>
         stringr::str_pad(width = 2, side = "left", pad = "0"),
       year_month = paste0(year, "-", month),
-      # binned_date = lubridate::as_date()(paste(year_month, "-1)),
+      # binned_date = lubridate::as_date()(paste(year_month, "-1))),
       date_aligned = paste0(ifelse(as.numeric(month) >= start, target_year, target_year + 1), "-", month, "-1") |>
         lubridate::as_date(),
       # if start <= 1

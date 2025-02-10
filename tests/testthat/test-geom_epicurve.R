@@ -15,6 +15,22 @@ test_that("geom_epicurve handles basic date inputs", {
   expect_s3_class(p, "ggplot")
 })
 
+test_that("geom_epicurve handles date_resolution = NA/NULL", {
+  # Test data
+  test_dates <- data.frame(
+    date = as.Date("2024-01-01") + 0:10,
+    cat = c(rep("A", 5), rep("B", 6))
+  )
+
+  # Create plot
+  expect_no_error({
+    ggplot(test_dates, aes(x = date, fill = cat)) +
+      geom_vline_year() +
+      geom_epicurve() +
+      scale_y_cases_5er()
+  })
+})
+
 test_that("geom_epicurve handles flipped aes", {
   # Test data
   test_dates <- data.frame(

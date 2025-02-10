@@ -167,11 +167,11 @@ StatEpicurve <- ggproto("StatEpicurve", Stat,
     week_start <- params$week_start %||% 1
     flipped_aes <- params$flipped_aes %||% any(data$flipped_aes) %||% FALSE
 
-    if (date_resolution == "isoweek") {
+    if (!is.na(date_resolution) & date_resolution == "isoweek") {
       date_resolution <- "week"
       week_start <- 1
     } # ISO
-    if (date_resolution == "epiweek") {
+    if (!is.na(date_resolution) & date_resolution == "epiweek") {
       date_resolution <- "week"
       week_start <- 7
     } # US

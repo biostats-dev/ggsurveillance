@@ -1,12 +1,12 @@
 Package: ggsurveillance
 Title: Tools for Outbreak Investigation/Infectious Disease Surveillance
-Version: 0.1.1
+Version: 0.1.1.9000
 Authors@R: 
     person("Alexander", "Bartel", , "alexander.bartel@fu-berlin.de", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-1280-6138"))
 Description: Create epicurves or epigantt charts in 'ggplot2'. Prepare
     data for visualisation or other reporting for infectious disease
-    surveillance and outbreak investigation.  Includes functions to solve
+    surveillance and outbreak investigation. Includes tidy functions to solve
     date based transformations for common reporting tasks, like 
     (A) seasonal date alignment for respiratory disease surveillance, 
     (B) date-based case binning based on specified time intervals like

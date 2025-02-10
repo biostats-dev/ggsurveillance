@@ -2,7 +2,8 @@
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/ggsurveillance)](https://CRAN.R-project.org/package=ggsurveillance)
-[![](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![Download](https://cranlogs.r-pkg.org/badges/grand-total/ggsurveillance)](https://cran.r-project.org/package=ggsurveillance)
+[![Lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![R-CMD-check](https://github.com/biostats-dev/ggsurveillance/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/biostats-dev/ggsurveillance/actions/workflows/R-CMD-check.yaml)
 [![Codecov test coverage](https://codecov.io/gh/biostats-dev/ggsurveillance/graph/badge.svg)](https://app.codecov.io/gh/biostats-dev/ggsurveillance)
 <!-- badges: end -->
@@ -44,7 +45,7 @@ sars_canada_2003 |> #SARS dataset from outbreaks
   theme_classic()
 ```
 
-![Epicurve of 2003 SARS outbreak in Canada](man/figures/epicurve_readme.png)
+![Epicurve of the 2003 SARS outbreak in Canada](man/figures/epicurve_readme.png)
 
 ## Align surveillance data for seasonal comparison
 
@@ -73,7 +74,7 @@ ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence)) +
   theme(legend.position = c(0.2,0.8))
 ```
 
-![Seasonal influenza data from Germany by Age Group](man/figures/seasonal_plot_readme.png)
+![Seasonal influenza data from Germany by age group](man/figures/seasonal_plot_readme.png)
 
 ## Installation
 

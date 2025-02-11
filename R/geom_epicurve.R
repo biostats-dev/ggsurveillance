@@ -117,7 +117,7 @@ stat_bin_date <- function(mapping = NULL, data = NULL,
   layer(
     data = data,
     mapping = mapping,
-    stat = StatCount,
+    stat = StatBinDate,
     geom = geom,
     position = position,
     show.legend = show.legend,
@@ -276,12 +276,17 @@ StatBinDate <- ggproto("StatBinDate", Stat,
     date_resolution <- date_resolution %||% NA
     week_start <- week_start %||% 1
     flipped_aes <- flipped_aes %||% any(data$flipped_aes) %||% FALSE
+    
+    if (is.na(date_resolution)) {
+      cli::cli_warn("It seems you provided no date_resolution. Column used as specified.
+                          Please use date_resolution = 'week' to round to week (stat_bin_date/date_count).")
+    }
 
-    if (date_resolution == "isoweek") {
+    if (!is.na(date_resolution) & date_resolution == "isoweek") {
       date_resolution <- "week"
       week_start <- 1
     } # ISO
-    if (date_resolution == "epiweek") {
+    if (!is.na(date_resolution) & date_resolution == "epiweek") {
       date_resolution <- "week"
       week_start <- 7
     } # US
@@ -331,11 +336,6 @@ StatBinDate <- ggproto("StatBinDate", Stat,
     } else {
       data$x_ll <- data$x
       data$x_ul <- data$x
-    }
-
-    if (is.na(date_resolution)) {
-      cli::cli_warn("It seems you provided no date_resolution. Column used as specified.
-                          Please use date_resolution = 'week' to round to week (stat_bin_date/date_count).")
     }
 
     data$weight <- data$weight %||% rep(1, length(data$x))

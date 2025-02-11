@@ -9,6 +9,8 @@ test_that("geom_epicurve handles basic date inputs", {
   p <- ggplot(test_dates, aes(x = date, fill = cat)) +
     geom_vline_year() +
     geom_epicurve(date_resolution = "day") +
+    stat_bin_date(aes(y = after_stat(count)*1.05, label = after_stat(count)),
+                  date_resolution = "day", geom = "text") +
     scale_y_cases_5er()
 
   # Test that the plot is created successfully
@@ -27,6 +29,8 @@ test_that("geom_epicurve handles date_resolution = NA/NULL", {
     ggplot(test_dates, aes(x = date, fill = cat)) +
       geom_vline_year() +
       geom_epicurve() +
+      stat_bin_date(aes(y = after_stat(count)*1.05, label = after_stat(count)),
+                    geom = "text") +
       scale_y_cases_5er()
   })
 })

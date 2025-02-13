@@ -15,8 +15,7 @@
 #'
 #' @export
 scale_y_discrete_reverse <- function(name = waiver(), limits = NULL, ...,
-                                     expand = waiver(), position = "left"
-                                     ) {
+                                     expand = waiver(), position = "left") {
   # Pass the function rev to limits or reverse the provided limits
   if (rlang::is_empty(limits)) {
     limits <- rev

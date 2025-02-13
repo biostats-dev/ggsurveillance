@@ -276,7 +276,7 @@ StatBinDate <- ggproto("StatBinDate", Stat,
     date_resolution <- date_resolution %||% NA
     week_start <- week_start %||% 1
     flipped_aes <- flipped_aes %||% any(data$flipped_aes) %||% FALSE
-    
+
     if (is.na(date_resolution)) {
       cli::cli_warn("It seems you provided no date_resolution. Column used as specified.
                           Please use date_resolution = 'week' to round to week (stat_bin_date/date_count).")

@@ -13,7 +13,7 @@
 #'   * **weight**: if data is already aggregated (e.g. case counts)
 #' @param data The data frame containing the variables for the plot
 #' @param stat either "`epicurve`" for outlines around cases or "`bin_date`" for outlines around (fill) groups.
-#' For large numbers of cases please use "`bin_date`" to reduce number of drawn rectangles.
+#' For large numbers of cases please use "`bin_date`" to reduce the number of drawn rectangles.
 #' @param position Position adjustment. Currently supports "`stack`".
 #' @param date_resolution Character string specifying the time unit for date aggregation.
 #' Set to \code{NULL} or `NA` for no date aggregation \cr

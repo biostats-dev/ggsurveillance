@@ -2,9 +2,34 @@
 #'
 #' Various ways of representing a vertical interval defined by `y`,
 #' `xmin` and `xmax`. Each case draws a single graphical object.
+#' `geom_epigantt()` will adjust the linewidth depending on the number of cases.
 #'
 #' @inheritParams ggplot2::geom_linerange
+#' @param ... set linewidth directly or linewidth auto scaling using lw_min, lw_max and lw_scaling_factor.
 #' @return A `ggplot2` geom layer that can be added to a plot
+#'
+#' @examples
+#' library(dplyr)
+#' library(tidyr)
+#' library(ggplot2)
+#'
+#' linelist_hospital_outbreak |>
+#'   pivot_longer(
+#'     cols = starts_with("ward"),
+#'     names_to = c(".value", "num"),
+#'     names_pattern = "ward_(name|start_of_stay|end_of_stay)_([0-9]+)",
+#'     values_drop_na = TRUE
+#'   ) -> df_stays_long
+#'
+#' linelist_hospital_outbreak |>
+#'   pivot_longer(cols = starts_with("pathogen"), values_to = "date") -> df_detections_long
+#'
+#' ggplot(df_stays_long) +
+#'   geom_epigantt(aes(y = Patient, xmin = start_of_stay, xmax = end_of_stay, color = name)) +
+#'   geom_point(aes(y = Patient, x = date), data = df_detections_long) +
+#'   scale_y_discrete_reverse() +
+#'   theme_bw() +
+#'   theme(legend.position = "bottom")
 #'
 #' @export
 geom_epigantt <- function(mapping = NULL, data = NULL,
@@ -32,8 +57,33 @@ geom_epigantt <- function(mapping = NULL, data = NULL,
 GeomEpigantt <- ggproto("GeomEpigantt", GeomLinerange,
   default_aes = ggplot2:::defaults(
     # linewidth = from_theme(borderwidth)
-    aes(colour = "dodgerblue4", linewidth = 8, linetype = "solid"),
+    aes(
+      colour = "dodgerblue4",
+      # linewidth = 8, # Will be auto-adjusted based on the number of cases
+      linetype = "solid"
+    ),
     GeomLinerange$default_aes
   ),
+  extra_params = c(GeomLinerange$extra_params, "lw_min", "lw_max", "lw_scaling_factor"),
   # TODO: auto adjust linewidth and warn if to many cases.
+  setup_data = function(data, params) {
+    data$flipped_aes <- params$flipped_aes
+
+    data$linewidth <- data$linewidth %||% params$linewidth %||% .calc_linewidth(
+      data, params,
+      min = params$lw_min %||% 1, max = params$lw_max %||% 8,
+      scaling_factor = params$lw_scaling_factor %||% 100
+    )
+    data
+  },
 )
+
+.calc_linewidth <- function(data, params, max = 8, min = 1, scaling_factor = 100) {
+  if (params$flipped_aes) n_obs <- dplyr::n_distinct(data$y) else n_obs <- dplyr::n_distinct(data$x)
+
+  # Should scaling_factor be adjustable by user?
+  linewidth <- scaling_factor / n_obs
+
+  # return linewidth if between min and max, else cutoff at min or max
+  return(pmin(pmax(min, linewidth), max))
+}

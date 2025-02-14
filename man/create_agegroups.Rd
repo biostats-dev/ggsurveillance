@@ -28,13 +28,13 @@ Default: \code{c(5, 10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 90)}}
 If \code{FALSE}, as upper bounds.}
 
 \item{first_group_format}{Character string template for the first age group. Uses glue syntax. \cr
-Default: \code{"0-\{x\}"}, Other common styles: \code{"<={x}", "<{x+1}"}}
+Default: \code{"0-{x}"}, Other common styles: \code{"<={x}", "<{x+1}"}}
 
 \item{interval_format}{Character string template for intermediate age groups. Uses glue syntax.\cr
-Default: \code{"\{x\}-\{y\}"}, Other common styles: \code{"{x} to {y}"}}
+Default: \code{"{x}-{y}"}, Other common styles: \code{"{x} to {y}"}}
 
 \item{last_group_format}{Character string template for the last age group. Uses glue syntax. \cr
-Default: \code{"\{x\}+"}, Other common styles: \code{">={x}",">{x-1}"}}
+Default: \code{"{x}+"}, Other common styles: \code{">={x}",">{x-1}"}}
 
 \item{pad_numbers}{Logical or numeric; if numeric, pad numbers up to the specified length (Tip: use \code{2}).
 Not compatible with calculations within glue formats. Default: \code{FALSE}}

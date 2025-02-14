@@ -62,7 +62,7 @@ stat_date_count(
 \item{data}{The data frame containing the variables for the plot}
 
 \item{stat}{either "\code{epicurve}" for outlines around cases or "\code{bin_date}" for outlines around (fill) groups.
-For large numbers of cases please use "\code{bin_date}" to reduce number of drawn rectangles.}
+For large numbers of cases please use "\code{bin_date}" to reduce the number of drawn rectangles.}
 
 \item{position}{Position adjustment. Currently supports "\code{stack}".}
 

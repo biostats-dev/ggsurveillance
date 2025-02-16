@@ -8,7 +8,8 @@ geometric_mean(
   x,
   na.rm = FALSE,
   replace_value = NULL,
-  replace = c("all", "non-positive", "zero")
+  replace = c("all", "non-positive", "zero"),
+  warning = TRUE
 )
 }
 \arguments{
@@ -33,6 +34,8 @@ are known to be invalid or below a certain limit.}
 \item{\code{"zero"}}{Replaces only exact zeros (\code{x == 0}) with
 \code{replace_value}. Useful if negative values should be treated as missing.}
 }}
+
+\item{warning}{Disable warnings by setting it to \code{FALSE}. Defaults to \code{TRUE}.}
 }
 \value{
 A single numeric value representing the geometric mean of the

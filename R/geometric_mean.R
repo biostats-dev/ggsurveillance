@@ -23,6 +23,7 @@
 #'     \item{\code{"zero"}}{Replaces only exact zeros (\code{x == 0}) with
 #'       \code{replace_value}. Useful if negative values should be treated as missing.}
 #'   }
+#' @param warning Disable warnings by setting it to `FALSE`. Defaults to `TRUE`.
 #'
 #' @details
 #' \strong{Replacement Considerations}:
@@ -65,8 +66,9 @@
 #' geometric_mean(x4, na.rm = TRUE)
 #'
 #' @export
-geometric_mean <- function(x, na.rm = FALSE, replace_value = NULL, replace = c("all", "non-positive", "zero")) {
-  if (!is.numeric(x) && !is.complex(x)) {
+geometric_mean <- function(x, na.rm = FALSE, replace_value = NULL, replace = c("all", "non-positive", "zero"),
+                           warning = TRUE) {
+  if (!is.numeric(x) && !is.complex(x) & warning) {
     cli::cli_warn("argument is not numeric: returning NA")
     return(NA_real_)
   }
@@ -83,11 +85,11 @@ geometric_mean <- function(x, na.rm = FALSE, replace_value = NULL, replace = c("
   if (!is.null(replace_value)) {
     n_replaced <- sum(f_replace(x), na.rm = TRUE)
     x[f_replace(x)] <- as.numeric(replace_value)
-    if (n_replaced != 0) cli::cli_warn("{n_replaced} value{?s} were substituted with {as.numeric(replace_value)}.")
+    if (n_replaced != 0 & warning) cli::cli_warn("{n_replaced} value{?s} were substituted with {as.numeric(replace_value)}.")
   }
 
   # Check if x is 0 or smaller
-  if (any(x <= 0, na.rm = TRUE) & !na.rm) {
+  if (any(x <= 0, na.rm = TRUE) & !na.rm & warning) {
     cli::cli_warn("Zero or negative values are treated as NA. Please use na.rm=TRUE to ignore them.")
     return(NA_real_)
   }

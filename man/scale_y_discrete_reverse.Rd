@@ -18,7 +18,7 @@ scale_x_discrete_reverse(
   limits = NULL,
   ...,
   expand = waiver(),
-  position = "left"
+  position = "bottom"
 )
 }
 \arguments{

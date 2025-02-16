@@ -21,9 +21,10 @@ This packages provides:
 
 -   `create_agegroups()`: Create reproducible age groups with highly customizable labels.
 
--   `geom_epigantt()` : A geom for epigantt plots. Helpful to visualize overlapping time intervals for contact tracing (i.e. hospital outbreaks). (Beta)
+-   `geom_epigantt()` : A geom for epigantt plots. Helpful to visualize overlapping time intervals for contact tracing (i.e. hospital outbreaks).
+    -   including `scale_y_discrete_reverse()` which reverses the order of the categorical scale. 
 
--   and more: `geometric_mean()` , `expand_counts()`,
+-   and more: `geometric_mean()` , `expand_counts()`
 
 ## Creating Epicurves
 
@@ -51,6 +52,7 @@ sars_canada_2003 |> #SARS dataset from outbreaks
 
 ``` r
 library(ggplot2)
+library(dplyr)
 library(ggsurveillance)
 
 influenza_germany |>
@@ -76,13 +78,35 @@ ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence)) +
 
 ![Seasonal influenza data from Germany by age group](man/figures/seasonal_plot_readme.png)
 
-## Installation
-
-Install the development version with:
+## Create Epigantt plots to visualize exposure intervals in outbreaks
 
 ``` r
-devtools::install_github("biostats-dev/ggsurveillance")
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(ggsurveillance)
 
-# or directly with renv:
-renv::install("biostats-dev/ggsurveillance")
+# Transform to long format
+linelist_hospital_outbreak |>
+  pivot_longer(
+    cols = starts_with("ward"),
+    names_to = c(".value", "num"),
+    names_pattern = "ward_(name|start_of_stay|end_of_stay)_([0-9]+)",
+    values_drop_na = TRUE
+  ) -> df_stays_long
+
+linelist_hospital_outbreak |>
+  pivot_longer(cols = starts_with("pathogen"), values_to = "date") -> df_detections_long
+
+# Plot
+ggplot(df_stays_long) +
+  geom_epigantt(aes(y = Patient, xmin = start_of_stay, xmax = end_of_stay, color = name)) +
+  geom_point(aes(y = Patient, x = date, shape = "Date of pathogen detection"), data = df_detections_long) +
+  scale_y_discrete_reverse() +
+  theme_bw() +
+  theme(legend.position = "bottom")
 ```
+
+![Epicurve of a fictional hospital outbreak](man/figures/ggepicurve_plot_readme.png)
+
+

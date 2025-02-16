@@ -16,6 +16,8 @@ ggsave("man/figures/epicurve_readme.svg", width = 7, height = 4, dpi = 600)
 
 
 ## Influenza
+library(ggplot2)
+library(dplyr)
 
 influenza_germany |>
   filter(AgeGroup == "00+") |>
@@ -47,3 +49,31 @@ ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence)) +
   theme(legend.position = c(0.2, 0.8))
 
 ggsave("man/figures/seasonal_plot_readme.png", width = 6, height = 3.5, dpi = 600)
+
+## EpiGantt
+
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+# Transform to long format
+linelist_hospital_outbreak |>
+  pivot_longer(
+    cols = starts_with("ward"),
+    names_to = c(".value", "num"),
+    names_pattern = "ward_(name|start_of_stay|end_of_stay)_([0-9]+)",
+    values_drop_na = TRUE
+  ) -> df_stays_long
+
+linelist_hospital_outbreak |>
+  pivot_longer(cols = starts_with("pathogen"), values_to = "date") -> df_detections_long
+
+# Plot
+ggplot(df_stays_long) +
+  geom_epigantt(aes(y = Patient, xmin = start_of_stay, xmax = end_of_stay, color = name)) +
+  geom_point(aes(y = Patient, x = date, shape = "Date of pathogen detection"), data = df_detections_long) +
+  scale_y_discrete_reverse() +
+  theme_bw() +
+  theme(legend.position = "bottom")
+
+ggsave("man/figures/ggepicurve_plot_readme.png", width = 6, height = 3.5, dpi = 600)

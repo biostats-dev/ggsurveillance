@@ -16,10 +16,13 @@ geom_epigantt(
 )
 }
 \arguments{
-\item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}}. If specified and
-\code{inherit.aes = TRUE} (the default), it is combined with the default mapping
-at the top level of the plot. You must supply \code{mapping} if there is no plot
-mapping.}
+\item{mapping}{Set of aesthetic mappings. Must include:
+\itemize{
+\item \code{y}: Case/patient identifier
+\item \code{xmin}: Start date/time of interval
+\item \code{xmax}: End date/time of interval
+\item Optional: \code{color} or \code{fill} for different locations/categories
+}}
 
 \item{data}{The data to be displayed in this layer. There are three
 options:
@@ -36,33 +39,18 @@ the plot data. The return value must be a \code{data.frame}, and
 will be used as the layer data. A \code{function} can be created
 from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 
-\item{stat}{The statistical transformation to use on the data for this layer.
-When using a \verb{geom_*()} function to construct a layer, the \code{stat}
-argument can be used the override the default coupling between geoms and
-stats. The \code{stat} argument accepts the following:
-\itemize{
-\item A \code{Stat} ggproto subclass, for example \code{StatCount}.
-\item A string naming the stat. To give the stat as a string, strip the
-function name of the \code{stat_} prefix. For example, to use \code{stat_count()},
-give the stat as \code{"count"}.
-\item For more information and other ways to specify the stat, see the
-\link[ggplot2:layer_stats]{layer stat} documentation.
-}}
+\item{stat}{A \code{ggplot2} stat. Defaults to \code{"identity"}.}
 
-\item{position}{A position adjustment to use on the data for this layer. This
-can be used in various ways, including to prevent overplotting and
-improving the display. The \code{position} argument accepts the following:
-\itemize{
-\item The result of calling a position function, such as \code{position_jitter()}.
-This method allows for passing extra arguments to the position.
-\item A string naming the position adjustment. To give the position as a
-string, strip the function name of the \code{position_} prefix. For example,
-to use \code{position_jitter()}, give the position as \code{"jitter"}.
-\item For more information and other ways to specify the position, see the
-\link[ggplot2:layer_positions]{layer position} documentation.
-}}
+\item{position}{A \code{ggplot2} position. Defaults to \code{"identity"}.}
 
-\item{...}{set linewidth directly or linewidth auto scaling using lw_min, lw_max and lw_scaling_factor.}
+\item{...}{Additional parameters:
+\itemize{
+\item \code{linewidth}: Set width of bars directly, disables auto-scaling if set.
+\item \code{lw_scaling_factor}: Scaling factor for auto-width calculation.
+Linewidth is calculated as lw_scaling_factor/number_of_rows (default: 90)
+\item \code{lw_min}: Minimum auto-scaled line width cutoff (default: 1)
+\item \code{lw_max}: Maximum auto-scaled line width cutoff (default: 8)
+}}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with
 a warning. If \code{TRUE}, missing values are silently removed.}
@@ -82,8 +70,20 @@ the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 A \code{ggplot2} geom layer that can be added to a plot
 }
 \description{
-Various ways of representing a vertical interval defined by \code{y},
-\code{xmin} and \code{xmax}. Each case draws a single graphical object.
+Creates Epi Gantt charts, which are specialized timeline visualizations used in
+outbreak investigations to track potential exposure periods and identify transmission
+patterns. They are particularly useful for:
+\itemize{
+\item Hospital outbreak investigations to visualize patient movements between wards
+\item Identifying potential transmission events by showing when cases were in the same location
+\item Visualizing common exposure times using overlapping exposure time intervals
+}
+
+The chart displays time intervals as horizontal bars, typically with one row per case/patient.
+Different colors can be used to represent different locations (e.g., hospital wards) or
+exposure types. Additional points or markers can show important events like symptom onset
+or test dates.
+
 \code{geom_epigantt()} will adjust the linewidth depending on the number of cases.
 }
 \examples{
@@ -91,6 +91,7 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 
+# Transform hospital outbreak line list to long format
 linelist_hospital_outbreak |>
   pivot_longer(
     cols = starts_with("ward"),
@@ -102,9 +103,12 @@ linelist_hospital_outbreak |>
 linelist_hospital_outbreak |>
   pivot_longer(cols = starts_with("pathogen"), values_to = "date") -> df_detections_long
 
+# Create Epi Gantt chart showing ward stays and test dates
 ggplot(df_stays_long) +
   geom_epigantt(aes(y = Patient, xmin = start_of_stay, xmax = end_of_stay, color = name)) +
-  geom_point(aes(y = Patient, x = date), data = df_detections_long) +
+  geom_point(aes(y = Patient, x = date, shape = "Date of pathogen detection"),
+    data = df_detections_long
+  ) +
   scale_y_discrete_reverse() +
   theme_bw() +
   theme(legend.position = "bottom")

@@ -12,6 +12,19 @@
 #' @param ... Arguments passed on to [ggplot2::discrete_scale()]
 #' @seealso [geom_epigantt()], [ggplot2::scale_y_discrete()]
 #' @return A `ggplot2` scale object that can be added to a plot.
+#' @examples
+#' library(ggplot2)
+#'
+#' # Create sample data
+#' df <- data.frame(
+#'   category = factor(c("A", "B", "C", "D")),
+#'   value = c(10, 5, 8, 3)
+#' )
+#'
+#' # Basic plot with reversed y-axis
+#' ggplot(df, aes(x = value, y = category)) +
+#'   geom_col() +
+#'   scale_y_discrete_reverse()
 #'
 #' @export
 scale_y_discrete_reverse <- function(name = waiver(), limits = NULL, ...,

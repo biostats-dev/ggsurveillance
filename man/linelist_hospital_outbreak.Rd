@@ -40,6 +40,7 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 
+# Transform hospital outbreak line list to long format
 linelist_hospital_outbreak |>
   pivot_longer(
     cols = starts_with("ward"),
@@ -51,9 +52,12 @@ linelist_hospital_outbreak |>
 linelist_hospital_outbreak |>
   pivot_longer(cols = starts_with("pathogen"), values_to = "date") -> df_detections_long
 
+# Create Epi Gantt chart showing ward stays and test dates
 ggplot(df_stays_long) +
   geom_epigantt(aes(y = Patient, xmin = start_of_stay, xmax = end_of_stay, color = name)) +
-  geom_point(aes(y = Patient, x = date), data = df_detections_long) +
+  geom_point(aes(y = Patient, x = date, shape = "Date of pathogen detection"),
+    data = df_detections_long
+  ) +
   scale_y_discrete_reverse() +
   theme_bw() +
   theme(legend.position = "bottom")

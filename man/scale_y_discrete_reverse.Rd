@@ -52,6 +52,21 @@ the lower left corner, factors on the y-axis are sorted is descending order by d
 (i.e. alphabetically from Z to A). With this scale the the y-axis will start with the
 first factor level at the top or with alphabetically correctly ordered values
 }
+\examples{
+library(ggplot2)
+
+# Create sample data
+df <- data.frame(
+  category = factor(c("A", "B", "C", "D")),
+  value = c(10, 5, 8, 3)
+)
+
+# Basic plot with reversed y-axis
+ggplot(df, aes(x = value, y = category)) +
+  geom_col() +
+  scale_y_discrete_reverse()
+
+}
 \seealso{
 \code{\link[=geom_epigantt]{geom_epigantt()}}, \code{\link[ggplot2:scale_discrete]{ggplot2::scale_y_discrete()}}
 }

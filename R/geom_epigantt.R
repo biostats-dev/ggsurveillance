@@ -1,11 +1,35 @@
 #' Epi Gantt Chart: Visualize Epidemiological Time Intervals
 #'
-#' Various ways of representing a vertical interval defined by `y`,
-#' `xmin` and `xmax`. Each case draws a single graphical object.
+#' @description
+#' Creates Epi Gantt charts, which are specialized timeline visualizations used in
+#' outbreak investigations to track potential exposure periods and identify transmission
+#' patterns. They are particularly useful for:
+#'
+#' * Hospital outbreak investigations to visualize patient movements between wards
+#' * Identifying potential transmission events by showing when cases were in the same location
+#' * Visualizing common exposure times using overlapping exposure time intervals
+#'
+#' The chart displays time intervals as horizontal bars, typically with one row per case/patient.
+#' Different colors can be used to represent different locations (e.g., hospital wards) or
+#' exposure types. Additional points or markers can show important events like symptom onset
+#' or test dates.
+#'
 #' `geom_epigantt()` will adjust the linewidth depending on the number of cases.
 #'
+#' @param stat A `ggplot2` stat. Defaults to `"identity"`.
+#' @param position A `ggplot2` position. Defaults to `"identity"`.
+#' @param mapping Set of aesthetic mappings. Must include:
+#'   * `y`: Case/patient identifier
+#'   * `xmin`: Start date/time of interval
+#'   * `xmax`: End date/time of interval
+#'   * Optional: `color` or `fill` for different locations/categories
 #' @inheritParams ggplot2::geom_linerange
-#' @param ... set linewidth directly or linewidth auto scaling using lw_min, lw_max and lw_scaling_factor.
+#' @param ... Additional parameters:
+#'   * `linewidth`: Set width of bars directly, disables auto-scaling if set.
+#'   * `lw_scaling_factor`: Scaling factor for auto-width calculation.
+#'    Linewidth is calculated as lw_scaling_factor/number_of_rows (default: 90)
+#'   * `lw_min`: Minimum auto-scaled line width cutoff (default: 1)
+#'   * `lw_max`: Maximum auto-scaled line width cutoff (default: 8)
 #' @return A `ggplot2` geom layer that can be added to a plot
 #'
 #' @examples
@@ -13,6 +37,7 @@
 #' library(tidyr)
 #' library(ggplot2)
 #'
+#' # Transform hospital outbreak line list to long format
 #' linelist_hospital_outbreak |>
 #'   pivot_longer(
 #'     cols = starts_with("ward"),
@@ -24,9 +49,12 @@
 #' linelist_hospital_outbreak |>
 #'   pivot_longer(cols = starts_with("pathogen"), values_to = "date") -> df_detections_long
 #'
+#' # Create Epi Gantt chart showing ward stays and test dates
 #' ggplot(df_stays_long) +
 #'   geom_epigantt(aes(y = Patient, xmin = start_of_stay, xmax = end_of_stay, color = name)) +
-#'   geom_point(aes(y = Patient, x = date), data = df_detections_long) +
+#'   geom_point(aes(y = Patient, x = date, shape = "Date of pathogen detection"),
+#'     data = df_detections_long
+#'   ) +
 #'   scale_y_discrete_reverse() +
 #'   theme_bw() +
 #'   theme(legend.position = "bottom")
@@ -65,20 +93,20 @@ GeomEpigantt <- ggproto("GeomEpigantt", GeomLinerange,
     GeomLinerange$default_aes
   ),
   extra_params = c(GeomLinerange$extra_params, "lw_min", "lw_max", "lw_scaling_factor"),
-  # TODO: auto adjust linewidth and warn if to many cases.
   setup_data = function(data, params) {
     data$flipped_aes <- params$flipped_aes
 
+    # TODO: warn if to many cases.
     data$linewidth <- data$linewidth %||% params$linewidth %||% .calc_linewidth(
       data, params,
       min = params$lw_min %||% 1, max = params$lw_max %||% 8,
-      scaling_factor = params$lw_scaling_factor %||% 100
+      scaling_factor = params$lw_scaling_factor %||% 90
     )
     data
   },
 )
 
-.calc_linewidth <- function(data, params, max = 8, min = 1, scaling_factor = 100) {
+.calc_linewidth <- function(data, params, max = 8, min = 1, scaling_factor = 90) {
   if (params$flipped_aes) n_obs <- dplyr::n_distinct(data$y) else n_obs <- dplyr::n_distinct(data$x)
 
   # Should scaling_factor be adjustable by user?

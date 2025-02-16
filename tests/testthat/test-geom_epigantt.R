@@ -94,4 +94,13 @@ test_that("geom_epigantt full test", {
     scale_y_discrete_reverse() +
     theme_bw() +
     theme(legend.position = "bottom"))
+
+  # Test coord_flip()
+  expect_no_error(ggplot(df_stays_long) +
+    geom_epigantt(aes(y = Patient, xmin = start_of_stay, xmax = end_of_stay, color = name)) +
+    geom_point(aes(y = Patient, x = date), data = df_detections_long) +
+    scale_y_discrete_reverse() +
+    coord_flip() +
+    theme_bw() +
+    theme(legend.position = "bottom"))
 })

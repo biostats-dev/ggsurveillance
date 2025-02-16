@@ -10,7 +10,7 @@
 #' * Visualizing common exposure times using overlapping exposure time intervals
 #'
 #' The chart displays time intervals as horizontal bars, typically with one row per case/patient.
-#' Different colors can be used to represent different locations (e.g., hospital wards) or
+#' Different colours can be used to represent different locations (e.g., hospital wards) or
 #' exposure types. Additional points or markers can show important events like symptom onset
 #' or test dates.
 #'
@@ -22,12 +22,12 @@
 #'   * `y`: Case/patient identifier
 #'   * `xmin`: Start date/time of interval
 #'   * `xmax`: End date/time of interval
-#'   * Optional: `color` or `fill` for different locations/categories
+#'   * Optional: `colour` or `fill` for different locations/categories
 #' @inheritParams ggplot2::geom_linerange
 #' @param ... Additional parameters:
 #'   * `linewidth`: Set width of bars directly, disables auto-scaling if set.
 #'   * `lw_scaling_factor`: Scaling factor for auto-width calculation.
-#'    Linewidth is calculated as lw_scaling_factor/number_of_rows (default: 90)
+#'    The linewidth is calculated as lw_scaling_factor/number_of_rows (default: 90)
 #'   * `lw_min`: Minimum auto-scaled line width cutoff (default: 1)
 #'   * `lw_max`: Maximum auto-scaled line width cutoff (default: 8)
 #' @return A `ggplot2` geom layer that can be added to a plot

@@ -21,7 +21,7 @@ geom_epigantt(
 \item \code{y}: Case/patient identifier
 \item \code{xmin}: Start date/time of interval
 \item \code{xmax}: End date/time of interval
-\item Optional: \code{color} or \code{fill} for different locations/categories
+\item Optional: \code{colour} or \code{fill} for different locations/categories
 }}
 
 \item{data}{The data to be displayed in this layer. There are three
@@ -47,7 +47,7 @@ from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 \itemize{
 \item \code{linewidth}: Set width of bars directly, disables auto-scaling if set.
 \item \code{lw_scaling_factor}: Scaling factor for auto-width calculation.
-Linewidth is calculated as lw_scaling_factor/number_of_rows (default: 90)
+The linewidth is calculated as lw_scaling_factor/number_of_rows (default: 90)
 \item \code{lw_min}: Minimum auto-scaled line width cutoff (default: 1)
 \item \code{lw_max}: Maximum auto-scaled line width cutoff (default: 8)
 }}
@@ -80,7 +80,7 @@ patterns. They are particularly useful for:
 }
 
 The chart displays time intervals as horizontal bars, typically with one row per case/patient.
-Different colors can be used to represent different locations (e.g., hospital wards) or
+Different colours can be used to represent different locations (e.g., hospital wards) or
 exposure types. Additional points or markers can show important events like symptom onset
 or test dates.
 

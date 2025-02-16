@@ -60,7 +60,7 @@ ggplot(df_stays_long) +
 linelist_hospital_outbreak
 ```
 
-### Tranform the Line List into long format for ggplot
+### Transform the Line List into long format for ggplot
 ```{r}
 linelist_hospital_outbreak |>
   pivot_longer(
@@ -76,7 +76,7 @@ linelist_hospital_outbreak |>
 df_detections_long |> select(Patient, name, date)
 ```
 
-### Plot the Epigannt chart
+### Plot the Epigantt chart
 ```{r}
 ggplot(df_stays_long) +
   geom_epigantt(aes(y = Patient, xmin = start_of_stay, xmax = end_of_stay, color = name)) +
@@ -86,7 +86,7 @@ ggplot(df_stays_long) +
   theme(legend.position = "bottom")
 ```
 
-## Outbreak 2: Fictional Varicella Oubtreak in Berlin
+## Outbreak 2: Fictional Varicella Outbreak in Berlin
 ```{r}
 outbreaks::varicella_sim_berlin |>
   filter(center1 == "Platz der Luftbruecke") |>

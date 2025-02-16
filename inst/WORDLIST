@@ -11,6 +11,7 @@ EpiCurves
 EpiGantt
 Epicurve
 Epicurves
+Epigantt
 Influenzafälle
 Institut
 Kikwit
@@ -28,6 +29,7 @@ asn
 atanh
 biostats
 boxcox
+cutoff
 datetime
 ed
 epicurve
@@ -37,7 +39,6 @@ epiweek
 etc
 geoms
 ggplot
-ggproto
 hms
 isoweek
 linewidth

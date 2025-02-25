@@ -29,7 +29,7 @@ stat_bin_date(
   mapping = NULL,
   data = NULL,
   geom = "line",
-  position = "stack",
+  position = "identity",
   date_resolution = NULL,
   week_start = getOption("lubridate.week.start", 1),
   ...,
@@ -42,7 +42,7 @@ stat_date_count(
   mapping = NULL,
   data = NULL,
   geom = "line",
-  position = "stack",
+  position = "identity",
   date_resolution = NULL,
   week_start = getOption("lubridate.week.start", 1),
   ...,
@@ -64,7 +64,7 @@ stat_date_count(
 \item{stat}{either "\code{epicurve}" for outlines around cases or "\code{bin_date}" for outlines around (fill) groups.
 For large numbers of cases please use "\code{bin_date}" to reduce the number of drawn rectangles.}
 
-\item{position}{Position adjustment. Currently supports "\code{stack}".}
+\item{position}{Position adjustment. Currently supports "\code{stack}" for \code{geom_epicurve()}.}
 
 \item{date_resolution}{Character string specifying the time unit for date aggregation.
 Set to \code{NULL} or \code{NA} for no date aggregation \cr

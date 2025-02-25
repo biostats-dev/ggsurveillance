@@ -74,11 +74,9 @@ test_that("geom_epigantt handles NA values correctly", {
 })
 
 test_that("geom_epigantt full test", {
-  library(dplyr)
-  library(tidyr)
 
   linelist_hospital_outbreak |>
-    pivot_longer(
+    tidyr::pivot_longer(
       cols = starts_with("ward"),
       names_to = c(".value", "num"),
       names_pattern = "ward_(name|start_of_stay|end_of_stay)_([0-9]+)",
@@ -86,7 +84,7 @@ test_that("geom_epigantt full test", {
     ) -> df_stays_long
 
   linelist_hospital_outbreak |>
-    pivot_longer(cols = starts_with("pathogen"), values_to = "date") -> df_detections_long
+    tidyr::pivot_longer(cols = starts_with("pathogen"), values_to = "date") -> df_detections_long
 
   expect_no_error(ggplot(df_stays_long) +
     geom_epigantt(aes(y = Patient, xmin = start_of_stay, xmax = end_of_stay, color = name)) +

@@ -14,7 +14,7 @@
 #' @param data The data frame containing the variables for the plot
 #' @param stat either "`epicurve`" for outlines around cases or "`bin_date`" for outlines around (fill) groups.
 #' For large numbers of cases please use "`bin_date`" to reduce the number of drawn rectangles.
-#' @param position Position adjustment. Currently supports "`stack`".
+#' @param position Position adjustment. Currently supports "`stack`" for `geom_epicurve()`.
 #' @param date_resolution Character string specifying the time unit for date aggregation.
 #' Set to \code{NULL} or `NA` for no date aggregation \cr
 #' Possible values are: `"day"`, `"week"`, `"month"`, `"bimonth"`, `"season"`, `"quarter"`, `"halfyear"`, `"year"`.
@@ -107,7 +107,7 @@ geom_epicurve <- function(mapping = NULL, data = NULL,
 #' @rdname geom_epicurve
 #' @export
 stat_bin_date <- function(mapping = NULL, data = NULL,
-                          geom = "line", position = "stack",
+                          geom = "line", position = "identity",
                           date_resolution = NULL,
                           week_start = getOption("lubridate.week.start", 1),
                           ...,

@@ -70,7 +70,7 @@ ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence)) +
     fun = median, geom = "line") +
   geom_line(
     aes(linetype = "2024/25"), data = . %>% filter(current_season), colour = "dodgerblue4", linewidth = 2) +
-  labs(linetype = "") +
+  labs(linetype = NULL) +
   scale_x_date(date_labels = "%b'%y") +
   theme_bw() +
   theme(legend.position = c(0.2,0.8))

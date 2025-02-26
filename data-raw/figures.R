@@ -43,7 +43,7 @@ ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence)) +
     colour = "dodgerblue4",
     data = . %>% filter(current_season), linewidth = 2
   ) +
-  labs(linetype = "") +
+  labs(linetype = NULL) +
   scale_x_date(date_labels = "%b'%y") +
   theme_bw() +
   theme(legend.position = c(0.2, 0.8))

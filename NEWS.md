@@ -3,7 +3,8 @@
 -   Update geom_epigantt(): Add auto-scaling for linewidth and update documentation
 -   Add scale_y_discrete_reverse()
 -   New dataset of a fictional hospital outbreak
--   geometric_mean(): Add an option to disables warnings
+-   geometric_mean(): Add an option to disable warnings
+-   Minor fixes
 
 # ggsurveillance 0.1.2
 

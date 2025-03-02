@@ -21,7 +21,7 @@ stats behave like ggplot2::stat_count.
 
     <a class="navbar-brand me-2" href="../index.html">ggsurveillance</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,7 +81,7 @@ stats behave like <a href="https://ggplot2.tidyverse.org/reference/geom_bar.html
 <span>  mapping <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  geom <span class="op">=</span> <span class="st">"line"</span>,</span>
-<span>  position <span class="op">=</span> <span class="st">"stack"</span>,</span>
+<span>  position <span class="op">=</span> <span class="st">"identity"</span>,</span>
 <span>  date_resolution <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  week_start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"lubridate.week.start"</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span>,</span>
@@ -94,7 +94,7 @@ stats behave like <a href="https://ggplot2.tidyverse.org/reference/geom_bar.html
 <span>  mapping <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  geom <span class="op">=</span> <span class="st">"line"</span>,</span>
-<span>  position <span class="op">=</span> <span class="st">"stack"</span>,</span>
+<span>  position <span class="op">=</span> <span class="st">"identity"</span>,</span>
 <span>  date_resolution <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  week_start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"lubridate.week.start"</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span>,</span>
@@ -121,11 +121,11 @@ stats behave like <a href="https://ggplot2.tidyverse.org/reference/geom_bar.html
 
 <dt id="arg-stat">stat<a class="anchor" aria-label="anchor" href="#arg-stat"></a></dt>
 <dd><p>either "<code>epicurve</code>" for outlines around cases or "<code>bin_date</code>" for outlines around (fill) groups.
-For large numbers of cases please use "<code>bin_date</code>" to reduce number of drawn rectangles.</p></dd>
+For large numbers of cases please use "<code>bin_date</code>" to reduce the number of drawn rectangles.</p></dd>
 
 
 <dt id="arg-position">position<a class="anchor" aria-label="anchor" href="#arg-position"></a></dt>
-<dd><p>Position adjustment. Currently supports "<code>stack</code>".</p></dd>
+<dd><p>Position adjustment. Currently supports "<code>stack</code>" for <code>geom_epicurve()</code>.</p></dd>
 
 
 <dt id="arg-date-resolution">date_resolution<a class="anchor" aria-label="anchor" href="#arg-date-resolution"></a></dt>

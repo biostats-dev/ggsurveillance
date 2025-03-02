@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggsurveillance</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -103,8 +103,8 @@ how this is automated using <code>ggsurveillance</code>.
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">influenza_germany</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/align_dates_seasonal.html">align_dates_seasonal</a></span><span class="op">(</span>dates_from <span class="op">=</span> <span class="va">ReportingWeek</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">AgeGroup</span>, <span class="va">season</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">tally</span><span class="op">(</span>wt <span class="op">=</span> <span class="va">Cases</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">AgeGroup</span>, <span class="va">season</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">tally</a></span><span class="op">(</span>wt <span class="op">=</span> <span class="va">Cases</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">AgeGroup</span>, values_from <span class="op">=</span> <span class="va">n</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 5</span></span></span>
 <span><span class="co">#&gt;   season   `00+` `00-14` `15-59` `60+`</span></span>
@@ -121,7 +121,7 @@ how this is automated using <code>ggsurveillance</code>.
 </h2>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">influenza_germany</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">AgeGroup</span> <span class="op">==</span> <span class="st">"00+"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">AgeGroup</span> <span class="op">==</span> <span class="st">"00+"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/align_dates_seasonal.html">align_dates_seasonal</a></span><span class="op">(</span></span>
 <span>    dates_from <span class="op">=</span> <span class="va">ReportingWeek</span>,</span>
 <span>    date_resolution <span class="op">=</span> <span class="st">"isoweek"</span>,</span>
@@ -131,17 +131,17 @@ how this is automated using <code>ggsurveillance</code>.
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df_flu_aligned</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">date_aligned</span>, y <span class="op">=</span> <span class="va">Incidence</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/stat_summary.html" class="external-link">stat_summary</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>linetype <span class="op">=</span> <span class="st">"Historical Median (Min-Max)"</span><span class="op">)</span>,</span>
-<span>    data <span class="op">=</span> <span class="va">.</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="va">current_season</span><span class="op">)</span>,</span>
+<span>    data <span class="op">=</span> <span class="va">.</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="va">current_season</span><span class="op">)</span>,</span>
 <span>    fun.data <span class="op">=</span> <span class="va">median_hilow</span>, geom <span class="op">=</span> <span class="st">"ribbon"</span>, alpha <span class="op">=</span> <span class="fl">0.3</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/stat_summary.html" class="external-link">stat_summary</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>linetype <span class="op">=</span> <span class="st">"Historical Median (Min-Max)"</span><span class="op">)</span>,</span>
-<span>    data <span class="op">=</span> <span class="va">.</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="va">current_season</span><span class="op">)</span>,</span>
+<span>    data <span class="op">=</span> <span class="va">.</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="va">current_season</span><span class="op">)</span>,</span>
 <span>    fun <span class="op">=</span> <span class="va">median</span>, geom <span class="op">=</span> <span class="st">"line"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>linetype <span class="op">=</span> <span class="st">"2024/25"</span><span class="op">)</span>,</span>
-<span>    data <span class="op">=</span> <span class="va">.</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">current_season</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"dodgerblue4"</span>, linewidth <span class="op">=</span> <span class="fl">2</span></span>
+<span>    data <span class="op">=</span> <span class="va">.</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">current_season</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"dodgerblue4"</span>, linewidth <span class="op">=</span> <span class="fl">2</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>linetype <span class="op">=</span> <span class="st">""</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_date.html" class="external-link">scale_x_date</a></span><span class="op">(</span>date_labels <span class="op">=</span> <span class="st">"%b'%y"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -154,7 +154,7 @@ how this is automated using <code>ggsurveillance</code>.
 </h2>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">influenza_germany</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">AgeGroup</span> <span class="op">!=</span> <span class="st">"00+"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">AgeGroup</span> <span class="op">!=</span> <span class="st">"00+"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/align_dates_seasonal.html">align_dates_seasonal</a></span><span class="op">(</span>dates_from <span class="op">=</span> <span class="va">ReportingWeek</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">ReportingWeek</span>, weight <span class="op">=</span> <span class="va">Cases</span>, fill <span class="op">=</span> <span class="va">season</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_vline_year.html">geom_vline_year</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"grey50"</span><span class="op">)</span> <span class="op">+</span></span>

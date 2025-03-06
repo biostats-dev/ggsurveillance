@@ -23,7 +23,7 @@
 #' @rdname uncount
 #' @aliases expand_counts
 NULL
- 
+
 #' @importFrom tidyr uncount
 #' @name uncount
 #' @rdname uncount

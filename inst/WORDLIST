@@ -41,6 +41,7 @@ geoms
 ggplot
 hms
 isoweek
+linetype
 linewidth
 lw
 plotmath

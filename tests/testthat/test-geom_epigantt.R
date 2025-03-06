@@ -74,7 +74,6 @@ test_that("geom_epigantt handles NA values correctly", {
 })
 
 test_that("geom_epigantt full test", {
-
   linelist_hospital_outbreak |>
     tidyr::pivot_longer(
       cols = starts_with("ward"),

@@ -1,6 +1,6 @@
 Package: ggsurveillance
 Title: Tools for Outbreak Investigation/Infectious Disease Surveillance
-Version: 0.2.0
+Version: 0.2.0.9000
 Authors@R: 
     person("Alexander", "Bartel", , "alexander.bartel@fu-berlin.de", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-1280-6138"))

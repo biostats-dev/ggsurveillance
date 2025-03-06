@@ -2,12 +2,12 @@ test_that("geom_vline_year handles basic functionality", {
   test_dates <- data.frame(
     date = as.Date("2023-12-01") + 0:60
   )
-  
+
   # Test default year break (January 1)
   p <- ggplot(test_dates, aes(x = date)) +
     geom_bar() +
     geom_vline_year()
-  
+
   expect_no_error(p)
   expect_s3_class(p, "ggplot")
 })
@@ -16,7 +16,7 @@ test_that("geom_vline_year handles datetime data", {
   test_datetime <- data.frame(
     datetime = as.POSIXct("2023-12-15") + seq(0, 86400 * 30, by = 3600)
   )
-  
+
   p <- ggplot(test_datetime, aes(x = datetime)) +
     geom_bar() +
     geom_vline_year()
@@ -28,7 +28,7 @@ test_that("geom_hline_year works with flipped coordinates", {
   test_dates <- data.frame(
     date = as.Date("2023-12-01") + 0:60
   )
-  
+
   p <- ggplot(test_dates, aes(y = date)) +
     geom_bar() +
     geom_hline_year()
@@ -42,12 +42,12 @@ test_that("calc_visible_years handles date ranges correctly", {
   range <- as_date(c("2023-06-01", "2025-06-01"))
   years <- calc_visible_years(as.numeric(range), is_date = TRUE)
   expect_equal(years, as.numeric(as_date(c("2024-01-01", "2025-01-01"))))
-  
+
   # Test date range within single year
   range <- as_date(c("2023-03-01", "2023-09-01"))
   years <- calc_visible_years(as.numeric(range), is_date = TRUE)
   expect_equal(length(years), 0) # No year breaks visible
-  
+
   # Test custom year break (fiscal year starting April 1)
   range <- as_date(c("2023-01-01", "2024-12-31"))
   years <- calc_visible_years(as.numeric(range), is_date = TRUE, year_break = "04-01")
@@ -59,7 +59,7 @@ test_that("calc_visible_years handles datetime ranges correctly", {
   range <- as_datetime(c("2023-12-31 18:00:00", "2024-01-01 06:00:00"))
   years <- calc_visible_years(as.numeric(range), is_date = FALSE)
   expect_equal(years, as.numeric(as_datetime("2024-01-01 00:00:00")))
-  
+
   # Test datetime range within single year
   range <- as_datetime(c("2023-06-01 00:00:00", "2023-12-30 23:59:59"))
   years <- calc_visible_years(as.numeric(range), is_date = FALSE)
@@ -71,7 +71,7 @@ test_that("calc_visible_years handles edge cases", {
   range <- as_date(c("2023-01-01", "2024-01-01"))
   years <- calc_visible_years(as.numeric(range), is_date = TRUE)
   expect_equal(years, as.numeric(as_date(c("2023-01-01", "2024-01-01"))))
-  
+
   # Test very short range around new year
   range <- as_date(c("2023-12-31", "2024-01-01"))
   years <- calc_visible_years(as.numeric(range), is_date = TRUE)

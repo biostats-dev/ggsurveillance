@@ -65,7 +65,9 @@ test_that("geom_epicurve handles datetime data", {
     scale_y_cases_5er(n = 5, n.min = 4, u5.bias = 10)
 
   expect_s3_class(p, "ggplot")
-  expect_no_error({p})
+  expect_no_error({
+    p
+  })
 })
 
 test_that("geom_epicurve respects different date resolutions", {

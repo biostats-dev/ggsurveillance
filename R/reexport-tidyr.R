@@ -19,12 +19,18 @@
 #' # Or equivalently:
 #' df |> expand_counts(n)
 #'
-#' @importFrom tidyr uncount
-#' @export
-#' @name uncount
+#' @name uncount, expand_counts
+#' @rdname uncount
 #' @aliases expand_counts
+NULL
+ 
+#' @importFrom tidyr uncount
+#' @name uncount
+#' @rdname uncount
+#' @export
 uncount
 
+#' @importFrom tidyr uncount
 #' @rdname uncount
 #' @export
 expand_counts <- uncount

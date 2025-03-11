@@ -158,10 +158,10 @@ ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence)) +
   scale_x_date(date_labels = "%b %y", date_breaks = "1 month") +
   # scale_x_date(date_labels = "%B\n%Y", date_breaks = "1 month") +
   theme_bw() +
-  th_rotate_x_axis_labels(angle = 10) +
+  theme_mod_rotate_x_axis_labels(angle = 10) +
   # theme(axis.text.x = element_text(angle = -30, vjust = 0.4, hjust = 0, margin = margin(t = 2))) +
   # theme(axis.text.x = element_text(angle = -45, vjust = 0.4, hjust = 0, margin = margin(t = 5))) +
   # theme(axis.text.x = element_text(angle = -45, vjust = 0.4, margin = margin(t = -3))) +
   # theme(axis.text.x = element_text(angle = -90, vjust = 0.4, hjust = 0, margin = margin(t = 0))) +
-  theme(legend.position = c(0.2, 0.8))
+  theme_mod_legend_position(position.inside = c(0.2, 0.8))
 ```

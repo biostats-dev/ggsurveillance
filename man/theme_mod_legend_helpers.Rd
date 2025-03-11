@@ -2,16 +2,16 @@
 % Please edit documentation in R/ggplot_theme_helpers.R
 \name{Quick legend helpers}
 \alias{Quick legend helpers}
-\alias{th_guide_thick_lines}
-\alias{th_guide_long_lines}
-\alias{th_remove_legend_title}
+\alias{theme_mod_guide_thick_lines}
+\alias{theme_mod_guide_long_lines}
+\alias{theme_mod_remove_legend_title}
 \title{Quick legend helpers}
 \usage{
-th_guide_thick_lines(linewidth = 3, ...)
+theme_mod_guide_thick_lines(linewidth = 3, ...)
 
-th_guide_long_lines(keywidth = 3, ...)
+theme_mod_guide_long_lines(keywidth = 3, ...)
 
-th_remove_legend_title()
+theme_mod_remove_legend_title()
 }
 \arguments{
 \item{linewidth}{Line width of the line shown in the colour legend.}
@@ -25,8 +25,8 @@ Overrides the \code{aes} of the colour guide using \code{\link[ggplot2:guides]{g
 }
 \description{
 \itemize{
-\item \code{th_guide_thick_lines()}: Increase the line thickness for \code{geom_line()} \strong{colour} legends.
-\item \code{th_guide_long_lines()}: Increase the line thickness for \code{geom_line()} \strong{linetype} legends.
-\item \code{th_remove_legend_title()}: Removes the legend title. Use after setting the theme.
+\item \code{theme_mod_guide_thick_lines()}: Increase the line thickness for \code{geom_line()} \strong{colour} legends.
+\item \code{theme_mod_guide_long_lines()}: Increase the line thickness for \code{geom_line()} \strong{linetype} legends.
+\item \code{theme_mod_remove_legend_title()}: Removes the legend title. Use after setting the theme.
 }
 }

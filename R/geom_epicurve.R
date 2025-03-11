@@ -114,7 +114,7 @@ stat_bin_date <- function(mapping = NULL, data = NULL,
                           na.rm = FALSE,
                           show.legend = NA,
                           inherit.aes = TRUE) {
-  layer(
+  ggplot2::layer(
     data = data,
     mapping = mapping,
     stat = StatBinDate,

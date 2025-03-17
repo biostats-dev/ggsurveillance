@@ -24,7 +24,7 @@ Imports:
     cli,
     dplyr,
     forcats,
-    ggplot2,
+    ggplot2 (>= 3.5.0),
     glue,
     ISOweek,
     lubridate,
@@ -32,8 +32,7 @@ Imports:
     scales,
     stringr,
     tidyr,
-    tidyselect,
-    tsibble
+    tidyselect
 Suggests:
     ggrepel (>= 0.9.6),
     Hmisc,
@@ -41,7 +40,8 @@ Suggests:
     outbreaks,
     rmarkdown,
     spelling,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    tsibble
 VignetteBuilder: 
     knitr
 Config/testthat/edition: 3

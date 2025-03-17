@@ -143,7 +143,6 @@ align_dates_seasonal <- function(
 }
 
 #' @rdname align_dates_seasonal
-#' @importFrom tsibble as_tsibble fill_gaps
 #' @import dplyr
 #' @import lubridate
 #' @import ISOweek
@@ -183,11 +182,12 @@ align_and_bin_dates_seasonal <- function(
 
   # Fill gaps in time series with 0
   if (fill_gaps) {
+    rlang::check_installed("tsibble", reason = "to fill the gaps in the time series.")
     suppressWarnings(x |>
       tsibble::as_tsibble(index = {{ dates_from }}, key = grouping) |>
       tsibble::fill_gaps(wt = 0, incidence = 0) |>
       as.data.frame() |>
-      # TODO: Group by give a warning. How to fix?
+      # TODO: Group by gives a warning. How to fix?
       dplyr::group_by(dplyr::pick(grouping)) -> x)
   }
 

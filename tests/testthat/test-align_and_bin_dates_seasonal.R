@@ -237,4 +237,17 @@ test_that("align_and_bin_dates_seasonal fills gaps correctly", {
     )
 
   expect_identical(result$n, c(5, 0, 4, 10, 0, 8))
+  
+  # Check date coercion (2022-W01) with fill gaps
+  influenza_germany |>
+    filter(AgeGroup == "00+", Cases > 100) |>
+    align_and_bin_dates_seasonal(
+      dates_from = ReportingWeek,
+      n = Cases,
+      date_resolution = "isoweek",
+      fill_gaps = TRUE,
+      start = 28
+    ) -> df_flu_aligned
+  
+  expect_identical(nrow(df_flu_aligned), 263L)
 })

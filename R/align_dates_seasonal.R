@@ -168,6 +168,11 @@ align_and_bin_dates_seasonal <- function(
   if (!rlang::quo_is_symbol(rlang::enquo(population))) {
     if (is.character(population)) population <- rlang::sym(population)
   }
+  
+  x |>
+    dplyr::mutate(
+      {{ dates_from }} := .coerce_to_date({{ dates_from }})
+  ) -> x
 
   # Save existing grouping of the df
   grouping <- dplyr::group_vars(x)

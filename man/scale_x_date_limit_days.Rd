@@ -8,21 +8,21 @@
 \usage{
 scale_x_date_limit_days(
   name = waiver(),
-  limit_days = 549,
+  limit_scale_to_days = 549,
   reference_date = NULL,
-  limit_at_reference = FALSE,
+  limit_right = FALSE,
   ...,
   expand = waiver(),
   position = "bottom"
 )
 
-scale_x_date_limit_1.5years(limit_days = 549, ...)
+scale_x_date_limit_1.5years(limit_scale_to_days = 549, ...)
 
 scale_x_datetime_limit_days(
   name = waiver(),
-  limit_days = 549,
+  limit_scale_to_days = 549,
   reference_date = NULL,
-  limit_at_reference = FALSE,
+  limit_right = FALSE,
   ...,
   expand = waiver(),
   position = "bottom"
@@ -31,13 +31,13 @@ scale_x_datetime_limit_days(
 \arguments{
 \item{name}{The name of the scale - used as the axis label.}
 
-\item{limit_days}{The number of days to display on the x-axis. Default is 549 days (approximately 1.5 years).}
+\item{limit_scale_to_days}{The number of days to display on the x-axis. Default is 549 days (approximately 1.5 years).}
 
 \item{reference_date}{A reference date to calculate the lower limit (i.e. reference_date - limit_days).
 Useful to align multiple plots either at the current date or if the datasets have different ranges of data
 (e.g. different dates for the last observation).}
 
-\item{limit_at_reference}{Logical. If TRUE, the upper limit will be exactly the reference date.
+\item{limit_right}{Logical. If TRUE, the upper limit will be exactly the reference date.
 If FALSE (default), the upper limit will be the maximum date in the data.
 Warning: Can result in loss of labels or text on the right side of the last observation.}
 
@@ -82,6 +82,6 @@ ggplot(df, aes(x = date, y = value)) +
 # With reference date as strict upper limit
 ggplot(df, aes(x = date, y = value)) +
   geom_line() +
-  scale_x_date_limit_days(reference_date = "2021-12-01", limit_at_reference = TRUE)
+  scale_x_date_limit_days(reference_date = "2021-12-01", limit_right = TRUE)
 }
 }

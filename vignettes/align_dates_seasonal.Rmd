@@ -28,7 +28,8 @@ library(ggsurveillance)
 ## The seasonal plot
 This vignette is still work in progress. But the examples are hopefully already helpful and inspiring.
 
-The seasonal plot is a commonly used plot for seasonal respiratory pathogens like Influenza and RSV. For seasons covering the turn of the year have to be defined. In a second step the previous seasons have to be aligned to the current season to allow for a comparison. Here we show how this is automated using `ggsurveillance`.
+The seasonal plot is a commonly used plot for seasonal respiratory pathogens like Influenza and RSV. For seasons covering the turn of the year the new yearly breakpoint has to defined (e.g. week 28 instead week 1 for new year). In a second step the previous seasons have to be aligned to the current season to allow the seasonal comparison. Here we show how this is automated using `ggsurveillance`.
+
 ```{r echo=FALSE}
 influenza_germany |>
   filter(AgeGroup == "00+") |>
@@ -67,7 +68,7 @@ library(ggplot2)
 
 influenza_germany |>
   align_dates_seasonal(
-    dates_from = ReportingWeek, date_resolution = "epiweek", start = 28
+    dates_from = ReportingWeek, date_resolution = "isoweek", start = 28
   ) -> df_flu_aligned
 
 ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence, color = season)) +

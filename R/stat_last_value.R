@@ -37,12 +37,12 @@
 #' @param min.segment.length Minimum length of the leader line segments. See \code{\link[ggrepel]{geom_text_repel}}.
 #' @param ... Other arguments passed to \code{\link[ggplot2]{geom_label}}, \code{\link[ggplot2]{geom_text}},
 #' \code{\link[ggrepel]{geom_label_repel}} or \code{\link[ggrepel]{geom_text_repel}}.
-#' 
-#' @description 
+#'
+#' @description
 #' The following calculated stats can be used further in aes:
 #' * after_stat(x0): the highest x value
 #' * after_stat(y): the y value of the observation with the highest x value.
-#' 
+#'
 #' @inheritParams ggplot2::geom_label
 #' @inheritParams ggrepel::geom_label_repel
 #'
@@ -224,8 +224,9 @@ StatLastValue <- ggproto("StatLastValue", Stat,
     params$flipped_aes <- ggplot2::has_flipped_aes(data, params, main_is_orthogonal = FALSE)
     params
   },
-  compute_group = function(data, scales, flipped_aes = NA, 
-  nudge_rel = 0, nudge_add = 0, expand_rel = 0, expand_add = 0, ...) {
+  compute_group = function(
+      data, scales, flipped_aes = NA,
+      nudge_rel = 0, nudge_add = 0, expand_rel = 0, expand_add = 0, ...) {
     flipped_aes <- flipped_aes %||% any(data$flipped_aes) %||% FALSE
 
     if (!flipped_aes) {
@@ -266,8 +267,9 @@ StatLastValueRepel <- ggproto("StatLastValueRepel", Stat,
     params$flipped_aes <- ggplot2::has_flipped_aes(data, params, main_is_orthogonal = FALSE)
     params
   },
-  compute_group = function(data, scales, flipped_aes = NA, 
-  nudge_rel = 0, nudge_add = 0, expand_rel = 0, expand_add = 0, ...) {
+  compute_group = function(
+      data, scales, flipped_aes = NA,
+      nudge_rel = 0, nudge_add = 0, expand_rel = 0, expand_add = 0, ...) {
     flipped_aes <- flipped_aes %||% any(data$flipped_aes) %||% FALSE
 
     if (!flipped_aes) {

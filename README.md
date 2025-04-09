@@ -107,6 +107,6 @@ ggplot(df_stays_long) +
   theme(legend.position = "bottom")
 ```
 
-![Epicurve of a fictional hospital outbreak](man/figures/ggepicurve_plot_readme.png)
+![Epigantt chart of a fictional hospital outbreak](man/figures/epigantt_plot_readme.png)
 
 

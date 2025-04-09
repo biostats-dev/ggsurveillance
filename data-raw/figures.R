@@ -76,4 +76,4 @@ ggplot(df_stays_long) +
   theme_bw() +
   theme(legend.position = "bottom")
 
-ggsave("man/figures/ggepicurve_plot_readme.png", width = 6, height = 3.5, dpi = 600)
+ggsave("man/figures/epigantt_plot_readme.png", width = 6, height = 3.5, dpi = 600)

@@ -17,7 +17,7 @@ register_plotly_methods <- function() {
   # Get the S3 methods from plotly
   geom_bar_method <- utils::getS3method("geom2trace", "GeomBar", envir = asNamespace("plotly"))
   linerange_method <- utils::getS3method("to_basic", "GeomLinerange", envir = asNamespace("plotly"))
-  
+
   # Register our methods
   registerS3method("geom2trace", "GeomEpicurve", geom_bar_method, envir = asNamespace("plotly"))
   registerS3method("to_basic", "GeomEpigantt", linerange_method, envir = asNamespace("plotly"))

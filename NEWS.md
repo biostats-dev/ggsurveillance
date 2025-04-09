@@ -4,6 +4,7 @@
     -   rotate axis labels
     -   legend positioning
     -   remove minor panel grid lines (x, y or both) or all grind lines
+-   `geom_vline_year()` now also supports year_breaks based on weeks. Since weeks don't fall on the same date every year.
 -   `tsibble` now optional dependency to improve speed of first install
 -   add `plotly` compatibility for `geom_epicurve()` and `geom_epigantt()`
 -   Bug fixes and minor improvements

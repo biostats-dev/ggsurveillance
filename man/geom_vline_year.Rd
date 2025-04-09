@@ -9,7 +9,8 @@ geom_vline_year(
   mapping = NULL,
   position = "identity",
   year_break = "01-01",
-  just = -0.5,
+  break_type = c("day", "week", "isoweek", "epiweek"),
+  just = NULL,
   ...,
   show.legend = NA
 )
@@ -18,7 +19,8 @@ geom_hline_year(
   mapping = NULL,
   position = "identity",
   year_break = "01-01",
-  just = -0.5,
+  break_type = c("day", "week", "isoweek", "epiweek"),
+  just = NULL,
   ...,
   show.legend = NA
 )
@@ -31,11 +33,22 @@ Panels created by \code{\link[ggplot2:facet_wrap]{ggplot2::facet_wrap()}} or \co
 \item{position}{Position adjustment, either as a string, or the result of a call to
 a position adjustment function.}
 
-\item{year_break}{String specifying the month and day of the year break ("MM-DD").
-Defaults to: \code{"01-01"} for January 1.}
+\item{year_break}{String specifying the month and day ("MM-DD") or week ("W01") of the year break .
+Defaults to: \code{"01-01"} for January 1.
+"Week" and "MM-DD" are converted automatically based on a leap year (366 days) which starts on Monday.}
+
+\item{break_type}{String specifying the type of break to use. Options are:
+\itemize{
+\item \code{"day"} (default): Line a drawn based on the specified day for each visible year.
+\item \code{"week"} or \code{"isoweek"}: Line drawn based on the Monday of the specified week for each visible year.
+(e.g., "W01" for new year or "W40" for start of influenza season)
+\item \code{"epiweek"}: same as week, but line is drawn one day earlier (Sunday).
+}}
 
 \item{just}{Numeric offset in days (justification). Shifts the lines from the year break date.
-Defaults to \code{-0.5}, which shifts the line by half a day so if falls in the middle between December 31 and January 1.}
+Defaults to \code{-0.5} for \code{day}, which shifts the line by half a day so it falls
+between December 31 and January 1 by default.
+Defaults to \code{-3.5} (i.e. half a week) for \code{week}, \code{isoweek} and \code{epiweek}.}
 
 \item{...}{Other arguments passed to \code{\link[ggplot2]{layer}}. For example:
 \itemize{
@@ -43,7 +56,7 @@ Defaults to \code{-0.5}, which shifts the line by half a day so if falls in the 
 \item \code{linetype} Linetype. Try: \code{linetype = "dashed"} or \code{linetype = "dotted"}
 \item \code{linewidth} Width of the line.
 \item \code{alpha}  Transparency of the line.
-used to set an aesthetic to a fixed value, like \code{colour = "grey25"} or \code{linetype = 2}.
+used to set an aesthetic to a fixed value.
 }}
 
 \item{show.legend}{logical. Should this layer be included in the legends? \code{NA}, the default,

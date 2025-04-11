@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggsurveillance</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,20 +34,43 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.svg" class="logo" alt=""><h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/biostats-dev/ggsurveillance/blob/0.2.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/biostats-dev/ggsurveillance/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.3.0" id="ggsurveillance-030">ggsurveillance 0.3.0<a class="anchor" aria-label="anchor" href="#ggsurveillance-030"></a></h2>
+<ul><li>new <code>ggplot2</code> theme modification helpers:
+<ul><li>
+<code><a href="../reference/theme_mod_rotate_axis_labels.html">theme_mod_rotate_x_axis_labels()</a></code>: rotate axis labels</li>
+<li>
+<code><a href="../reference/theme_mod_disable_legend.html">theme_mod_legend_position()</a></code>: legend positioning</li>
+<li>
+<code><a href="../reference/theme_mod_remove_minor_grid.html">theme_mod_remove_minor_grid()</a></code> : remove minor panel grid lines (x, y or both) or all grind lines</li>
+</ul></li>
+<li>
+<code><a href="../reference/geom_vline_year.html">geom_vline_year()</a></code> now also supports year_breaks based on weeks. Since weeks don’t fall on the same date every year.</li>
+<li>
+<code>tsibble</code> now optional dependency to improve speed of first install</li>
+<li>add <code>plotly</code> compatibility for <code><a href="../reference/geom_epicurve.html">geom_epicurve()</a></code> and <code><a href="../reference/geom_epigantt.html">geom_epigantt()</a></code>
+</li>
+<li>
+<code><a href="../reference/scale_y_cases_5er.html">scale_y_cases_5er()</a></code>: rename to <code>min.n</code> (from <code>n.min</code>) for correct <code><a href="https://rdrr.io/r/base/pretty.html" class="external-link">base::pretty()</a></code> compatibility</li>
+<li>Bug fixes and minor improvements</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.0" id="ggsurveillance-020">ggsurveillance 0.2.0<a class="anchor" aria-label="anchor" href="#ggsurveillance-020"></a></h2><p class="text-muted">CRAN release: 2025-03-02</p>
-<ul><li>Update geom_epigantt(): Add auto-scaling for linewidth and update documentation</li>
-<li>Add scale_y_discrete_reverse()</li>
+<ul><li>Update <code><a href="../reference/geom_epigantt.html">geom_epigantt()</a></code>: Add auto-scaling for linewidth and update documentation</li>
+<li>Add <code><a href="../reference/scale_y_discrete_reverse.html">scale_y_discrete_reverse()</a></code>
+</li>
 <li>New dataset of a fictional hospital outbreak</li>
-<li>geometric_mean(): Add an option to disable warnings</li>
+<li>
+<code><a href="../reference/geometric_mean.html">geometric_mean()</a></code>: Add an option to disable warnings</li>
 <li>Minor fixes</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.2" id="ggsurveillance-012">ggsurveillance 0.1.2<a class="anchor" aria-label="anchor" href="#ggsurveillance-012"></a></h2><p class="text-muted">CRAN release: 2025-02-11</p>
-<ul><li>Documentation improvements and bug fixes for geom_epicurve()</li>
+<ul><li>Documentation improvements and bug fixes for <code><a href="../reference/geom_epicurve.html">geom_epicurve()</a></code>
+</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.1" id="ggsurveillance-011">ggsurveillance 0.1.1<a class="anchor" aria-label="anchor" href="#ggsurveillance-011"></a></h2><p class="text-muted">CRAN release: 2025-01-31</p>

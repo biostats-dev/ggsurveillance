@@ -19,6 +19,9 @@
 <url><loc>https://ggsurveillance.biostats.dev/reference/linelist_hospital_outbreak.html</loc></url>
 <url><loc>https://ggsurveillance.biostats.dev/reference/scale_y_cases_5er.html</loc></url>
 <url><loc>https://ggsurveillance.biostats.dev/reference/scale_y_discrete_reverse.html</loc></url>
+<url><loc>https://ggsurveillance.biostats.dev/reference/theme_mod_disable_legend.html</loc></url>
+<url><loc>https://ggsurveillance.biostats.dev/reference/theme_mod_remove_minor_grid.html</loc></url>
+<url><loc>https://ggsurveillance.biostats.dev/reference/theme_mod_rotate_axis_labels.html</loc></url>
 <url><loc>https://ggsurveillance.biostats.dev/reference/uncount.html</loc></url>
 </urlset>
 

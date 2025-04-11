@@ -11,7 +11,7 @@ Additionally, the first tick (i.e. zero) is aligned to the lower left corner."><
 
     <a class="navbar-brand me-2" href="../index.html">ggsurveillance</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,7 +38,7 @@ Additionally, the first tick (i.e. zero) is aligned to the lower left corner."><
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.svg" class="logo" alt=""><h1>Continuous x-axis and y-axis scale for (case) counts</h1>
-      <small class="dont-index">Source: <a href="https://github.com/biostats-dev/ggsurveillance/blob/0.2.0/R/scale_cases_5er.R" class="external-link"><code>R/scale_cases_5er.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/biostats-dev/ggsurveillance/blob/main/R/scale_cases_5er.R" class="external-link"><code>R/scale_cases_5er.R</code></a></small>
       <div class="d-none name"><code>scale_y_cases_5er.Rd</code></div>
     </div>
 
@@ -53,7 +53,7 @@ Additionally, the first tick (i.e. zero) is aligned to the lower left corner.</p
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">scale_y_cases_5er</span><span class="op">(</span></span>
 <span>  name <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">8</span>,</span>
-<span>  n.min <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  min.n <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>  u5.bias <span class="op">=</span> <span class="fl">4</span>,</span>
 <span>  expand <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  labels <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
@@ -70,7 +70,7 @@ Additionally, the first tick (i.e. zero) is aligned to the lower left corner.</p
 <span><span class="fu">scale_x_cases_5er</span><span class="op">(</span></span>
 <span>  name <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">8</span>,</span>
-<span>  n.min <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  min.n <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>  u5.bias <span class="op">=</span> <span class="fl">4</span>,</span>
 <span>  expand <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  labels <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
@@ -100,7 +100,7 @@ omitted.</p></dd>
 <dd><p>Target number of breaks passed to <code><a href="https://rdrr.io/r/base/pretty.html" class="external-link">base::pretty()</a></code>. Defaults to 8.</p></dd>
 
 
-<dt id="arg-n-min">n.min<a class="anchor" aria-label="anchor" href="#arg-n-min"></a></dt>
+<dt id="arg-min-n">min.n<a class="anchor" aria-label="anchor" href="#arg-min-n"></a></dt>
 <dd><p>Minimum number of breaks passed to <code><a href="https://rdrr.io/r/base/pretty.html" class="external-link">base::pretty()</a></code>. Defaults to 5.</p></dd>
 
 
@@ -192,7 +192,8 @@ You can create your own transformation with <code><a href="https://scales.r-lib.
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="geom_epicurve.html">geom_epicurve()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">ggplot2::scale_y_continuous()</a></code>, <code><a href="https://rdrr.io/r/base/pretty.html" class="external-link">base::pretty()</a></code></p></div>
+    <div class="dont-index"><p><code><a href="geom_epicurve.html">geom_epicurve()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">ggplot2::scale_y_continuous()</a></code>, <code><a href="https://rdrr.io/r/base/pretty.html" class="external-link">base::pretty()</a></code>,
+<code><a href="theme_mod_remove_minor_grid.html">theme_mod_remove_minor_grid_y()</a></code></p></div>
     </div>
 
     <div class="section level2">
@@ -202,7 +203,8 @@ You can create your own transformation with <code><a href="https://scales.r-lib.
 <span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2024-01-01"</span><span class="op">)</span> <span class="op">+</span> <span class="fl">0</span><span class="op">:</span><span class="fl">30</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">data</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">date</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="geom_epicurve.html">geom_epicurve</a></span><span class="op">(</span>date_resolution <span class="op">=</span> <span class="st">"week"</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu">scale_y_cases_5er</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu">scale_y_cases_5er</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="theme_mod_remove_minor_grid.html">theme_mod_remove_minor_grid_y</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="scale_y_cases_5er-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>

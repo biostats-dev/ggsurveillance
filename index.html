@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="index.html">ggsurveillance</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -68,30 +68,48 @@
 </div>
 <!-- badges: start -->
 
+<!-- badges: end -->
 <p><strong>ggsurveillance</strong> is an R package with helpful tools and ggplot extensions for epidemiology, especially infectious disease surveillance and outbreak investigation. All functions provide tidy functional interfaces for easy integration with the tidyverse. For documentation and vignettes see: <a href="https://ggsurveillance.biostats.dev" target="_blank">ggsurveillance.biostats.dev</a></p>
-<p>This packages provides:</p>
+<div class="section level2">
+<h2 id="key-features">Key Features<a class="anchor" aria-label="anchor" href="#key-features"></a>
+</h2>
 <ul>
 <li>
-<p><code><a href="reference/geom_epicurve.html">geom_epicurve()</a></code> : A ggplot geom for plotting epicurves</p>
+<p><code><a href="reference/geom_epicurve.html">geom_epicurve()</a></code>: A ggplot geom for plotting epicurves</p>
 <ul>
 <li>including <code><a href="reference/geom_epicurve.html">stat_bin_date()</a></code> for date interval (week, month etc.) based binning of case numbers with perfect alignment with i.e. reporting week.</li>
 <li>including <code><a href="reference/scale_y_cases_5er.html">scale_y_cases_5er()</a></code> for better (case) count axis breaks and positioning.</li>
 <li>including <code><a href="reference/geom_vline_year.html">geom_vline_year()</a></code>, which automatically detects the turn of the year(s) from the date or datetime axis and draws a vertical line.</li>
 </ul>
 </li>
-<li><p><code><a href="reference/align_dates_seasonal.html">align_dates_seasonal()</a></code> : Align surveillance data for seasonal plots (e.g. flu season).</p></li>
+<li><p><code><a href="reference/align_dates_seasonal.html">align_dates_seasonal()</a></code>: Align surveillance data for seasonal plots (e.g. flu season).</p></li>
 <li><p><code><a href="reference/create_agegroups.html">create_agegroups()</a></code>: Create reproducible age groups with highly customizable labels.</p></li>
 <li>
-<p><code><a href="reference/geom_epigantt.html">geom_epigantt()</a></code> : A geom for epigantt plots. Helpful to visualize overlapping time intervals for contact tracing (i.e. hospital outbreaks).</p>
+<p><code><a href="reference/geom_epigantt.html">geom_epigantt()</a></code>: A geom for epigantt plots. Helpful to visualize overlapping time intervals for contact tracing (i.e. hospital outbreaks).</p>
 <ul>
 <li>including <code><a href="reference/scale_y_discrete_reverse.html">scale_y_discrete_reverse()</a></code> which reverses the order of the categorical scale.</li>
 </ul>
 </li>
-<li><p>and more: <code><a href="reference/geometric_mean.html">geometric_mean()</a></code> , <code><a href="reference/uncount.html">expand_counts()</a></code></p></li>
+<li>
+<p><code>theme_mod_</code> functions for ggplot2 theme modifications:</p>
+<ul>
+<li>
+<code><a href="reference/theme_mod_disable_legend.html">theme_mod_legend_position()</a></code> etc. to adjust the legend positions.</li>
+<li>
+<code><a href="reference/theme_mod_rotate_axis_labels.html">theme_mod_rotate_x_axis_labels()</a></code> etc. for rotating x axis labels.</li>
+<li>
+<code><a href="reference/theme_mod_remove_minor_grid.html">theme_mod_remove_minor_grid()</a></code> etc. to remove the minor grid lines (x, y or both) or all grind lines.</li>
 </ul>
+</li>
+<li><p>Additional utilities: <code><a href="reference/geometric_mean.html">geometric_mean()</a></code>, <code><a href="reference/uncount.html">expand_counts()</a></code>, and more</p></li>
+</ul>
+</div>
 <div class="section level2">
-<h2 id="creating-epicurves">Creating Epicurves<a class="anchor" aria-label="anchor" href="#creating-epicurves"></a>
+<h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
 </h2>
+<div class="section level3">
+<h3 id="creating-epicurves">Creating Epicurves<a class="anchor" aria-label="anchor" href="#creating-epicurves"></a>
+</h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
@@ -112,9 +130,9 @@
 <img src="reference/figures/epicurve_readme.png" alt="Epicurve of the 2003 SARS outbreak in Canada"><div class="figcaption">Epicurve of the 2003 SARS outbreak in Canada</div>
 </div>
 </div>
-<div class="section level2">
-<h2 id="align-surveillance-data-for-seasonal-comparison">Align surveillance data for seasonal comparison<a class="anchor" aria-label="anchor" href="#align-surveillance-data-for-seasonal-comparison"></a>
-</h2>
+<div class="section level3">
+<h3 id="align-surveillance-data-for-seasonal-comparison">Align surveillance data for seasonal comparison<a class="anchor" aria-label="anchor" href="#align-surveillance-data-for-seasonal-comparison"></a>
+</h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
@@ -138,14 +156,14 @@
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>linetype <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_date.html" class="external-link">scale_x_date</a></span><span class="op">(</span>date_labels <span class="op">=</span> <span class="st">"%b'%y"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>,<span class="fl">0.8</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="reference/theme_mod_disable_legend.html">theme_mod_legend_position</a></span><span class="op">(</span>position.inside <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.8</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="float">
 <img src="reference/figures/seasonal_plot_readme.png" alt="Seasonal influenza data from Germany by age group"><div class="figcaption">Seasonal influenza data from Germany by age group</div>
 </div>
 </div>
-<div class="section level2">
-<h2 id="create-epigantt-plots-to-visualize-exposure-intervals-in-outbreaks">Create Epigantt plots to visualize exposure intervals in outbreaks<a class="anchor" aria-label="anchor" href="#create-epigantt-plots-to-visualize-exposure-intervals-in-outbreaks"></a>
-</h2>
+<div class="section level3">
+<h3 id="create-epigantt-plots-to-visualize-exposure-intervals-in-outbreaks">Create Epigantt plots to visualize exposure intervals in outbreaks<a class="anchor" aria-label="anchor" href="#create-epigantt-plots-to-visualize-exposure-intervals-in-outbreaks"></a>
+</h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
@@ -170,9 +188,10 @@
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">Patient</span>, x <span class="op">=</span> <span class="va">date</span>, shape <span class="op">=</span> <span class="st">"Date of pathogen detection"</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">df_detections_long</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="reference/scale_y_discrete_reverse.html">scale_y_discrete_reverse</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="reference/theme_mod_disable_legend.html">theme_mod_legend_bottom</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="float">
-<img src="reference/figures/ggepicurve_plot_readme.png" alt="Epicurve of a fictional hospital outbreak"><div class="figcaption">Epicurve of a fictional hospital outbreak</div>
+<img src="reference/figures/epigantt_plot_readme.png" alt="Epigantt chart of a fictional hospital outbreak"><div class="figcaption">Epigantt chart of a fictional hospital outbreak</div>
+</div>
 </div>
 </div>
 </div>

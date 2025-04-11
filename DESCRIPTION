@@ -1,6 +1,6 @@
 Package: ggsurveillance
 Title: Tools for Outbreak Investigation/Infectious Disease Surveillance
-Version: 0.2.0.9000
+Version: 0.3.0
 Authors@R: 
     person("Alexander", "Bartel", , "alexander.bartel@fu-berlin.de", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-1280-6138"))
@@ -19,7 +19,7 @@ URL: https://ggsurveillance.biostats.dev,
     https://github.com/biostats-dev/ggsurveillance
 BugReports: https://github.com/biostats-dev/ggsurveillance/issues
 Depends: 
-    R (>= 4.1.0)
+    R (>= 4.2.0)
 Imports: 
     cli,
     dplyr,
@@ -34,7 +34,6 @@ Imports:
     tidyr,
     tidyselect
 Suggests:
-    ggrepel (>= 0.9.6),
     Hmisc,
     knitr,
     outbreaks,

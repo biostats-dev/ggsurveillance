@@ -39,10 +39,10 @@ Defaults to: \code{"01-01"} for January 1.
 
 \item{break_type}{String specifying the type of break to use. Options are:
 \itemize{
-\item \code{"day"} (default): Line a drawn based on the specified day for each visible year.
+\item \code{"day"} (default): Line drawn based on the specified day for each visible year.
 \item \code{"week"} or \code{"isoweek"}: Line drawn based on the Monday of the specified week for each visible year.
 (e.g., "W01" for new year or "W40" for start of influenza season)
-\item \code{"epiweek"}: same as week, but line is drawn one day earlier (Sunday).
+\item \code{"epiweek"}: same as week, but the line is drawn one day earlier (Sunday).
 }}
 
 \item{just}{Numeric offset in days (justification). Shifts the lines from the year break date.

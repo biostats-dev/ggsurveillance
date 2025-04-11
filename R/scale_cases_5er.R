@@ -14,7 +14,8 @@
 #' @param ... Additional arguments passed on to [base::pretty()].
 #'
 #' @return A `ggplot2` scale object that can be added to a plot.
-#' @seealso [geom_epicurve()], [ggplot2::scale_y_continuous()], [base::pretty()]
+#' @seealso [geom_epicurve()], [ggplot2::scale_y_continuous()], [base::pretty()], 
+#' [theme_mod_remove_minor_grid_y()]
 #'
 #' @examples
 #' library(ggplot2)

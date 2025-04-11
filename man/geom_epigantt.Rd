@@ -114,3 +114,6 @@ ggplot(df_stays_long) +
   theme_mod_legend_bottom()
 
 }
+\seealso{
+\code{\link[=theme_mod_legend_bottom]{theme_mod_legend_bottom()}}
+}

@@ -31,7 +31,8 @@
 #'   * `lw_min`: Minimum auto-scaled line width cutoff (default: 1)
 #'   * `lw_max`: Maximum auto-scaled line width cutoff (default: 8)
 #' @return A `ggplot2` geom layer that can be added to a plot
-#'
+#' @seealso [theme_mod_legend_bottom()]
+#' 
 #' @examples
 #' library(dplyr)
 #' library(tidyr)
@@ -109,7 +110,7 @@ GeomEpigantt <- ggproto("GeomEpigantt", GeomLinerange,
 .calc_linewidth <- function(data, flipped_aes, max = 8, min = 1, scaling_factor = 90) {
   if (flipped_aes) n_obs <- dplyr::n_distinct(data$y) else n_obs <- dplyr::n_distinct(data$x)
 
-  # Should scaling_factor be adjustable by user?
+  # scaling_factor is adjustable by the user
   linewidth <- scaling_factor / n_obs
 
   # return linewidth if between min and max, else cutoff at min or max

@@ -71,7 +71,7 @@ Set to \code{NULL} or \code{NA} for no date aggregation \cr
 Possible values are: \code{"day"}, \code{"week"}, \code{"month"}, \code{"bimonth"}, \code{"season"}, \code{"quarter"}, \code{"halfyear"}, \code{"year"}.
 To special values enforce ISO or US week standard:
 \itemize{
-\item \code{isoweek} will force \code{dadte_resolution = week} and \code{week_start = 1} (ISO and ECDC Standard)
+\item \code{isoweek} will force \code{date_resolution = week} and \code{week_start = 1} (ISO and ECDC Standard)
 \item \code{epiweek} will force \code{date_resolution = week} and \code{week_start = 7} (US CDC Standard)
 }}
 

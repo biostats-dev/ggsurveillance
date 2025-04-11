@@ -134,5 +134,6 @@ ggplot(data, aes(x = date)) +
   theme_mod_remove_minor_grid_y()
 }
 \seealso{
-\code{\link[=geom_epicurve]{geom_epicurve()}}, \code{\link[ggplot2:scale_continuous]{ggplot2::scale_y_continuous()}}, \code{\link[base:pretty]{base::pretty()}}
+\code{\link[=geom_epicurve]{geom_epicurve()}}, \code{\link[ggplot2:scale_continuous]{ggplot2::scale_y_continuous()}}, \code{\link[base:pretty]{base::pretty()}},
+\code{\link[=theme_mod_remove_minor_grid_y]{theme_mod_remove_minor_grid_y()}}
 }

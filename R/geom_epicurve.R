@@ -19,7 +19,7 @@
 #' Set to \code{NULL} or `NA` for no date aggregation \cr
 #' Possible values are: `"day"`, `"week"`, `"month"`, `"bimonth"`, `"season"`, `"quarter"`, `"halfyear"`, `"year"`.
 #' To special values enforce ISO or US week standard:
-#'  - `isoweek` will force `dadte_resolution = week` and `week_start = 1` (ISO and ECDC Standard)
+#'  - `isoweek` will force `date_resolution = week` and `week_start = 1` (ISO and ECDC Standard)
 #'  - `epiweek` will force `date_resolution = week` and `week_start = 7` (US CDC Standard)
 #' @param week_start Integer specifying the start of the week (1 = Monday, 7 = Sunday). \cr
 #'        Only used when date_resolution includes weeks. Defaults to 1 (Monday). \cr

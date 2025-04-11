@@ -8,31 +8,33 @@
 
 **ggsurveillance** is an R package with helpful tools and ggplot extensions for epidemiology, especially infectious disease surveillance and outbreak investigation. All functions provide tidy functional interfaces for easy integration with the tidyverse. For documentation and vignettes see: <a href="https://ggsurveillance.biostats.dev" target="_blank">ggsurveillance.biostats.dev</a>
 
-This packages provides:
+## Key Features
 
--   `geom_epicurve()` : A ggplot geom for plotting epicurves
+-   `geom_epicurve()`: A ggplot geom for plotting epicurves
 
     -   including `stat_bin_date()` for date interval (week, month etc.) based binning of case numbers with perfect alignment with i.e. reporting week.
     -   including `scale_y_cases_5er()` for better (case) count axis breaks and positioning.
     -   including `geom_vline_year()`, which automatically detects the turn of the year(s) from the date or datetime axis and draws a vertical line.
 
--   `align_dates_seasonal()` : Align surveillance data for seasonal plots (e.g. flu season).
+-   `align_dates_seasonal()`: Align surveillance data for seasonal plots (e.g. flu season).
 
 -   `create_agegroups()`: Create reproducible age groups with highly customizable labels.
 
--   `geom_epigantt()` : A geom for epigantt plots. Helpful to visualize overlapping time intervals for contact tracing (i.e. hospital outbreaks).
+-   `geom_epigantt()`: A geom for epigantt plots. Helpful to visualize overlapping time intervals for contact tracing (i.e. hospital outbreaks).
 
     -   including `scale_y_discrete_reverse()` which reverses the order of the categorical scale.
 
--   `theme_mod_` functions for common ggplot2 theme modifications:
+-   `theme_mod_` functions for ggplot2 theme modifications:
 
     -   `theme_mod_legend_position()` etc. to adjust the legend positions.
     -   `theme_mod_rotate_x_axis_labels()` etc. for rotating x axis labels.
     -   `theme_mod_remove_minor_grid()` etc. to remove the minor grid lines (x, y or both) or all grind lines.
 
--   and more: `geometric_mean()` , `expand_counts()`
+-   Additional utilities: `geometric_mean()`, `expand_counts()`, and more
 
-## Creating Epicurves
+## Examples
+
+### Creating Epicurves
 
 ``` r
 library(ggplot2)
@@ -54,7 +56,7 @@ sars_canada_2003 |> #SARS dataset from outbreaks
 
 ![Epicurve of the 2003 SARS outbreak in Canada](man/figures/epicurve_readme.png)
 
-## Align surveillance data for seasonal comparison
+### Align surveillance data for seasonal comparison
 
 ``` r
 library(ggplot2)
@@ -84,7 +86,7 @@ ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence)) +
 
 ![Seasonal influenza data from Germany by age group](man/figures/seasonal_plot_readme.png)
 
-## Create Epigantt plots to visualize exposure intervals in outbreaks
+### Create Epigantt plots to visualize exposure intervals in outbreaks
 
 ``` r
 library(dplyr)

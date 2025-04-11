@@ -224,9 +224,8 @@ StatLastValue <- ggproto("StatLastValue", Stat,
     params$flipped_aes <- ggplot2::has_flipped_aes(data, params, main_is_orthogonal = FALSE)
     params
   },
-  compute_group = function(
-      data, scales, flipped_aes = NA,
-      nudge_rel = 0, nudge_add = 0, expand_rel = 0, expand_add = 0, ...) {
+  compute_group = function(data, scales, flipped_aes = NA,
+                           nudge_rel = 0, nudge_add = 0, expand_rel = 0, expand_add = 0, ...) {
     flipped_aes <- flipped_aes %||% any(data$flipped_aes) %||% FALSE
 
     if (!flipped_aes) {
@@ -267,9 +266,8 @@ StatLastValueRepel <- ggproto("StatLastValueRepel", Stat,
     params$flipped_aes <- ggplot2::has_flipped_aes(data, params, main_is_orthogonal = FALSE)
     params
   },
-  compute_group = function(
-      data, scales, flipped_aes = NA,
-      nudge_rel = 0, nudge_add = 0, expand_rel = 0, expand_add = 0, ...) {
+  compute_group = function(data, scales, flipped_aes = NA,
+                           nudge_rel = 0, nudge_add = 0, expand_rel = 0, expand_add = 0, ...) {
     flipped_aes <- flipped_aes %||% any(data$flipped_aes) %||% FALSE
 
     if (!flipped_aes) {

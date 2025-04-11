@@ -7,8 +7,19 @@ test_that("linewidth calculation works correctly", {
   )
 
   # Test with default parameters
-  result <- .calc_linewidth(test_data, list(flipped_aes = TRUE), max = 8, min = 1, scaling_factor = 100)
+  result <- .calc_linewidth(test_data, flipped_aes = TRUE, max = 8, min = 1, scaling_factor = 100)
   expect_identical(result, 5) # 100/20 = 5
+
+  # Test flipped aes
+  test_data <- data.frame(
+    x = factor(1:20),
+    ymin = as.Date("2024-01-01"),
+    ymax = as.Date("2024-01-10")
+  )
+
+  # Test with default parameters
+  result <- .calc_linewidth(test_data, flipped_aes = FALSE, max = 8, min = 1, scaling_factor = 100)
+  expect_identical(result, 5)
 
   # Test with single observation (should return max)
   single_data <- data.frame(
@@ -16,7 +27,7 @@ test_that("linewidth calculation works correctly", {
     xmin = as.Date("2024-01-01"),
     xmax = as.Date("2024-01-10")
   )
-  result <- .calc_linewidth(single_data, list(flipped_aes = TRUE), max = 8, min = 1, scaling_factor = 100)
+  result <- .calc_linewidth(single_data, flipped_aes = TRUE, max = 8, min = 1, scaling_factor = 100)
   expect_identical(result, 8)
 
   # Test with many observations (should return min)
@@ -25,7 +36,7 @@ test_that("linewidth calculation works correctly", {
     xmin = as.Date("2024-01-01"),
     xmax = as.Date("2024-01-10")
   )
-  result <- .calc_linewidth(many_data, list(flipped_aes = TRUE), max = 8, min = 1, scaling_factor = 100)
+  result <- .calc_linewidth(many_data, flipped_aes = TRUE, max = 8, min = 1, scaling_factor = 100)
   expect_identical(result, 1)
 })
 

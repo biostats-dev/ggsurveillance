@@ -101,36 +101,3 @@ theme_mod_legend_left <- function() ggplot2::theme(legend.position = "left")
 #' @rdname theme_mod_disable_legend
 #' @export
 theme_mod_legend_right <- function() ggplot2::theme(legend.position = "right")
-
-#' Quick legend helpers
-#'
-#' @description
-#'  - `theme_mod_guide_thick_lines()`: Increase the line thickness for `geom_line()` **colour** legends.
-#'  - `theme_mod_guide_long_lines()`: Increase the line thickness for `geom_line()` **linetype** legends.
-#'  - `theme_mod_remove_legend_title()`: Removes the legend title. Use after setting the theme.
-#' @param linewidth Line width of the line shown in the colour legend.
-#' @param keywidth Key width of the line shown in the legend.
-#' @param ... further parameters passed to [ggplot2::guide_legend()].
-#' @return Overrides the `aes` of the colour guide using [ggplot2::guides()].
-#' @name Quick legend helpers
-#' @rdname theme_mod_legend_helpers
-NULL
-
-#' @rdname theme_mod_legend_helpers
-#' @export
-theme_mod_guide_thick_lines <- function(linewidth = 3, ...) {
-  ggplot2::guides(colour = ggplot2::guide_legend(override.aes = list(linewidth = linewidth), ...))
-}
-
-#' @rdname theme_mod_legend_helpers
-#' @export
-theme_mod_guide_long_lines <- function(keywidth = 3, ...) {
-  # TODO: nur Lintype oder alle mit theme?
-  ggplot2::guides(linetype = ggplot2::guide_legend(keywidth = keywidth, ...))
-}
-
-#' @rdname theme_mod_legend_helpers
-#' @export
-theme_mod_remove_legend_title <- function() {
-  ggplot2::theme(legend.title = ggplot2::element_blank())
-}

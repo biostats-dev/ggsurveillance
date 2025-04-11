@@ -46,7 +46,7 @@ ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence)) +
   labs(linetype = NULL) +
   scale_x_date(date_labels = "%b'%y") +
   theme_bw() +
-  theme(legend.position = c(0.2, 0.8))
+  theme_mod_legend_position(position.inside = c(0.2, 0.8))
 
 ggsave("man/figures/seasonal_plot_readme.png", width = 6, height = 3.5, dpi = 600)
 
@@ -74,6 +74,6 @@ ggplot(df_stays_long) +
   geom_point(aes(y = Patient, x = date, shape = "Date of pathogen detection"), data = df_detections_long) +
   scale_y_discrete_reverse() +
   theme_bw() +
-  theme(legend.position = "bottom")
+  theme_mod_legend_bottom()
 
 ggsave("man/figures/epigantt_plot_readme.png", width = 6, height = 3.5, dpi = 600)

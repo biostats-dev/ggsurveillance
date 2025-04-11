@@ -111,6 +111,6 @@ ggplot(df_stays_long) +
   ) +
   scale_y_discrete_reverse() +
   theme_bw() +
-  theme(legend.position = "bottom")
+  theme_mod_legend_bottom()
 
 }

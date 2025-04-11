@@ -69,7 +69,8 @@
 #' ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence, color = season)) +
 #'   geom_line() +
 #'   facet_wrap(~AgeGroup) +
-#'   theme_bw()
+#'   theme_bw() +
+#'   theme_mod_rotate_x_axis_labels_45()
 #'
 #' @export
 align_dates_seasonal <- function(

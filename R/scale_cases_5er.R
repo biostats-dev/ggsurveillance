@@ -22,7 +22,8 @@
 #' data <- data.frame(date = as.Date("2024-01-01") + 0:30)
 #' ggplot(data, aes(x = date)) +
 #'   geom_epicurve(date_resolution = "week") +
-#'   scale_y_cases_5er()
+#'   scale_y_cases_5er() +
+#'   theme_mod_remove_minor_grid_y()
 #' @importFrom scales censor
 #' @export
 

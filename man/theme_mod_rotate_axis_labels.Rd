@@ -32,7 +32,7 @@ theme_mod_rotate_y_axis_labels(angle = 90, hjust = 0.5, vjust = 0, ...)
 \item{angle}{Angle of rotation. Should be between 10 and 90 degrees.}
 
 \item{margin_top}{Used to move the tick labels downwards to prevent text intersecting the x-axis.
-Increase for multiline text (e.g. 5 for two lines).}
+Increase for angled multiline text (e.g. 5 for two lines at 45°).}
 
 \item{hjust, vjust}{Text justification within the rotated text element. Just ignore.}
 

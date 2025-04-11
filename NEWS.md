@@ -1,13 +1,13 @@
 # ggsurveillance 0.3.0
 
 -   new `ggplot2` theme modification helpers:
-    -   rotate axis labels
-    -   legend positioning
-    -   remove minor panel grid lines (x, y or both) or all grind lines
+    -   `theme_mod_rotate_x_axis_labels()`: rotate axis labels 
+    -   `theme_mod_legend_position()`: legend positioning 
+    -   `theme_mod_remove_minor_grid()` : remove minor panel grid lines (x, y or both) or all grind lines
 -   `geom_vline_year()` now also supports year_breaks based on weeks. Since weeks don't fall on the same date every year.
 -   `tsibble` now optional dependency to improve speed of first install
 -   add `plotly` compatibility for `geom_epicurve()` and `geom_epigantt()`
--   rename `min.n` (from `n.min`) in `scale_y_cases_5er()` for correct `base::pretty()` compatibility
+-   `scale_y_cases_5er()`: rename to `min.n` (from `n.min`) for correct `base::pretty()` compatibility
 -   Bug fixes and minor improvements
 
 # ggsurveillance 0.2.0

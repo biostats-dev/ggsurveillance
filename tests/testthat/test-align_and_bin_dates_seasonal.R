@@ -25,6 +25,27 @@ test_that("align_and_bin_dates_seasonal correctly aggregates numeric values", {
     sum(result$n)
   )
 
+  # Test datetime / POSIXct
+  dates <- seq(as_datetime("2023-01-01"), as_datetime("2024-03-01"), by = "week")
+  df2 <- data.frame(
+    date = dates,
+    cases = df$cases # Use previous case numbers
+  )
+  
+  # Test aggregation
+  result <- align_and_bin_dates_seasonal(
+    df2,
+    n = cases,
+    dates_from = date,
+    date_resolution = "month"
+  )
+  
+  # Compare total cases
+  expect_identical(
+    sum(df$cases),
+    sum(result$n)
+  )
+  
   # Test non date column
   expect_error(
     df |>

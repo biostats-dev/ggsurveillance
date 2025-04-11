@@ -8,7 +8,7 @@
 \alias{theme_mod_legend_bottom}
 \alias{theme_mod_legend_left}
 \alias{theme_mod_legend_right}
-\title{Quickly remove the minor lines of the panel grid}
+\title{Quickly adjust the legend position}
 \usage{
 theme_mod_disable_legend()
 

@@ -74,7 +74,8 @@ influenza_germany |>
 ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence, color = season)) +
   geom_line() +
   facet_wrap(~AgeGroup) +
-  theme_bw()
+  theme_bw() +
+  theme_mod_rotate_x_axis_labels_45()
 ```
 
 ```{r}
@@ -129,40 +130,4 @@ influenza_germany |>
   geom_epicurve(color = NA, stat = "count") +
   scale_y_cases_5er() +
   theme_bw()
-```
-
-```{r echo=FALSE}
-influenza_germany |>
-  filter(AgeGroup == "00+") |>
-  align_dates_seasonal(
-    dates_from = ReportingWeek,
-    date_resolution = "isoweek",
-    start = 28
-  ) -> df_flu_aligned
-
-ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence)) +
-  stat_summary(
-    aes(linetype = "Historical Median (Min-Max)"),
-    data = . %>% filter(!current_season),
-    fun.data = median_hilow, geom = "ribbon", alpha = 0.3
-  ) +
-  stat_summary(
-    aes(linetype = "Historical Median (Min-Max)"),
-    data = . %>% filter(!current_season),
-    fun = median, geom = "line"
-  ) +
-  geom_line(
-    aes(linetype = "2024/25"),
-    data = . %>% filter(current_season), colour = "dodgerblue4", linewidth = 2
-  ) +
-  labs(linetype = NULL) +
-  scale_x_date(date_labels = "%b %y", date_breaks = "1 month") +
-  # scale_x_date(date_labels = "%B\n%Y", date_breaks = "1 month") +
-  theme_bw() +
-  theme_mod_rotate_x_axis_labels(angle = 10) +
-  # theme(axis.text.x = element_text(angle = -30, vjust = 0.4, hjust = 0, margin = margin(t = 2))) +
-  # theme(axis.text.x = element_text(angle = -45, vjust = 0.4, hjust = 0, margin = margin(t = 5))) +
-  # theme(axis.text.x = element_text(angle = -45, vjust = 0.4, margin = margin(t = -3))) +
-  # theme(axis.text.x = element_text(angle = -90, vjust = 0.4, hjust = 0, margin = margin(t = 0))) +
-  theme_mod_legend_position(position.inside = c(0.2, 0.8))
 ```

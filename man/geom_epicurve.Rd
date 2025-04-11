@@ -135,7 +135,7 @@ plot_data_epicurve_imp <- data.frame(
 )
 
 ggplot(plot_data_epicurve_imp, aes(x = date, weight = 2)) +
-  geom_vline_year(year_break = "01-01", show.legend = TRUE) +
+  geom_vline_year(break_type = "week") +
   geom_epicurve(date_resolution = "week") +
   labs(title = "Epicurve Example") +
   scale_y_cases_5er() +

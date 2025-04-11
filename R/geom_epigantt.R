@@ -57,7 +57,7 @@
 #'   ) +
 #'   scale_y_discrete_reverse() +
 #'   theme_bw() +
-#'   theme(legend.position = "bottom")
+#'   theme_mod_legend_bottom()
 #'
 #' @export
 geom_epigantt <- function(mapping = NULL, data = NULL,

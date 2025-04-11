@@ -40,9 +40,19 @@
 #'   date = rep(as.Date("2023-12-01") + ((0:300) * 1), times = rpois(301, 0.5))
 #' )
 #'
+#' # Break type day
 #' ggplot(plot_data_epicurve_imp, aes(x = date, weight = 2)) +
 #'   geom_epicurve(date_resolution = "week") +
-#'   geom_vline_year(year_break = "01-01", show.legend = TRUE) +
+#'   geom_vline_year() +
+#'   labs(title = "Epicurve Example") +
+#'   scale_y_cases_5er() +
+#'   scale_x_date(date_breaks = "4 weeks", date_labels = "W%V'%g") + # Correct ISOWeek labels week'year
+#'   theme_bw()
+#' 
+#' # Break type week  
+#' ggplot(plot_data_epicurve_imp, aes(x = date, weight = 2)) +
+#'   geom_epicurve(date_resolution = "week") +
+#'   geom_vline_year(break_type = "week") +
 #'   labs(title = "Epicurve Example") +
 #'   scale_y_cases_5er() +
 #'   scale_x_date(date_breaks = "4 weeks", date_labels = "W%V'%g") + # Correct ISOWeek labels week'year

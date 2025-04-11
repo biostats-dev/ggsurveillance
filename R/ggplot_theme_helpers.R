@@ -33,7 +33,7 @@ theme_mod_remove_panel_grid <- function() {
 #' Has to be called after setting the theme.
 #' @param angle Angle of rotation. Should be between 10 and 90 degrees.
 #' @param margin_top Used to move the tick labels downwards to prevent text intersecting the x-axis.
-#' Increase for multiline text (e.g. 5 for two lines).
+#' Increase for angled multiline text (e.g. 5 for two lines at 45°).
 #' @param hjust,vjust Text justification within the rotated text element. Just ignore.
 #' @param ... Arguments passed to `theme_mod_rotate_x_axis_labels` and [ggplot2::element_text()].
 #' @return Changes the rotation of the axis labels by modifying the `axis.text` of the [ggplot2::theme()].
@@ -66,7 +66,7 @@ theme_mod_rotate_y_axis_labels <- function(angle = 90, hjust = 0.5, vjust = 0, .
 }
 
 
-#' Quickly remove the minor lines of the panel grid
+#' Quickly adjust the legend position
 #'
 #' @description
 #' Convenience functions to control the legend position for `ggplot2`.

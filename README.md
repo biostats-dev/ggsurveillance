@@ -1,11 +1,9 @@
 # ggsurveillance <img src="man/figures/logo.svg" alt="logo" align="right" width="120" height="139" style="border: none; float: right;"/>
 
 <!-- badges: start -->
-[![CRAN status](https://www.r-pkg.org/badges/version/ggsurveillance)](https://CRAN.R-project.org/package=ggsurveillance)
-[![Download](https://cranlogs.r-pkg.org/badges/grand-total/ggsurveillance)](https://cran.r-project.org/package=ggsurveillance)
-[![Lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![R-CMD-check](https://github.com/biostats-dev/ggsurveillance/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/biostats-dev/ggsurveillance/actions/workflows/R-CMD-check.yaml)
-[![Codecov test coverage](https://codecov.io/gh/biostats-dev/ggsurveillance/graph/badge.svg)](https://app.codecov.io/gh/biostats-dev/ggsurveillance)
+
+[![CRAN status](https://www.r-pkg.org/badges/version/ggsurveillance)](https://CRAN.R-project.org/package=ggsurveillance) [![Download](https://cranlogs.r-pkg.org/badges/grand-total/ggsurveillance)](https://cran.r-project.org/package=ggsurveillance) [![Lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental) [![R-CMD-check](https://github.com/biostats-dev/ggsurveillance/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/biostats-dev/ggsurveillance/actions/workflows/R-CMD-check.yaml) [![Codecov test coverage](https://codecov.io/gh/biostats-dev/ggsurveillance/graph/badge.svg)](https://app.codecov.io/gh/biostats-dev/ggsurveillance)
+
 <!-- badges: end -->
 
 **ggsurveillance** is an R package with helpful tools and ggplot extensions for epidemiology, especially infectious disease surveillance and outbreak investigation. All functions provide tidy functional interfaces for easy integration with the tidyverse. For documentation and vignettes see: <a href="https://ggsurveillance.biostats.dev" target="_blank">ggsurveillance.biostats.dev</a>
@@ -13,7 +11,8 @@
 This packages provides:
 
 -   `geom_epicurve()` : A ggplot geom for plotting epicurves
-    -   including `stat_bin_date()` for date interval (week, month etc.) based binning of case numbers with perfect alignment with i.e. reporting week. 
+
+    -   including `stat_bin_date()` for date interval (week, month etc.) based binning of case numbers with perfect alignment with i.e. reporting week.
     -   including `scale_y_cases_5er()` for better (case) count axis breaks and positioning.
     -   including `geom_vline_year()`, which automatically detects the turn of the year(s) from the date or datetime axis and draws a vertical line.
 
@@ -22,7 +21,14 @@ This packages provides:
 -   `create_agegroups()`: Create reproducible age groups with highly customizable labels.
 
 -   `geom_epigantt()` : A geom for epigantt plots. Helpful to visualize overlapping time intervals for contact tracing (i.e. hospital outbreaks).
-    -   including `scale_y_discrete_reverse()` which reverses the order of the categorical scale. 
+
+    -   including `scale_y_discrete_reverse()` which reverses the order of the categorical scale.
+
+-   `theme_mod_` functions for common ggplot2 theme modifications:
+
+    -   `theme_mod_legend_position()` etc. to adjust the legend positions.
+    -   `theme_mod_rotate_x_axis_labels()` etc. for rotating x axis labels.
+    -   `theme_mod_remove_minor_grid()` etc. to remove the minor grid lines (x, y or both) or all grind lines.
 
 -   and more: `geometric_mean()` , `expand_counts()`
 
@@ -73,7 +79,7 @@ ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence)) +
   labs(linetype = NULL) +
   scale_x_date(date_labels = "%b'%y") +
   theme_bw() +
-  theme(legend.position = c(0.2,0.8))
+  theme_mod_legend_position(position.inside = c(0.2, 0.8))
 ```
 
 ![Seasonal influenza data from Germany by age group](man/figures/seasonal_plot_readme.png)
@@ -104,9 +110,7 @@ ggplot(df_stays_long) +
   geom_point(aes(y = Patient, x = date, shape = "Date of pathogen detection"), data = df_detections_long) +
   scale_y_discrete_reverse() +
   theme_bw() +
-  theme(legend.position = "bottom")
+  theme_mod_legend_bottom()
 ```
 
 ![Epigantt chart of a fictional hospital outbreak](man/figures/epigantt_plot_readme.png)
-
-

@@ -6,7 +6,7 @@
 #'
 #' @inheritParams ggplot2::scale_y_continuous
 #' @param n Target number of breaks passed to [base::pretty()]. Defaults to 8.
-#' @param n.min Minimum number of breaks passed to [base::pretty()]. Defaults to 5.
+#' @param min.n Minimum number of breaks passed to [base::pretty()]. Defaults to 5.
 #' @param u5.bias The "5-bias" parameter passed to [base::pretty()]; higher values
 #'   push the breaks more strongly toward multiples of 5. Defaults to 4.
 #' @param expand Uses own expansion logic. Use \code{expand = waiver()} to restore ggplot defaults
@@ -28,24 +28,17 @@
 
 scale_y_cases_5er <- function(
     name = waiver(),
-    n = 8, n.min = 5, u5.bias = 4,
+    n = 8, min.n = 5, u5.bias = 4,
     expand = NULL,
     labels = waiver(), limits = NULL,
     oob = scales::censor, na.value = NA_real_,
     transform = "identity", position = "left",
     sec.axis = waiver(), guide = waiver(), ...) {
+  # Scale Continuous
   scale_y_continuous(
     name = name,
     # Pass Pretty arguments
-    breaks = function(x) {
-      pretty(
-        x,
-        n = if (max(x) < n) ceiling(max(x)) else n,
-        n.min = if (max(x) < n.min) ceiling(max(x)) else n.min,
-        u5.bias = u5.bias,
-        ...
-      )
-    },
+    breaks = .auto_pretty(n = n, min.n = min.n, u5.bias = u5.bias, ...),
     # minor_breaks = waiver(),
     labels = labels,
     limits = limits,
@@ -65,24 +58,17 @@ scale_y_cases_5er <- function(
 
 scale_x_cases_5er <- function(
     name = waiver(),
-    n = 8, n.min = 5, u5.bias = 4,
+    n = 8, min.n = 5, u5.bias = 4,
     expand = NULL,
     labels = waiver(), limits = NULL,
     oob = scales::censor, na.value = NA_real_,
     transform = "identity", position = "bottom",
     sec.axis = waiver(), guide = waiver(), ...) {
+  # Scale Continuous
   scale_x_continuous(
     name = name,
     # Pass Pretty arguments
-    breaks = function(x) {
-      pretty(
-        x,
-        n = n,
-        n.min = if (max(x) < n.min) ceiling(max(x)) else n.min,
-        u5.bias = u5.bias,
-        ...
-      )
-    },
+    breaks = .auto_pretty(n = n, min.n = min.n, u5.bias = u5.bias, ...),
     # minor_breaks = waiver(),
     labels = labels,
     limits = limits,
@@ -93,5 +79,15 @@ scale_x_cases_5er <- function(
     position = position,
     sec.axis = sec.axis,
     guide = guide
+  )
+}
+
+.auto_pretty <- function(n = 8, min.n = 5, u5.bias = 4, ...) {
+  function(x) pretty(
+    x,
+    n = if (max(x) < n) max(x) else n,
+    min.n = if (max(x) < min.n) max(x) else if (min.n > n) n else min.n,
+    u5.bias = u5.bias,
+    ...
   )
 }

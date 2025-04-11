@@ -7,6 +7,7 @@
 -   `geom_vline_year()` now also supports year_breaks based on weeks. Since weeks don't fall on the same date every year.
 -   `tsibble` now optional dependency to improve speed of first install
 -   add `plotly` compatibility for `geom_epicurve()` and `geom_epigantt()`
+-   rename `min.n` (from `n.min`) in `scale_y_cases_5er()` for correct `base::pretty()` compatibility
 -   Bug fixes and minor improvements
 
 # ggsurveillance 0.2.0

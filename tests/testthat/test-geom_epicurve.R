@@ -62,7 +62,7 @@ test_that("geom_epicurve handles datetime data", {
   p <- ggplot(test_datetime, aes(x = datetime)) +
     geom_vline_year() +
     geom_epicurve(date_resolution = "day") +
-    scale_y_cases_5er(n = 5, n.min = 4, u5.bias = 10)
+    scale_y_cases_5er(n = 5, min.n = 4, u5.bias = 10)
 
   expect_s3_class(p, "ggplot")
   expect_no_error({
@@ -121,3 +121,15 @@ test_that("geom_epicurve with stat = 'bin_date'", {
       geom_epicurve(color = "black", just = 0.5, relative.width = 1, stat = "bin_date")
   })
 })
+
+test_that("scale_y_cases_5er: .auto_pretty", {
+  expect_identical(.auto_pretty()(1:100), (0:10)*10)
+  expect_identical(.auto_pretty()(1:200), (0:10)*20)
+  expect_identical(.auto_pretty()(1:120), (0:6)*20)
+  expect_identical(.auto_pretty()(1), (0:1)*1.0)
+  expect_identical(.auto_pretty()(0L:7L), (0:7)*1.0)
+  # Pass ... arguments to pretty
+  expect_identical(.auto_pretty(n = 3, min.n = 1)(1:200), (0:4)*50)
+  expect_identical(.auto_pretty(n = 3, min.n = 1, high.u.bias = 10^10)(1:200), (0:2)*100)
+})
+

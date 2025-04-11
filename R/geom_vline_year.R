@@ -10,7 +10,7 @@
 #' @param position Position adjustment, either as a string, or the result of a call to
 #'   a position adjustment function.
 #' @param year_break String specifying the month and day ("MM-DD") or week ("W01") of the year break .
-#' Defaults to: `"01-01"` for January 1. 
+#' Defaults to: `"01-01"` for January 1.
 #' "Week" and "MM-DD" are converted automatically based on a leap year (366 days) which starts on Monday.
 #' @param break_type String specifying the type of break to use. Options are:
 #'   * `"day"` (default): Line a drawn based on the specified day for each visible year.
@@ -18,7 +18,7 @@
 #'  (e.g., "W01" for new year or "W40" for start of influenza season)
 #'   * `"epiweek"`: same as week, but line is drawn one day earlier (Sunday).
 #' @param just Numeric offset in days (justification). Shifts the lines from the year break date.
-#' Defaults to `-0.5` for `day`, which shifts the line by half a day so it falls 
+#' Defaults to `-0.5` for `day`, which shifts the line by half a day so it falls
 #'  between December 31 and January 1 by default.
 #' Defaults to `-3.5` (i.e. half a week) for `week`, `isoweek` and `epiweek`.
 #' @param ... Other arguments passed to \code{\link[ggplot2]{layer}}. For example:

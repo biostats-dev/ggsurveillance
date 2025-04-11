@@ -35,6 +35,7 @@
 #'   * For `week/epiweek`: week number (default: 28, approximately July)
 #'   * For `month`: month number (default: 7 for July)
 #'   * For `day`: day of year (default: 150, approximately June)
+#' If start is set to "1" the alignment is done for yearly comparison and the shift in dates for seasonality is skipped.
 #' @param target_year Numeric value for the reference year to align dates to. The default target year
 #'  is the start of the most recent season in the data. This way the most recent dates stay unchanged.
 #' @param population A number or a numeric column with the population size. Used to calculate the incidence.
@@ -49,7 +50,7 @@
 #'   * `year`: Calendar year from original date
 #'   * `week/month/day`: Time unit based on chosen resolution
 #'   * `date_aligned`: Date standardized to target year
-#'   * `season`: Epidemic season identifier (e.g., "2023/24")
+#'   * `season`: Epidemic season identifier (e.g., "2023/24"), if `start = 1` this is the year only (e.g. 2023).
 #'   * `current_season`: Logical flag for most recent season
 #'
 #' Binning also creates the columns:
@@ -85,13 +86,12 @@ align_dates_seasonal <- function(
 
   # rlang check quo to detect character column names
   if (!rlang::quo_is_symbol(rlang::enquo(dates_from))) dates_from <- rlang::sym(dates_from)
+  tidyselect::eval_select(rlang::as_name(rlang::enquo(dates_from)), data = x)
 
   df <- x |>
     dplyr::mutate(
       {{ dates_from }} := .coerce_to_date({{ dates_from }})
     )
-
-  .check_align_df(df, {{ dates_from }})
 
   last_date <- df |>
     dplyr::pull({{ dates_from }}) |>
@@ -160,6 +160,15 @@ align_and_bin_dates_seasonal <- function(
 
   # rlang check quo to detect character column names
   if (!rlang::quo_is_symbol(rlang::enquo(dates_from))) dates_from <- rlang::sym(dates_from)
+  date_var <- rlang::as_name(rlang::enquo(dates_from))
+  # Check if col exists
+  tidyselect::eval_select(date_var, data = x)
+  # Check grouping
+  if (date_var %in% (dplyr::group_vars(x))) {
+    warning(cli::format_warning(
+      "Data.frame grouped by date column: { date_var }. Please remove variable from grouping."
+    ))
+  }
 
   if (!rlang::quo_is_symbol(rlang::enquo(n))) {
     if (is.character(n)) n <- rlang::sym(n)
@@ -168,11 +177,11 @@ align_and_bin_dates_seasonal <- function(
   if (!rlang::quo_is_symbol(rlang::enquo(population))) {
     if (is.character(population)) population <- rlang::sym(population)
   }
-  
+
   x |>
     dplyr::mutate(
       {{ dates_from }} := .coerce_to_date({{ dates_from }})
-  ) -> x
+    ) -> x
 
   # Save existing grouping of the df
   grouping <- dplyr::group_vars(x)
@@ -209,17 +218,6 @@ align_and_bin_dates_seasonal <- function(
 }
 
 .is_current_season <- function(season) (season == (sort(season) |> utils::tail(n = 1)))
-
-.check_align_df <- function(df, dates_from) {
-  dates_from <- rlang::as_name(rlang::enquo(dates_from))
-
-  tidyselect::eval_select(dates_from, data = df)
-  if (dates_from %in% (df |> dplyr::group_vars())) {
-    cli::cli_alert_warning(
-      "Data.frame grouped by date column: { dates_from }. Please remove variable from grouping."
-    )
-  }
-}
 
 .align_dates_seasonal_week <- function(df, dates_from, start = 28, target_year = 2024, drop_leap_week = TRUE) {
   # Make R CMD Check happy, prevent global var
@@ -330,7 +328,6 @@ align_and_bin_dates_seasonal <- function(
   year_month_pattern <- "^\\d{4}-\\d{2}$"
   year_week_day_pattern <- "^\\d{4}-W\\d{2}-\\d{1}$"
   year_week_pattern <- "^\\d{4}-W\\d{2}$"
-
 
   if (lubridate::is.Date(dates)) {
     return(dates)

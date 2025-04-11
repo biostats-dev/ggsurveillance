@@ -24,6 +24,22 @@ test_that("align_and_bin_dates_seasonal correctly aggregates numeric values", {
     sum(df$cases),
     sum(result$n)
   )
+
+  # Test non date column
+  expect_error(
+    df |>
+      align_dates_seasonal(
+        dates_from = region,
+        date_resolution = "month"
+      )
+  )
+
+  # Test non existing column
+  expect_error(df |>
+    align_dates_seasonal(
+      dates_from = test,
+      date_resolution = "month"
+    ))
 })
 
 test_that("align_and_bin_dates_seasonal handles quoted column names", {
@@ -72,6 +88,17 @@ test_that("align_and_bin_dates_seasonal maintains grouping variables", {
   expect_identical(
     as.numeric(counts_by_region),
     as.numeric(result_by_region)
+  )
+
+  # Test grouping by date column
+  expect_warning(
+    df |>
+      dplyr::group_by(date) |>
+      align_and_bin_dates_seasonal(
+        n = cases,
+        dates_from = date,
+        date_resolution = "month"
+      )
   )
 })
 

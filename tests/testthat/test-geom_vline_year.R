@@ -138,20 +138,20 @@ test_that("calc_visible_years handles date ranges correctly", {
   range <- as_date(c("2023-06-01", "2025-06-01"))
   years <- .calc_visible_years(as.numeric(range), is_date = TRUE)
   expect_equal(years, as.numeric(as_date(c("2024-01-01", "2025-01-01"))))
-  
+
   years <- .calc_visible_years(as.numeric(range), is_date = TRUE, year_break = "W01")
   expect_equal(years, as.numeric(as_date(c("2024-01-01", "2025-01-01"))))
-  
+
   years <- .calc_visible_years(as.numeric(range), is_date = TRUE, break_type = "week")
   expect_equal(years, as.numeric(as_date(c("2024-01-01", "2024-12-30"))))
-  
+
   years <- .calc_visible_years(as.numeric(range), is_date = TRUE, break_type = "week", year_break = "W01")
   expect_equal(years, as.numeric(as_date(c("2024-01-01", "2024-12-30"))))
-  
+
   expect_error(
     .calc_visible_years(as.numeric(range), is_date = TRUE, break_type = "week", year_break = "test")
-    )
-  
+  )
+
   expect_warning(expect_warning( # 2 warnings need to expect_warning() calls.
     .calc_visible_years(as.numeric(range), is_date = TRUE, break_type = "day", year_break = "test")
   ))

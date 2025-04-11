@@ -51,6 +51,7 @@ One of:
 \item For \code{week/epiweek}: week number (default: 28, approximately July)
 \item For \code{month}: month number (default: 7 for July)
 \item For \code{day}: day of year (default: 150, approximately June)
+If start is set to "1" the alignment is done for yearly comparison and the shift in dates for seasonality is skipped.
 }}
 
 \item{target_year}{Numeric value for the reference year to align dates to. The default target year
@@ -73,7 +74,7 @@ A data frame with standardized date columns:
 \item \code{year}: Calendar year from original date
 \item \code{week/month/day}: Time unit based on chosen resolution
 \item \code{date_aligned}: Date standardized to target year
-\item \code{season}: Epidemic season identifier (e.g., "2023/24")
+\item \code{season}: Epidemic season identifier (e.g., "2023/24"), if \code{start = 1} this is the year only (e.g. 2023).
 \item \code{current_season}: Logical flag for most recent season
 }
 

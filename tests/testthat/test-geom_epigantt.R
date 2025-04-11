@@ -43,11 +43,14 @@ test_that("geom_epigantt works with example data", {
     geom_epigantt(aes(y = Patient, xmin = start, xmax = end, color = group))
 
   expect_s3_class(p, "ggplot")
-
   # Check that the plot has the correct layers
   expect_true(any(sapply(p$layers, function(l) inherits(l$geom, "GeomEpigantt"))))
-
   expect_no_error(p)
+
+  # Coord Flip
+  p1 <- ggplot(df) +
+    geom_epigantt(aes(x = Patient, ymin = start, ymax = end, color = group))
+  expect_no_error(p1)
 })
 
 test_that("geom_epigantt handles NA values correctly", {

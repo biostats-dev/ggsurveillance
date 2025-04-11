@@ -12,7 +12,7 @@
 
 -   `geom_epicurve()`: A ggplot geom for plotting epicurves
 
-    -   including `stat_bin_date()` for date interval (week, month etc.) based binning of case numbers with perfect alignment with i.e. reporting week.
+    -   including `stat_bin_date()` for date interval (week, month etc.) based binning of case numbers with perfect alignment with e.g. reporting week.
     -   including `scale_y_cases_5er()` for better (case) count axis breaks and positioning.
     -   including `geom_vline_year()`, which automatically detects the turn of the year(s) from the date or datetime axis and draws a vertical line.
 
@@ -20,7 +20,7 @@
 
 -   `create_agegroups()`: Create reproducible age groups with highly customizable labels.
 
--   `geom_epigantt()`: A geom for epigantt plots. Helpful to visualize overlapping time intervals for contact tracing (i.e. hospital outbreaks).
+-   `geom_epigantt()`: A geom for epigantt plots. Helpful to visualize overlapping time intervals for contact tracing (e.g. hospital outbreaks).
 
     -   including `scale_y_discrete_reverse()` which reverses the order of the categorical scale.
 

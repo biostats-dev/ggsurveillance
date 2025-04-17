@@ -123,13 +123,12 @@ test_that("geom_epicurve with stat = 'bin_date'", {
 })
 
 test_that("scale_y_cases_5er: .auto_pretty", {
-  expect_identical(.auto_pretty()(1:100), (0:10)*10)
-  expect_identical(.auto_pretty()(1:200), (0:10)*20)
-  expect_identical(.auto_pretty()(1:120), (0:6)*20)
-  expect_identical(.auto_pretty()(1), (0:1)*1.0)
-  expect_identical(.auto_pretty()(0L:7L), (0:7)*1.0)
+  expect_identical(.auto_pretty()(1:100), (0:10) * 10)
+  expect_identical(.auto_pretty()(1:200), (0:10) * 20)
+  expect_identical(.auto_pretty()(1:120), (0:6) * 20)
+  expect_identical(.auto_pretty()(1), (0:1) * 1.0)
+  expect_identical(.auto_pretty()(0L:7L), (0:7) * 1.0)
   # Pass ... arguments to pretty
-  expect_identical(.auto_pretty(n = 3, min.n = 1)(1:200), (0:4)*50)
-  expect_identical(.auto_pretty(n = 3, min.n = 1, high.u.bias = 10^10)(1:200), (0:2)*100)
+  expect_identical(.auto_pretty(n = 3, min.n = 1)(1:200), (0:4) * 50)
+  expect_identical(.auto_pretty(n = 3, min.n = 1, high.u.bias = 10^10)(1:200), (0:2) * 100)
 })
-

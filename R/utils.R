@@ -22,3 +22,6 @@ register_plotly_methods <- function() {
   registerS3method("geom2trace", "GeomEpicurve", geom_bar_method, envir = asNamespace("plotly"))
   registerS3method("to_basic", "GeomEpigantt", linerange_method, envir = asNamespace("plotly"))
 }
+
+# Evaluates all arguments (see https://github.com/r-lib/scales/pull/81)
+force_all <- function(...) list(...)

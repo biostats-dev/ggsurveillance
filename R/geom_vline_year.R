@@ -48,8 +48,8 @@
 #'   scale_y_cases_5er() +
 #'   scale_x_date(date_breaks = "4 weeks", date_labels = "W%V'%g") + # Correct ISOWeek labels week'year
 #'   theme_bw()
-#' 
-#' # Break type week  
+#'
+#' # Break type week
 #' ggplot(plot_data_epicurve_imp, aes(x = date, weight = 2)) +
 #'   geom_epicurve(date_resolution = "week") +
 #'   geom_vline_year(break_type = "week") +
@@ -111,7 +111,7 @@ geom_hline_year <- function(mapping = NULL, position = "identity",
 GeomVlineYear <- ggplot2::ggproto("GeomVlineYear", Geom,
   extra_params = c(GeomSegment$extra_params, "flipped_aes", "year_break", "break_type", "just"),
   draw_panel = function(data, panel_params, coord, lineend = "butt",
-                        flipped_aes, year_break, break_type, just) {
+                        flipped_aes, year_break, break_type, just, debug = FALSE) {
     # Setup vline (x) oder hline (y)
     # Check for CoordFlip since it flips some thing and not others
     if (xor(!flipped_aes, (inherits(coord, "CoordFlip")))) {
@@ -120,17 +120,6 @@ GeomVlineYear <- ggplot2::ggproto("GeomVlineYear", Geom,
     } else {
       sel_scale <- panel_params$y$scale
       sel_axis <- "y-axis"
-    }
-
-    # Check scale class to detect date or datetime
-    if (inherits(sel_scale, "ScaleContinuousDate")) {
-      is_date <- TRUE
-    } else if (inherits(sel_scale, "ScaleContinuousDatetime")) {
-      is_date <- FALSE
-      just <- just * (24 * 60 * 60) # Transform just from days to seconds
-    } else {
-      is_date <- TRUE
-      cli::cli_warn("{sel_axis} is not date or datetime. Assuming date scale.")
     }
 
     break_type <- match.arg(break_type, choices = c("day", "week", "isoweek", "epiweek"))
@@ -154,6 +143,17 @@ GeomVlineYear <- ggplot2::ggproto("GeomVlineYear", Geom,
       T ~ 0
     )
 
+    # Check scale class to detect date or datetime
+    if (inherits(sel_scale, "ScaleContinuousDate")) {
+      is_date <- TRUE
+    } else if (inherits(sel_scale, "ScaleContinuousDatetime")) {
+      is_date <- FALSE
+      just <- just * (24 * 60 * 60) # Transform just from days to seconds
+    } else {
+      is_date <- TRUE
+      cli::cli_warn("{sel_axis} is not date or datetime. Assuming date scale.")
+    }
+
     # Get range of x and y scale
     ranges <- coord$backtransform_range(panel_params)
 
@@ -172,6 +172,11 @@ GeomVlineYear <- ggplot2::ggproto("GeomVlineYear", Geom,
         dplyr::distinct_all() |>
         dplyr::cross_join(data.frame(y = year + just, yend = year + just)) |>
         dplyr::mutate(x = ranges$x[1], xend = ranges$x[2])
+    }
+
+    # For test_that
+    if (debug) {
+      return(list(data = data, just = just, year = year))
     }
 
     # Draw Lines

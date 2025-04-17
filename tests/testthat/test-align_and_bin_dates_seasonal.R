@@ -31,7 +31,7 @@ test_that("align_and_bin_dates_seasonal correctly aggregates numeric values", {
     date = dates,
     cases = df$cases # Use previous case numbers
   )
-  
+
   # Test aggregation
   result <- align_and_bin_dates_seasonal(
     df2,
@@ -39,13 +39,13 @@ test_that("align_and_bin_dates_seasonal correctly aggregates numeric values", {
     dates_from = date,
     date_resolution = "month"
   )
-  
+
   # Compare total cases
   expect_identical(
     sum(df$cases),
     sum(result$n)
   )
-  
+
   # Test non date column
   expect_error(
     df |>
@@ -165,24 +165,37 @@ test_that("align_and_bin_dates_seasonal handles NA values correctly", {
 })
 
 test_that("align_and_bin_dates_seasonal preserves season information", {
-  dates <- seq(as.Date("2023-01-01"), as.Date("2024-03-01"), by = "week")
+  dates <- seq(as.Date("2023-01-01"), as.Date("2025-03-01"), by = "week")
   df <- data.frame(
     date = dates,
     cases = sample(1:100, length(dates), replace = TRUE)
   )
+  for (date_res in c("week", "epiweek", "month", "day")) {
+    result <- align_and_bin_dates_seasonal(
+      df,
+      n = cases,
+      dates_from = date,
+      date_resolution = date_res
+    )
 
-  result <- align_and_bin_dates_seasonal(
-    df,
-    n = cases,
-    dates_from = date,
-    date_resolution = "month"
-  )
+    # Check that season columns exist and are properly formatted
+    expect_true("season" %in% names(result), label = date_res)
+    expect_true("current_season" %in% names(result), label = date_res)
+    expect_match(result$season, "\\d{4}/\\d{2}", label = date_res)
+    expect_type(result$current_season, "logical")
+  }
 
-  # Check that season columns exist and are properly formatted
-  expect_true("season" %in% names(result))
-  expect_true("current_season" %in% names(result))
-  expect_match(result$season[1], "\\d{4}/\\d{2}")
-  expect_type(result$current_season, "logical")
+  for (date_res in c("week", "epiweek", "month", "day")) {
+    result <- align_and_bin_dates_seasonal(
+      df,
+      n = cases,
+      start = 1,
+      dates_from = date,
+      date_resolution = date_res
+    )
+
+    expect_true(all(result$season == result$year), label = date_res)
+  }
 })
 
 test_that("align_and_bin_dates_seasonal handles quoted population column", {

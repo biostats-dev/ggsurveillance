@@ -89,7 +89,7 @@ ggplot(plot_data_epicurve_imp, aes(x = date, weight = 2)) +
   scale_x_date(date_breaks = "4 weeks", date_labels = "W\%V'\%g") + # Correct ISOWeek labels week'year
   theme_bw()
 
-# Break type week  
+# Break type week
 ggplot(plot_data_epicurve_imp, aes(x = date, weight = 2)) +
   geom_epicurve(date_resolution = "week") +
   geom_vline_year(break_type = "week") +

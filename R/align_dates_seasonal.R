@@ -233,12 +233,13 @@ align_and_bin_dates_seasonal <- function(
       # binned_date = ISOweek::ISOweek2date(paste(year_week, "-1))),
       date_aligned = paste0(ifelse(as.numeric(week) >= start, target_year, target_year + 1), "-W", week, "-1") |>
         ISOweek::ISOweek2date(),
-      # if start <= 1
-      season = ifelse(as.numeric(week) >= start,
+      season = case_when(
+        # Only full years, if start = 1
+        start <= 1 ~ paste0(year),
         # End of year
-        paste0(year, "/", (year + 1) %% 100),
+        as.numeric(week) >= start ~ paste0(year, "/", (year + 1) %% 100),
         # Beginning of following year
-        paste0(year - 1, "/", year %% 100)
+        T ~ paste0(year - 1, "/", year %% 100)
       ),
       # use arrange for current/last season
       current_season = .is_current_season(season),
@@ -260,12 +261,13 @@ align_and_bin_dates_seasonal <- function(
       year_week = paste0(year, "-W", epiweek),
       date_aligned = paste0(ifelse(as.numeric(epiweek) >= start, target_year, target_year + 1), "-W", epiweek, "-1") |>
         ISOweek::ISOweek2date(),
-      # if start <= 1
-      season = ifelse(as.numeric(epiweek) >= start,
+      season = case_when(
+        # Only full years, if start = 1
+        start <= 1 ~ paste0(year),
         # End of year
-        paste0(year, "/", (year + 1) %% 100),
+        as.numeric(epiweek) >= start ~ paste0(year, "/", (year + 1) %% 100),
         # Beginning of following year
-        paste0(year - 1, "/", year %% 100)
+        T ~ paste0(year - 1, "/", year %% 100)
       ),
       # use arrange for current/last season
       current_season = .is_current_season(season),
@@ -289,11 +291,13 @@ align_and_bin_dates_seasonal <- function(
       date_aligned = paste0(ifelse(as.numeric(month) >= start, target_year, target_year + 1), "-", month, "-1") |>
         lubridate::as_date(),
       # if start <= 1
-      season = ifelse(as.numeric(month) >= start,
+      season = case_when(
+        # Only full years, if start = 1
+        start <= 1 ~ paste0(year),
         # End of year
-        paste0(year, "/", (year + 1) %% 100),
+        as.numeric(month) >= start ~ paste0(year, "/", (year + 1) %% 100),
         # Beginning of following year
-        paste0(year - 1, "/", year %% 100)
+        T ~ paste0(year - 1, "/", year %% 100)
       ),
       # use arrange for current/last season
       current_season = .is_current_season(season),
@@ -312,11 +316,13 @@ align_and_bin_dates_seasonal <- function(
       dayofyear = lubridate::yday({{ dates_from }}),
       date_aligned = {{ dates_from }} %m+% lubridate::years((target_year - year)),
       # if start <= 1
-      season = ifelse(as.numeric(dayofyear) >= start,
+      season = case_when(
+        # Only full years, if start = 1
+        start <= 1 ~ paste0(year),
         # End of year
-        paste0(year, "/", (year + 1) %% 100),
+        as.numeric(dayofyear) >= start ~ paste0(year, "/", (year + 1) %% 100),
         # Beginning of following year
-        paste0(year - 1, "/", year %% 100)
+        T ~ paste0(year - 1, "/", year %% 100)
       ),
       # use arrange for current/last season
       current_season = .is_current_season(season),

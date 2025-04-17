@@ -14,7 +14,7 @@
 #' @param ... Additional arguments passed on to [base::pretty()].
 #'
 #' @return A `ggplot2` scale object that can be added to a plot.
-#' @seealso [geom_epicurve()], [ggplot2::scale_y_continuous()], [base::pretty()], 
+#' @seealso [geom_epicurve()], [ggplot2::scale_y_continuous()], [base::pretty()],
 #' [theme_mod_remove_minor_grid_y()]
 #'
 #' @examples
@@ -85,11 +85,23 @@ scale_x_cases_5er <- function(
 }
 
 .auto_pretty <- function(n = 8, min.n = 5, u5.bias = 4, ...) {
-  function(x) pretty(
-    x,
-    n = if (max(x) < n) max(x) else n,
-    min.n = if (max(x) < min.n) max(x) else if (min.n > n) n else min.n,
-    u5.bias = u5.bias,
-    ...
-  )
+  function(x) {
+    pretty(
+      x,
+      n = if (max(x) < n) max(x) else n,
+      min.n = if (max(x) < min.n) max(x) else if (min.n > n) n else min.n,
+      u5.bias = u5.bias,
+      ...
+    )
+  }
+  force_all(n, min.n, u5.bias, ...)
+  function(x) {
+    pretty(
+      x,
+      n = if (max(x) < n) max(x) else n,
+      min.n = if (max(x) < min.n) max(x) else if (min.n > n) n else min.n,
+      u5.bias = u5.bias,
+      ...
+    )
+  }
 }

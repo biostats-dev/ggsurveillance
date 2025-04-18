@@ -8,8 +8,6 @@
 #' a data frame with a column of frequencies and duplicate each row according to
 #' those frequencies.
 #'
-#' @usage uncount(data, weights, ..., .remove = TRUE, .id = NULL)
-#'
 #' @inheritParams tidyr::uncount
 #'
 #' @return A `data.frame` with rows duplicated according to weights.
@@ -28,9 +26,33 @@ NULL
 #' @name uncount
 #' @rdname uncount
 #' @export
-uncount
+tidyr::uncount
 
 #' @importFrom tidyr uncount
 #' @rdname uncount
 #' @export
-expand_counts <- uncount
+expand_counts <- tidyr::uncount
+
+#' Date labeller
+#'
+#' Re-export from the scales package.
+#' * Can be used to overwrite the default locale of date labels.
+#' * `label_date_short()` only labels part of the dates, when they change,
+#' i.e. year is only labelled when the year changes.
+#' * See [scales::label_date()] and [scales::label_date_short()] for more details.
+#'
+#' @inheritParams scales::label_date
+#'
+#' @return A character vector of formatted dates.
+#'
+#' @importFrom scales label_date
+#' @name label_date
+#' @rdname label_date
+#' @export
+scales::label_date
+
+#' @importFrom scales label_date_short
+#' @name label_date
+#' @rdname label_date
+#' @export
+scales::label_date_short

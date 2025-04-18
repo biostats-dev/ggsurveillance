@@ -101,3 +101,6 @@ theme_mod_legend_left <- function() ggplot2::theme(legend.position = "left")
 #' @rdname theme_mod_disable_legend
 #' @export
 theme_mod_legend_right <- function() ggplot2::theme(legend.position = "right")
+#' @rdname theme_mod_disable_legend
+#' @export
+theme_mod_remove_legend_title <- function() ggplot2::theme(legend.title = ggplot2::element_blank())

@@ -32,7 +32,7 @@
 #'   * `lw_max`: Maximum auto-scaled line width cutoff (default: 8)
 #' @return A `ggplot2` geom layer that can be added to a plot
 #' @seealso [theme_mod_legend_bottom()]
-#' 
+#'
 #' @examples
 #' library(dplyr)
 #' library(tidyr)

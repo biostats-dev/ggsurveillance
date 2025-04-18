@@ -8,6 +8,7 @@
 \alias{theme_mod_legend_bottom}
 \alias{theme_mod_legend_left}
 \alias{theme_mod_legend_right}
+\alias{theme_mod_remove_legend_title}
 \title{Quickly adjust the legend position}
 \usage{
 theme_mod_disable_legend()
@@ -24,6 +25,8 @@ theme_mod_legend_bottom()
 theme_mod_legend_left()
 
 theme_mod_legend_right()
+
+theme_mod_remove_legend_title()
 }
 \arguments{
 \item{position}{Position of the ggplot2 legend.

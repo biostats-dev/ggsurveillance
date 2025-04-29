@@ -16,6 +16,7 @@ geom_bar_diverging <- function(mapping = NULL, data = NULL,
       neutral_cat = neutral_cat,
       stacked = TRUE,
       proportion = proportion,
+      totals_only = FALSE,
       ...
     )
   )
@@ -41,7 +42,8 @@ geom_bar_range <- function(mapping = NULL, data = NULL,
 
 stat_diverging <- function(mapping = NULL, data = NULL,
                           geom = "text", position = "identity",
-                          stacked = TRUE,
+                          stacked = TRUE, proportion = FALSE,
+                          totals_only = FALSE,
                           neutral_cat = TRUE,
                           ...,
                           na.rm = FALSE,
@@ -59,6 +61,8 @@ stat_diverging <- function(mapping = NULL, data = NULL,
       na.rm = na.rm,
       stacked = stacked,
       neutral_cat = neutral_cat,
+      proportion = proportion,
+      totals_only = totals_only,
       ...
     )
   )
@@ -66,8 +70,8 @@ stat_diverging <- function(mapping = NULL, data = NULL,
 
 StatDiverging <- ggproto("StatDiverging", Stat,
   required_aes = c("x|y", "fill|diverging_groups"),
-  default_aes = aes(weight = 1, label = after_stat(count)),
-  extra_params = c("stacked", "stacked", "neutral_cat", "na.rm"),
+  default_aes = aes(weight = 1, label = after_stat(default_label)),
+  extra_params = c("stacked", "stacked", "proportion", "totals_only", "neutral_cat", "na.rm"),
   setup_data = function(data, params) {
     # browser()
     data$diverging_groups <- data$diverging_groups %||% data$fill
@@ -84,10 +88,10 @@ StatDiverging <- ggproto("StatDiverging", Stat,
     has_x <- !(is.null(data$x) && is.null(params$x))
     has_y <- !(is.null(data$y) && is.null(params$y))
     if (!has_x && !has_y) {
-      cli::cli_abort("{.fn {snake_class(self)}} requires an {.field x} or {.field y} aesthetic.")
+      cli::cli_abort("stat_diverging() requires an {.field x} or {.field y} aesthetic.")
     }
     if (has_x && has_y) {
-      cli::cli_abort("{.fn {snake_class(self)}} must only have an {.field x} {.emph or} {.field y} aesthetic.")
+      cli::cli_abort("stat_diverging() must only have an {.field x} {.emph or} {.field y} aesthetic.")
     }
 
     if (is.null(params$width)) {
@@ -126,10 +130,12 @@ StatDiverging <- ggproto("StatDiverging", Stat,
         diverging_groups = diverging_groups,
         group = group,
         count = n,
+        default_label = count,
         prop = n / sum(abs(n)), # abs? negative weights?
         ymin = count * direction[1],
         ymax = count * direction[2],
         y = (ymin + ymax) / 2,
+        sign = sign(y),
         width = width,
         .size = length(data$n),
         # flipped_aes = flipped_aes
@@ -138,7 +144,8 @@ StatDiverging <- ggproto("StatDiverging", Stat,
   },
   # All used/passed params have to be named. ... will result in deletions of panel params. 
   # See ggplot2::Stat$parameters()
-  compute_panel = function(self, data, scales, flipped_aes, stacked, width, neutral_cat) {
+  compute_panel = function(self, data, scales, flipped_aes, 
+                           stacked, width, neutral_cat, proportion, totals_only) {
     #TODO: Dodge group
     #browser()
     data <- flip_data(data, flipped_aes)
@@ -161,7 +168,7 @@ StatDiverging <- ggproto("StatDiverging", Stat,
         total_pos = sum(ymax[ymax > 0]),
         prop = count / total,
         prop_neg = total_neg / total,
-        prop_pos = total_pos / total
+        prop_pos = total_pos / total,
         ) -> stats
     
     # Stack results
@@ -176,11 +183,43 @@ StatDiverging <- ggproto("StatDiverging", Stat,
         y = (ymin + ymax) / 2, # Recalc midpoint
       ) -> stats
     }
+    
     # Reconstruct data
     lapply(groups, slice_head, n = 1) |> 
       dplyr::bind_rows() |> 
       select(-x) |>
       right_join(stats, by = c("group", "diverging_groups")) -> data
+    
+    
+    if (totals_only) {
+      #TODO: Exclude middle?
+      data |>
+        dplyr::group_by(x) |>
+        reframe(
+          total = total[1],
+          total_neg = total_neg[1],
+          total_pos = total_pos[1],
+          prop_neg = prop_neg[1],
+          prop_pos = prop_pos[1],
+          ymin = c(total_neg, 0),
+          ymax = c(0, total_pos),
+          y = c(total_neg, total_pos),
+          sign = sign(y),
+          prop = abs(c(prop_neg, prop_pos)),
+          count = abs(y),
+          default_label = count
+        ) -> data
+    }
+    
+    if (proportion == TRUE) {
+      data |>
+        dplyr::mutate(
+          ymin = ymin / total,
+          ymax = ymax / total,
+          y = y / total,
+          default_label = scales::percent(prop, accuracy = 0.1),
+        ) -> data
+    }
     
     flip_data(data, flipped_aes)
   },

@@ -45,7 +45,7 @@ stat_diverging <- function(mapping = NULL, data = NULL,
                            geom = "text", position = "identity",
                            stacked = TRUE, proportion = FALSE,
                            totals_only = FALSE, div_just = 0,
-                           neutral_cat = TRUE, #drop_middle_group?
+                           neutral_cat = TRUE,
                            ...,
                            na.rm = FALSE,
                            show.legend = NA,
@@ -191,26 +191,6 @@ StatDiverging <- ggproto("StatDiverging", Stat,
       select(-x) |>
       right_join(stats, by = c("group", "diverging_groups")) -> data
 
-    # Split middle cat
-    # if (totals_only) {
-    #   #TODO: Exclude middle?
-    #   data |>
-    #     dplyr::group_by(x) |>
-    #     reframe(
-    #       total = total[1],
-    #       total_neg = total_neg[1],
-    #       total_pos = total_pos[1],
-    #       prop_neg = prop_neg[1],
-    #       prop_pos = prop_pos[1],
-    #       ymin = c(total_neg, 0),
-    #       ymax = c(0, total_pos),
-    #       y = c(total_neg, total_pos),
-    #       sign = sign(y),
-    #       prop = abs(c(prop_neg, prop_pos)),
-    #       count = abs(y),
-    #       default_label = count
-    #     ) -> data
-    # }
     if (totals_only) {
       data |>
         dplyr::group_by(x, sign) |>
@@ -249,7 +229,16 @@ StatDiverging <- ggproto("StatDiverging", Stat,
         y = y + (max(ymax) - min(ymin)) * sign * div_just
       ) -> data
 
-    flip_data(data, flipped_aes)
+    data <- flip_data(data, flipped_aes)
+
+    # Handle Transformation of continous scale (e.g. reverse)
+    sel_scale <- if (flipped_aes) scales$x else scales$y
+    if (!is.null(sel_scale$transform_df)) {
+      transformed <- sel_scale$transform_df(data)
+      data[names(transformed)] <- transformed
+    }
+
+    data
   },
   dropped_aes = "weight"
 )
@@ -263,7 +252,7 @@ StatDiverging <- ggproto("StatDiverging", Stat,
 
 GeomBarRange <- ggproto("GeomBarRange", GeomBar,
   # TODO: Allow flipped aes
-  required_aes = c("x|y"),
+  required_aes = c("x|y", "xmin|ymin", "xmax|ymax"),
 
   # These aes columns are created by setup_data(). They need to be listed here so
   # that GeomRect$handle_na() properly removes any bars that fall outside the defined
@@ -281,7 +270,6 @@ GeomBarRange <- ggproto("GeomBarRange", GeomBar,
     data <- flip_data(data, params$flipped_aes)
     data$just <- params$just %||% 0.5
     data <- transform(data,
-      # ymin = pmin(y, 0), ymax = pmax(y, 0),
       xmin = x - width * just, xmax = x + width * (1 - just),
       width = NULL, just = NULL
     )
@@ -293,51 +281,60 @@ GeomBarRange <- ggproto("GeomBarRange", GeomBar,
 
 
 scale_y_continuous_diverging <- function(name = waiver(), limits = NULL, labels = NULL, ...,
-                                         breaks = waiver(), n.breaks = 10,
+                                         breaks = waiver(), n.breaks = 10, transform = c("identity", "reverse"),
                                          expand = waiver(), position = "left") {
   if (!is.null(labels)) {
-    labeller <- scales::compose_label(abs, labels)
+    # if more than 2 labels functions are passed, then ignore
+    labeller <- if (length(labels) > 2) labels else do.call(scales::compose_label, c(abs, labels))
   } else {
     labeller <- abs
   }
 
-  limitter <- limits %||% \(x) rep(max(abs(x)), 2) * c(-1, 1)
+  limits <- limits %||% limit_symmetrical
+
+  transform <- match.arg(transform)
 
   ggplot2::scale_y_continuous(
     name = name,
-    # TODO: add reverse
-    limits = limitter,
-    # TODO: allow label functions
+    limits = limits,
     labels = labeller,
     ...,
     breaks = breaks,
     n.breaks = n.breaks,
+    transform = transform,
     expand = expand,
     position = position
   )
 }
 
 scale_x_continuous_diverging <- function(name = waiver(), limits = NULL, labels = NULL, ...,
-                                         breaks = waiver(), n.breaks = 10,
+                                         breaks = waiver(), n.breaks = 10, transform = c("identity", "reverse"),
                                          expand = waiver(), position = "bottom") {
   if (!is.null(labels)) {
-    labeller <- scales::compose_label(abs, labels)
+    # if more than 2 labels functions are passed, then ignore
+    labeller <- if (length(labels) > 2) labels else do.call(scales::compose_label, c(abs, labels))
   } else {
     labeller <- abs
   }
 
-  limitter <- limits %||% \(x) rep(max(abs(x)), 2) * c(-1, 1)
+  limits <- limits %||% limit_symmetrical
+
+  transform <- match.arg(transform)
 
   ggplot2::scale_x_continuous(
     name = name,
-    # TODO: add reverse
-    limits = limitter,
-    # TODO: allow label functions
+    limits = limits,
     labels = labeller,
     ...,
     breaks = breaks,
     n.breaks = n.breaks,
+    transform = transform,
     expand = expand,
     position = position
   )
 }
+
+# This function creates symmetrical limits around 0 (offset).
+limit_symmetrical <- function(x, center = 0) (max(abs(x - center)) * sign(x)) + center
+
+

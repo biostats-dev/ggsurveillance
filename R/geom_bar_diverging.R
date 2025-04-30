@@ -17,6 +17,7 @@ geom_bar_diverging <- function(mapping = NULL, data = NULL,
       stacked = TRUE,
       proportion = proportion,
       totals_only = FALSE,
+      div_just = 0,
       ...
     )
   )
@@ -41,14 +42,14 @@ geom_bar_range <- function(mapping = NULL, data = NULL,
 }
 
 stat_diverging <- function(mapping = NULL, data = NULL,
-                          geom = "text", position = "identity",
-                          stacked = TRUE, proportion = FALSE,
-                          totals_only = FALSE,
-                          neutral_cat = TRUE,
-                          ...,
-                          na.rm = FALSE,
-                          show.legend = NA,
-                          inherit.aes = TRUE) {
+                           geom = "text", position = "identity",
+                           stacked = TRUE, proportion = FALSE,
+                           totals_only = FALSE, div_just = 0,
+                           neutral_cat = TRUE, #drop_middle_group?
+                           ...,
+                           na.rm = FALSE,
+                           show.legend = NA,
+                           inherit.aes = TRUE) {
   ggplot2::layer(
     data = data,
     mapping = mapping,
@@ -63,6 +64,7 @@ stat_diverging <- function(mapping = NULL, data = NULL,
       neutral_cat = neutral_cat,
       proportion = proportion,
       totals_only = totals_only,
+      div_just = div_just,
       ...
     )
   )
@@ -71,7 +73,7 @@ stat_diverging <- function(mapping = NULL, data = NULL,
 StatDiverging <- ggproto("StatDiverging", Stat,
   required_aes = c("x|y", "fill|diverging_groups"),
   default_aes = aes(weight = 1, label = after_stat(default_label)),
-  extra_params = c("stacked", "stacked", "proportion", "totals_only", "neutral_cat", "na.rm"),
+  extra_params = c("stacked", "stacked", "proportion", "totals_only", "neutral_cat", "div_just", "na.rm"),
   setup_data = function(data, params) {
     # browser()
     data$diverging_groups <- data$diverging_groups %||% data$fill
@@ -81,7 +83,6 @@ StatDiverging <- ggproto("StatDiverging", Stat,
     }
     data
   },
-  
   setup_params = function(self, data, params) {
     params$flipped_aes <- has_flipped_aes(data, params, main_is_orthogonal = FALSE)
 
@@ -102,7 +103,6 @@ StatDiverging <- ggproto("StatDiverging", Stat,
     params
   },
   compute_group = function(data, scales, width = NULL, neutral_cat = TRUE) {
-    
     # data <- flip_data(data, flipped_aes)
     n_levels <- length(levels(data$diverging_groups))
     current_level <- unique(as.numeric(data$diverging_groups))
@@ -142,17 +142,18 @@ StatDiverging <- ggproto("StatDiverging", Stat,
       )
     # flip_data(bars, flipped_aes)
   },
-  # All used/passed params have to be named. ... will result in deletions of panel params. 
+  # All used/passed params have to be named. ... will result in deletions of panel params.
   # See ggplot2::Stat$parameters()
-  compute_panel = function(self, data, scales, flipped_aes, 
-                           stacked, width, neutral_cat, proportion, totals_only) {
-    #TODO: Dodge group
-    #browser()
+  compute_panel = function(self, data, scales, flipped_aes = FALSE,
+                           stacked = TRUE, width = 0.9, neutral_cat = TRUE,
+                           proportion = FALSE, totals_only = FALSE, div_just = 0) {
+    # TODO: Dodge group
+    # browser()
     data <- flip_data(data, flipped_aes)
     if (plyr::empty(data)) {
       return(data.frame())
     }
-    groups <- split(data, ~group + diverging_groups) |> 
+    groups <- split(data, ~ group + diverging_groups) |>
       base::Filter(f = nrow) # Drop empty groups
     # Compute group stats
     stats <- lapply(groups, function(group) {
@@ -169,48 +170,66 @@ StatDiverging <- ggproto("StatDiverging", Stat,
         prop = count / total,
         prop_neg = total_neg / total,
         prop_pos = total_pos / total,
-        ) -> stats
-    
+      ) -> stats
+
     # Stack results
     if (stacked == TRUE) {
-    stats |>
-      dplyr::group_by(x) |>
-      dplyr::mutate(
-        ymin = .calc_ymin_stacked(
-          dplyr::lag(ymin, default = total_neg[1]), dplyr::lag(count, default = 0)
-        ),
-        ymax = ymin + count,
-        y = (ymin + ymax) / 2, # Recalc midpoint
-      ) -> stats
+      stats |>
+        dplyr::group_by(x) |>
+        dplyr::mutate(
+          ymin = .calc_ymin_stacked(
+            dplyr::lag(ymin, default = total_neg[1]), dplyr::lag(count, default = 0)
+          ),
+          ymax = ymin + count,
+          y = (ymin + ymax) / 2, # Recalc midpoint
+        ) -> stats
     }
-    
+
     # Reconstruct data
-    lapply(groups, slice_head, n = 1) |> 
-      dplyr::bind_rows() |> 
+    lapply(groups, slice_head, n = 1) |>
+      dplyr::bind_rows() |>
       select(-x) |>
       right_join(stats, by = c("group", "diverging_groups")) -> data
-    
-    
+
+    # Split middle cat
+    # if (totals_only) {
+    #   #TODO: Exclude middle?
+    #   data |>
+    #     dplyr::group_by(x) |>
+    #     reframe(
+    #       total = total[1],
+    #       total_neg = total_neg[1],
+    #       total_pos = total_pos[1],
+    #       prop_neg = prop_neg[1],
+    #       prop_pos = prop_pos[1],
+    #       ymin = c(total_neg, 0),
+    #       ymax = c(0, total_pos),
+    #       y = c(total_neg, total_pos),
+    #       sign = sign(y),
+    #       prop = abs(c(prop_neg, prop_pos)),
+    #       count = abs(y),
+    #       default_label = count
+    #     ) -> data
+    # }
     if (totals_only) {
-      #TODO: Exclude middle?
       data |>
-        dplyr::group_by(x) |>
-        reframe(
+        dplyr::group_by(x, sign) |>
+        summarize(
           total = total[1],
           total_neg = total_neg[1],
           total_pos = total_pos[1],
           prop_neg = prop_neg[1],
           prop_pos = prop_pos[1],
-          ymin = c(total_neg, 0),
-          ymax = c(0, total_pos),
-          y = c(total_neg, total_pos),
-          sign = sign(y),
-          prop = abs(c(prop_neg, prop_pos)),
-          count = abs(y),
+          ymin = min(ymin),
+          ymax = max(ymax),
+          # Largest negative values for negative group, largest positive value for pos group, middle is 0.
+          y = sign * max(c(sign * ymin, sign * ymax)),
+          count = sum(count),
+          prop = count / total,
           default_label = count
         ) -> data
     }
-    
+
     if (proportion == TRUE) {
       data |>
         dplyr::mutate(
@@ -220,7 +239,16 @@ StatDiverging <- ggproto("StatDiverging", Stat,
           default_label = scales::percent(prop, accuracy = 0.1),
         ) -> data
     }
-    
+
+    # Apply div_just
+    # y-coordinates (for labels) will be moved outwards relative to bar range
+    data |>
+      dplyr::ungroup() |>
+      dplyr::mutate(
+        range = (max(ymax) - min(ymin)),
+        y = y + (max(ymax) - min(ymin)) * sign * div_just
+      ) -> data
+
     flip_data(data, flipped_aes)
   },
   dropped_aes = "weight"
@@ -248,7 +276,7 @@ GeomBarRange <- ggproto("GeomBarRange", GeomBar,
   },
   extra_params = c("just", "na.rm", "orientation"),
   setup_data = function(self, data, params) {
-    #browser()
+    # browser()
     data$flipped_aes <- params$flipped_aes
     data <- flip_data(data, params$flipped_aes)
     data$just <- params$just %||% 0.5
@@ -265,28 +293,50 @@ GeomBarRange <- ggproto("GeomBarRange", GeomBar,
 
 
 scale_y_continuous_diverging <- function(name = waiver(), limits = NULL, labels = NULL, ...,
+                                         breaks = waiver(), n.breaks = 10,
                                          expand = waiver(), position = "left") {
+  if (!is.null(labels)) {
+    labeller <- scales::compose_label(abs, labels)
+  } else {
+    labeller <- abs
+  }
+
+  limitter <- limits %||% \(x) rep(max(abs(x)), 2) * c(-1, 1)
+
   ggplot2::scale_y_continuous(
     name = name,
     # TODO: add reverse
-    limits = \(x) rep(max(abs(x)), 2) * c(-1, 1),
+    limits = limitter,
     # TODO: allow label functions
-    labels = abs,
+    labels = labeller,
     ...,
+    breaks = breaks,
+    n.breaks = n.breaks,
     expand = expand,
     position = position
   )
 }
 
 scale_x_continuous_diverging <- function(name = waiver(), limits = NULL, labels = NULL, ...,
+                                         breaks = waiver(), n.breaks = 10,
                                          expand = waiver(), position = "bottom") {
+  if (!is.null(labels)) {
+    labeller <- scales::compose_label(abs, labels)
+  } else {
+    labeller <- abs
+  }
+
+  limitter <- limits %||% \(x) rep(max(abs(x)), 2) * c(-1, 1)
+
   ggplot2::scale_x_continuous(
     name = name,
     # TODO: add reverse
-    limits = \(x) rep(max(abs(x)), 2) * c(-1, 1),
+    limits = limitter,
     # TODO: allow label functions
-    labels = abs,
+    labels = labeller,
     ...,
+    breaks = breaks,
+    n.breaks = n.breaks,
     expand = expand,
     position = position
   )

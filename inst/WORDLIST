@@ -42,7 +42,6 @@ geoms
 ggplot
 hms
 isoweek
-linetype
 linewidth
 lw
 plotmath
@@ -50,6 +49,7 @@ quasiquotation
 rd
 rlang
 stat
+stringi
 tibble
 tidyr
 tidyverse

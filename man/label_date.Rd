@@ -7,13 +7,19 @@
 \usage{
 label_date(format = "\%Y-\%m-\%d", tz = "UTC", locale = NULL)
 
-label_date_short(format = c("\%Y", "\%b", "\%d", "\%H:\%M"), sep = "\\n")
+label_date_short(
+  format = c("\%Y", "\%b", "\%d", "\%H:\%M"),
+  sep = "\\n",
+  leading = "0",
+  tz = "UTC",
+  locale = NULL
+)
 }
 \arguments{
-\item{format}{For \code{date_format()} and \code{time_format()} a date/time format
+\item{format}{For \code{label_date()} and \code{label_time()} a date/time format
 string using standard POSIX specification.  See \code{\link[=strptime]{strptime()}} for details.
 
-For \code{date_short()} a character vector of length 4 giving the format
+For \code{label_date_short()} a character vector of length 4 giving the format
 components to use for year, month, day, and hour respectively.}
 
 \item{tz}{a time zone name, see \code{\link[=timezones]{timezones()}}. Defaults
@@ -25,6 +31,9 @@ can see a complete list of supported locales with
 \code{\link[stringi:stri_locale_list]{stringi::stri_locale_list()}}.}
 
 \item{sep}{Separator to use when combining date formats into a single string.}
+
+\item{leading}{A string to replace leading zeroes with. Can be \code{""} to
+disable leading characters or \code{"\u2007"} for figure-spaces.}
 }
 \value{
 A character vector of formatted dates.

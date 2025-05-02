@@ -84,7 +84,7 @@ StatDiverging <- ggproto("StatDiverging", Stat,
     data
   },
   setup_params = function(self, data, params) {
-    params$flipped_aes <- has_flipped_aes(data, params, main_is_orthogonal = FALSE)
+    params$flipped_aes <- ggplot2::has_flipped_aes(data, params, main_is_orthogonal = FALSE)
 
     has_x <- !(is.null(data$x) && is.null(params$x))
     has_y <- !(is.null(data$y) && is.null(params$y))
@@ -103,7 +103,7 @@ StatDiverging <- ggproto("StatDiverging", Stat,
     params
   },
   compute_group = function(data, scales, width = NULL, neutral_cat = TRUE) {
-    # data <- flip_data(data, flipped_aes)
+    # browser()
     n_levels <- length(levels(data$diverging_groups))
     current_level <- unique(as.numeric(data$diverging_groups))
 
@@ -138,18 +138,16 @@ StatDiverging <- ggproto("StatDiverging", Stat,
         sign = sign(y),
         width = width,
         .size = length(data$n),
-        # flipped_aes = flipped_aes
       )
-    # flip_data(bars, flipped_aes)
   },
   # All used/passed params have to be named. ... will result in deletions of panel params.
   # See ggplot2::Stat$parameters()
   compute_panel = function(self, data, scales, flipped_aes = FALSE,
                            stacked = TRUE, width = 0.9, neutral_cat = TRUE,
                            proportion = FALSE, totals_only = FALSE, div_just = 0) {
-    # TODO: Dodge group
     # browser()
-    data <- flip_data(data, flipped_aes)
+    # TODO: Dodge group
+    data <- ggplot2::flip_data(data, flipped_aes)
     if (plyr::empty(data)) {
       return(data.frame())
     }
@@ -229,7 +227,7 @@ StatDiverging <- ggproto("StatDiverging", Stat,
         y = y + (max(ymax) - min(ymin)) * sign * div_just
       ) -> data
 
-    data <- flip_data(data, flipped_aes)
+    data <- ggplot2::flip_data(data, flipped_aes)
 
     # Handle Transformation of continous scale (e.g. reverse)
     sel_scale <- if (flipped_aes) scales$x else scales$y
@@ -251,7 +249,6 @@ StatDiverging <- ggproto("StatDiverging", Stat,
 }
 
 GeomBarRange <- ggproto("GeomBarRange", GeomBar,
-  # TODO: Allow flipped aes
   required_aes = c("x|y", "xmin|ymin", "xmax|ymax"),
 
   # These aes columns are created by setup_data(). They need to be listed here so
@@ -260,12 +257,14 @@ GeomBarRange <- ggproto("GeomBarRange", GeomBar,
   non_missing_aes = c("xmin", "xmax", "ymin", "ymax"),
   default_aes = aes(!!!GeomRect$default_aes, width = 0.9),
   setup_params = function(data, params) {
-    params$flipped_aes <- has_flipped_aes(data, params)
+    # Stat diverging returns x, xmax, xmin for flipped aes,
+    # range_is_orthogonal determines flipped based on ranges (i.e. xmax, xmin and ymax, ymin)
+    params$flipped_aes <- ggplot2::has_flipped_aes(data, params, range_is_orthogonal = TRUE)
+
     params
   },
   extra_params = c("just", "na.rm", "orientation"),
   setup_data = function(self, data, params) {
-    # browser()
     data$flipped_aes <- params$flipped_aes
     data <- flip_data(data, params$flipped_aes)
     data$just <- params$just %||% 0.5
@@ -281,18 +280,22 @@ GeomBarRange <- ggproto("GeomBarRange", GeomBar,
 
 
 scale_y_continuous_diverging <- function(name = waiver(), limits = NULL, labels = NULL, ...,
-                                         breaks = waiver(), n.breaks = 10, transform = c("identity", "reverse"),
+                                         breaks = waiver(), n.breaks = NULL, transform = "identity",
                                          expand = waiver(), position = "left") {
   if (!is.null(labels)) {
-    # if more than 2 labels functions are passed, then ignore
-    labeller <- if (length(labels) > 2) labels else do.call(scales::compose_label, c(abs, labels))
+    # if labels are a list of functions compose, else treat them as labels
+    if (
+      any(sapply(c(labeller), is.function)) ||
+        all(sapply(as.character(labeller), exists, mode = "function"))) {
+      labeller <- do.call(scales::compose_label, c(abs, labels))
+    } else {
+      labeller <- labels
+    }
   } else {
     labeller <- abs
   }
 
   limits <- limits %||% limit_symmetrical
-
-  transform <- match.arg(transform)
 
   ggplot2::scale_y_continuous(
     name = name,
@@ -308,18 +311,22 @@ scale_y_continuous_diverging <- function(name = waiver(), limits = NULL, labels 
 }
 
 scale_x_continuous_diverging <- function(name = waiver(), limits = NULL, labels = NULL, ...,
-                                         breaks = waiver(), n.breaks = 10, transform = c("identity", "reverse"),
+                                         breaks = waiver(), n.breaks = NULL, transform = "identity",
                                          expand = waiver(), position = "bottom") {
   if (!is.null(labels)) {
-    # if more than 2 labels functions are passed, then ignore
-    labeller <- if (length(labels) > 2) labels else do.call(scales::compose_label, c(abs, labels))
+    # if labels are a list of functions compose, else treat them as labels
+    if (
+      any(sapply(c(labeller), is.function)) ||
+        all(sapply(as.character(labeller), exists, mode = "function"))) {
+      labeller <- do.call(scales::compose_label, c(abs, labels))
+    } else {
+      labeller <- labels
+    }
   } else {
     labeller <- abs
   }
 
   limits <- limits %||% limit_symmetrical
-
-  transform <- match.arg(transform)
 
   ggplot2::scale_x_continuous(
     name = name,
@@ -336,5 +343,3 @@ scale_x_continuous_diverging <- function(name = waiver(), limits = NULL, labels 
 
 # This function creates symmetrical limits around 0 (offset).
 limit_symmetrical <- function(x, center = 0) (max(abs(x - center)) * sign(x)) + center
-
-

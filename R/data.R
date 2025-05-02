@@ -2,7 +2,7 @@
 #'
 #' A subset of the weekly German influenza surveillance data from January 2020 to January 2025.
 #'
-#' A data frame with 1,037 rows and 4 columns:
+#' @format A data frame with 1,037 rows and 4 columns:
 #' \describe{
 #'   \item{ReportingWeek}{Reporting Week in "2024-W03" format}
 #'   \item{AgeGroup}{Age groups: `00+` for all and `00-14`, `15-59` and `60+` for age stratified cases.}
@@ -13,6 +13,22 @@
 #' DOI:10.5281/zenodo.14619502. \url{https://github.com/robert-koch-institut/Influenzafaelle_in_Deutschland}
 "influenza_germany"
 
+#' Population of the German states (2023)
+#'
+#' German Population data by state in 2023
+#'
+#' @format A data frame with 2912 rows and 5 columns:
+#' \describe{
+#'   \item{reporting_date}{Date: Always "2023-12-31"}
+#'   \item{state}{Character: Name of the German state}
+#'   \item{age}{Numeric: Age from 0 to 89. Age 90 includes "90 and above"}
+#'   \item{n}{Numeric: Population size}
+#' }
+#' @source © Statistisches Bundesamt (Destatis), Genesis-Online, 2025:
+#' Bevölkerung: Bundesländer, Stichtag, Geschlecht, Altersjahre (12411-0013).
+#' Data licence Germany (\href{https://www.govdata.de/dl-de/by-2-0}{dl-de/by-2-0})
+#' \url{https://www-genesis.destatis.de/datenbank/online/statistic/12411/table/12411-0013}
+"population_german_states"
 
 #' Line list of a fictional hospital outbreak (Data)
 #'

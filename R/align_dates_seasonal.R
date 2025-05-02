@@ -23,7 +23,7 @@
 #'   * ISO dates `"2024-03-09"`
 #'   * Month `"2024-03"`
 #'   * Week `"2024-W09"` or `"2024-W09-1"`
-#' @param n Numeric column with case counts. Supports quoted and unquoted column names.
+#' @param n Numeric column with case counts (or weights). Supports quoted and unquoted column names.
 #' @param dates_from Column name containing the dates to align. Used when x is a data.frame.
 #' @param date_resolution Character string specifying the temporal resolution.
 #'   One of:

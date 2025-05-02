@@ -62,7 +62,7 @@ are dropped if they are not in the most recent season. Disable if data should be
 Dropping week 53 from historical data is the most common approach. Otherwise historical data for week 53 would
 map to week 52 if the target season has no leap week, resulting in a doubling of the case counts.}
 
-\item{n}{Numeric column with case counts. Supports quoted and unquoted column names.}
+\item{n}{Numeric column with case counts (or weights). Supports quoted and unquoted column names.}
 
 \item{population}{A number or a numeric column with the population size. Used to calculate the incidence.}
 

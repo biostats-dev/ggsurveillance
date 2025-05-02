@@ -24,6 +24,7 @@ Creates a labeller function that removes every n-th label on an \code{ggplot2} a
 Useful for reducing overlapping labels while keeping the major ticks.
 }
 \examples{
+library(ggplot2)
 # Default skip labels
 ggplot(mtcars, aes(x = mpg, y = wt)) +
   geom_point() +

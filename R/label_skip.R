@@ -14,6 +14,7 @@
 #'   skipped labels replaced by empty strings.
 #'
 #' @examples
+#' library(ggplot2)
 #' # Default skip labels
 #' ggplot(mtcars, aes(x = mpg, y = wt)) +
 #'   geom_point() +

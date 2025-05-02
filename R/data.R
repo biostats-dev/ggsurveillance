@@ -22,6 +22,7 @@
 #'   \item{reporting_date}{Date: Always "2023-12-31"}
 #'   \item{state}{Character: Name of the German state}
 #'   \item{age}{Numeric: Age from 0 to 89. Age 90 includes "90 and above"}
+#'   \item{sex}{Factor: "female" or "male"}
 #'   \item{n}{Numeric: Population size}
 #' }
 #' @source © Statistisches Bundesamt (Destatis), Genesis-Online, 2025:

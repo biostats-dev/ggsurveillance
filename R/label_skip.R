@@ -1,6 +1,37 @@
+#' Skip labels on an axis
+#'
+#' @description
+#' Creates a labeller function that removes every n-th label on an `ggplot2` axis.
+#' Useful for reducing overlapping labels while keeping the major ticks.
+#'
+#' @param n Integer. Display every nth label. Default is `2`.
+#' @param start Where to start the pattern. Either `"left"` for first tick (default),
+#' `"right"` for last tick, or an integer position (i.e. `1` for first tick, `2` for second tick, etc.).
+#' @param labeller Optional function to transform labels before applying skip pattern.
+#' For example [label_date()]. For more complex labeller combinations use [scales::compose_label()].
+#'
+#' @return A function that takes a vector of labels and returns a vector with
+#'   skipped labels replaced by empty strings.
+#'
+#' @examples
+#' # Default skip labels
+#' ggplot(mtcars, aes(x = mpg, y = wt)) +
+#'   geom_point() +
+#'   scale_x_continuous(labels = label_skip())
+#'
+#' # Skip date labels, while keep ticks
+#' ggplot(economics, aes(x = date, y = unemploy)) +
+#'   geom_line() +
+#'   scale_x_date(
+#'     date_breaks = "2 years",
+#'     labels = label_skip(start = "right", labeller = label_date(format = "%Y"))
+#'   ) +
+#'   theme_bw()
+#'
+#' @export
+
 label_skip <- function(n = 2, start = "left", labeller = NULL) {
-  force(n)
-  force(start)
+  force_all(n, start, labeller)
 
   # Validate inputs
   n <- as.integer(n) # Only integer
@@ -16,23 +47,23 @@ label_skip <- function(n = 2, start = "left", labeller = NULL) {
     cli::cli_abort("'start' must be either 'left', 'right', or an integer.")
   }
 
+  if (!is.null(labeller)) {
+    # if labels are a list of functions compose, else treat them as labels
+    if (
+      any(sapply(c(labeller), is.function)) ||
+        all(sapply(as.character(labeller), exists, mode = "function"))) {
+      # TODO: remove identity function
+      labeller <- do.call(scales::compose_label, c(identity, labeller))
+    } else {
+      cli::cli_abort("label_skip(): {labeller} not a function.")
+    }
+  }
+
   function(x) {
     # Apply other labeller
     if (!is.null(labeller) && is.function(labeller)) {
       x <- labeller(x)
     }
-
-    #   function(x) {
-    # # Apply the labeller function first if provided
-    # if (!is.null(labeller)) {
-    #   if (is.function(labeller)) {
-    #     x <- labeller(x)
-    #   } else if (inherits(labeller, "formula")) {
-    #     # Convert formula to function and apply
-    #     fun <- scales::as_labeller(labeller)
-    #     x <- fun(x)
-    #   }
-    # }
 
     # Find non-NA positions
     # ggplot2 sometimes passes NA values in x, which are not shown on the scale

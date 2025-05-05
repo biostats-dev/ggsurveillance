@@ -2,10 +2,23 @@
 % Please edit documentation in R/geom_bar_diverging.R
 \name{geom_bar_diverging}
 \alias{geom_bar_diverging}
+\alias{geom_area_diverging}
 \alias{stat_diverging}
-\title{Create diverging bar charts}
+\title{Create diverging bar charts, diverging area charts or other plots for opposing categorical data.}
 \usage{
 geom_bar_diverging(
+  mapping = NULL,
+  data = NULL,
+  position = "identity",
+  proportion = FALSE,
+  neutral_cat = c("odd", "never"),
+  ...,
+  na.rm = FALSE,
+  show.legend = NA,
+  inherit.aes = TRUE
+)
+
+geom_area_diverging(
   mapping = NULL,
   data = NULL,
   position = "identity",
@@ -79,17 +92,20 @@ Negative values nudge inward.}
 A \code{ggplot2} geom layer that can be added to a plot.
 }
 \description{
-\code{geom_bar_diverging()} creates a diverging bar chart, i.e. a stacked bar charts which is centered at 0.
+\code{geom_bar_diverging()} creates a diverging bar chart, i.e. stacked bars which are centered at 0.
 This is useful for visualizing contrasting categories like:
 \itemize{
-\item case by contrasting categories like vaccination status or autochton vs imported infection
+\item case counts by contrasting categories like vaccination status or autochthonous vs imported infection
 \item age pyramids,
 \item likert scales for e.g. agreement (sentiment analysis)
 \item or any data with natural opposing groups.
 }
 
 \code{stat_diverging()} calculates the required statistics for diverging
-charts and can be used with different geoms. Used for easy labeling of diverging bar charts.
+charts and can be used with different geoms. Used for easy labeling of diverging charts.
+
+\code{geom_area_diverging()} creates a diverging area chart, for continuous data of opposing categories.
+x (or y) has to be continuous for this geom.
 }
 \section{Diverging bar charts}{
 

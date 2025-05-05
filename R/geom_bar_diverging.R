@@ -1,15 +1,18 @@
-#' Create diverging bar charts
+#' Create diverging bar charts, diverging area charts or other plots for opposing categorical data.
 #'
 #' @description
-#' `geom_bar_diverging()` creates a diverging bar chart, i.e. a stacked bar charts which is centered at 0.
+#' `geom_bar_diverging()` creates a diverging bar chart, i.e. stacked bars which are centered at 0.
 #' This is useful for visualizing contrasting categories like:
-#'  * case by contrasting categories like vaccination status or autochton vs imported infection
+#'  * case counts by contrasting categories like vaccination status or autochthonous vs imported infection
 #'  * age pyramids,
 #'  * likert scales for e.g. agreement (sentiment analysis)
 #'  * or any data with natural opposing groups.
 #'
 #' `stat_diverging()` calculates the required statistics for diverging
-#' charts and can be used with different geoms. Used for easy labeling of diverging bar charts.
+#' charts and can be used with different geoms. Used for easy labeling of diverging charts.
+#' 
+#' `geom_area_diverging()` creates a diverging area chart, for continuous data of opposing categories.
+#' x (or y) has to be continuous for this geom.
 #'
 #' @section Diverging bar charts:
 #' Diverging bar charts split categories into positive and negative directions based on
@@ -116,10 +119,38 @@ geom_bar_diverging <- function(mapping = NULL, data = NULL, position = "identity
                                proportion = FALSE, neutral_cat = c("odd", "never"),
                                # break_cat = NULL, # odd, never, always
                                ..., na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
-  neutral_cat <- match.arg(neutral_cat)
+  neutral_cat <- rlang::arg_match(neutral_cat)
 
   ggplot2::layer(
     geom = GeomBarRange,
+    mapping = mapping,
+    data = data,
+    stat = "diverging",
+    position = position,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+    params = list(
+      na.rm = na.rm,
+      neutral_cat = neutral_cat,
+      stacked = TRUE,
+      proportion = proportion,
+      totals_by_direction = FALSE,
+      nudge_label_outward = 0,
+      ...
+    )
+  )
+}
+
+#' @rdname geom_bar_diverging
+#' @export
+geom_area_diverging <- function(mapping = NULL, data = NULL, position = "identity",
+                               proportion = FALSE, neutral_cat = c("odd", "never"),
+                               # break_cat = NULL, # odd, never, always
+                               ..., na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
+  neutral_cat <- rlang::arg_match(neutral_cat)
+  
+  ggplot2::layer(
+    geom = GeomAreaDiverging,
     mapping = mapping,
     data = data,
     stat = "diverging",
@@ -146,7 +177,7 @@ stat_diverging <- function(mapping = NULL, data = NULL,
                            neutral_cat = c("odd", "never"),
                            totals_by_direction = FALSE, nudge_label_outward = 0,
                            ..., na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
-  neutral_cat <- match.arg(neutral_cat)
+  neutral_cat <- rlang::arg_match(neutral_cat)
 
   ggplot2::layer(
     data = data,
@@ -240,8 +271,8 @@ StatDiverging <- ggproto("StatDiverging", Stat,
         prop = n / sum(n), # abs? negative weights?
         ymin = count * direction[1],
         ymax = count * direction[2],
-        y = (ymin + ymax) / 2,
-        sign = sign(y),
+        sign = sum(direction),
+        y = sign * count, # y is count * direction
         width = width,
         .size = length(data$n),
       )
@@ -286,7 +317,7 @@ StatDiverging <- ggproto("StatDiverging", Stat,
           # Stack bars from left (-) to right (+)
           ymin = total_neg[1] + cumsum(dplyr::lag(count, default = 0)),
           ymax = ymin + count,
-          y = (ymin + ymax) / 2, # Recalc midpoint
+          y = (ymin + ymax) / 2, # For stacked y is midpoint of area
         ) -> stats
     }
 
@@ -347,3 +378,22 @@ StatDiverging <- ggproto("StatDiverging", Stat,
   },
   dropped_aes = "weight"
 )
+
+GeomAreaDiverging <- ggproto("GeomAreaDiverging", GeomRibbon,
+                             setup_data = function(data, params) {
+                               data$flipped_aes <- params$flipped_aes
+                               data <- flip_data(data, params$flipped_aes)
+                               
+                               if (inherits(data$x, "mapped_discrete")) 
+                                 cli::cli_warn("{flipped_names(params$flipped_aes)$x} should be continuous and not discrete.")
+                               
+                               if (is.null(data$ymin) && is.null(data$ymax)) {
+                                 cli::cli_abort("Either {.field {flipped_names(params$flipped_aes)$ymin}} or {.field {flipped_names(params$flipped_aes)$ymax}} must be given as an aesthetic.")
+                               }
+                               data <- data[order(data$PANEL, data$group, data$x), , drop = FALSE]
+                               data$y <- data$ymin %||% data$ymax
+                               flip_data(data, params$flipped_aes)
+                             }
+)
+
+

@@ -60,6 +60,11 @@ GeomBarRange <- ggproto("GeomBarRange", GeomBar,
   setup_data = function(self, data, params) {
     data$flipped_aes <- params$flipped_aes
     data <- flip_data(data, params$flipped_aes)
+    
+    if (is.null(data$ymin) && is.null(data$ymax)) {
+      cli::cli_abort("Either {.field {flipped_names(params$flipped_aes)$ymin}} or {.field {flipped_names(params$flipped_aes)$ymax}} must be given as an aesthetic.")
+    }
+    
     data$just <- params$just %||% 0.5
     data$width <- data$width %||% params$width %||% 0.9
     data <- transform(data,
@@ -70,3 +75,4 @@ GeomBarRange <- ggproto("GeomBarRange", GeomBar,
   },
   rename_size = FALSE
 )
+

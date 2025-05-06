@@ -11,22 +11,22 @@ test_that("geom_vline_year handles basic functionality", {
   expect_no_error(p)
   expect_s3_class(p, "ggplot")
   vdiffr::expect_doppelganger("1_geom_vline_year_basic", p)
-  
 })
 
 test_that("geom_vline_year warning for non-date or datetime axis", {
   test_dates <- data.frame(
     date = as.numeric(as.Date("2023-12-01") + 0:60)
   )
-  
+
   p <- ggplot(test_dates, aes(x = date)) +
     geom_bar() +
     geom_vline_year()
-  
+
   expect_no_error(p)
   expect_s3_class(p, "ggplot")
-  expect_warning(vdiffr::expect_doppelganger("1_geom_vline_year_cont", p), 
-                 regexp = "x-axis is not date or datetime. Assuming date scale.")
+  expect_warning(vdiffr::expect_doppelganger("1_geom_vline_year_cont", p),
+    regexp = "x-axis is not date or datetime. Assuming date scale."
+  )
 })
 
 test_that("geom_vline_year handles datetime data", {
@@ -168,7 +168,7 @@ test_that("Test draw_panel of GeomVline directly", {
   dummy_panel_params <- list(
     x = list(scale = ggplot2::ScaleContinuousDate)
   )
-  
+
   dummy_coord <- ggplot2::CoordCartesian
   dummy_coord$backtransform_range <- function(params) {
     list(
@@ -176,10 +176,10 @@ test_that("Test draw_panel of GeomVline directly", {
       y = c(0, 10)
     )
   }
-  
+
   # Create a mock data frame
   dummy_data <- data.frame(PANEL = 1)
-  
+
   # Test with default parameters
   result <- expect_no_error(
     GeomVlineYear$draw_panel(
@@ -193,16 +193,16 @@ test_that("Test draw_panel of GeomVline directly", {
       debug = TRUE
     )
   )
-  
+
   expect_identical(result$just, -0.5)
   expect_identical(result$year, as.numeric(as_date("2023-01-01")))
   expect_identical(result$data$x, as.numeric(as_date("2023-01-01")) + -0.5)
-  
+
   # Mock data for panel_params
   dummy_panel_params <- list(
     x = list(scale = ggplot2::ScaleContinuousDatetime)
   )
-  
+
   dummy_coord <- ggplot2::CoordCartesian
   dummy_coord$backtransform_range <- function(params) {
     list(
@@ -210,7 +210,7 @@ test_that("Test draw_panel of GeomVline directly", {
       y = c(0, 10)
     )
   }
-  
+
   # Test with default parameters
   result <- expect_no_error(
     GeomVlineYear$draw_panel(
@@ -224,11 +224,11 @@ test_that("Test draw_panel of GeomVline directly", {
       debug = TRUE
     )
   )
-  
+
   expect_identical(result$just, -0.5 * 60 * 60 * 24)
   expect_identical(result$year, as.numeric(as_datetime("2023-01-01")))
   expect_identical(result$data$x, as.numeric(as_datetime("2023-01-01")) + -0.5 * 60 * 60 * 24)
-  
+
   # Test with default parameters
   result <- expect_no_error(
     GeomVlineYear$draw_panel(
@@ -242,12 +242,12 @@ test_that("Test draw_panel of GeomVline directly", {
       debug = TRUE
     )
   )
-  
+
   expect_identical(result$just, -2 * 60 * 60 * 24)
   expect_identical(result$year, as.numeric(as_datetime("2023-01-01")))
   expect_identical(result$data$x, as.numeric(as_datetime("2023-01-01")) + -2 * 60 * 60 * 24)
-  
-  
+
+
   result <- expect_no_error(
     GeomVlineYear$draw_panel(
       data = dummy_data,
@@ -260,7 +260,7 @@ test_that("Test draw_panel of GeomVline directly", {
       debug = TRUE
     )
   )
-  
+
   expect_identical(result$just, -3.5 * 60 * 60 * 24)
   expect_identical(result$year, as.numeric(as_datetime("2023-01-02")))
   expect_identical(result$data$x, as.numeric(as_datetime("2023-01-02")) + -3.5 * 60 * 60 * 24)

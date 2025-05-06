@@ -54,14 +54,14 @@ test_that("geom_epigantt works with example data", {
     geom_epigantt(aes(y = Patient, xmin = start, xmax = end, color = group))
 
   expect_s3_class(p, "ggplot")
-  # Check that the plot has the correct layers
-  expect_true(any(sapply(p$layers, function(l) inherits(l$geom, "GeomEpigantt"))))
   expect_no_error(p)
+  vdiffr::expect_doppelganger("1_geom_epigantt_basic", p)
 
   # Coord Flip
   p1 <- ggplot(df) +
     geom_epigantt(aes(x = Patient, ymin = start, ymax = end, color = group))
   expect_no_error(p1)
+  vdiffr::expect_doppelganger("1_geom_epigantt_flip_aes", p1)
 })
 
 test_that("geom_epigantt handles NA values correctly", {
@@ -80,11 +80,14 @@ test_that("geom_epigantt handles NA values correctly", {
     ))
 
   # Test with na.rm = FALSE
-  expect_no_error(ggplot(df_na) +
-    geom_epigantt(
-      aes(y = Patient, xmin = start, xmax = end),
-      na.rm = FALSE
-    ))
+  expect_warning(vdiffr::expect_doppelganger(
+    "2_geom_epigantt_na",
+    ggplot(df_na) +
+      geom_epigantt(
+        aes(y = Patient, xmin = start, xmax = end),
+        na.rm = FALSE
+      )
+  ), regexp = "Removed")
 })
 
 test_that("geom_epigantt full test", {
@@ -99,19 +102,24 @@ test_that("geom_epigantt full test", {
   linelist_hospital_outbreak |>
     tidyr::pivot_longer(cols = starts_with("pathogen"), values_to = "date") -> df_detections_long
 
-  expect_no_error(ggplot(df_stays_long) +
+  p <- ggplot(df_stays_long) +
     geom_epigantt(aes(y = Patient, xmin = start_of_stay, xmax = end_of_stay, color = name)) +
     geom_point(aes(y = Patient, x = date), data = df_detections_long) +
     scale_y_discrete_reverse() +
     theme_bw() +
-    theme(legend.position = "bottom"))
+    theme(legend.position = "bottom")
+
+  expect_no_error(p)
+  expect_warning(vdiffr::expect_doppelganger("3_geom_epigantt_full", p), regexp = "Removed")
 
   # Test coord_flip()
-  expect_no_error(ggplot(df_stays_long) +
+  p1 <- ggplot(df_stays_long) +
     geom_epigantt(aes(y = Patient, xmin = start_of_stay, xmax = end_of_stay, color = name)) +
     geom_point(aes(y = Patient, x = date), data = df_detections_long) +
     scale_y_discrete_reverse() +
     coord_flip() +
     theme_bw() +
-    theme(legend.position = "bottom"))
+    theme(legend.position = "bottom")
+  expect_no_error(p1)
+  expect_warning(vdiffr::expect_doppelganger("3_geom_epigantt_full_flip_aes", p1), regexp = "Removed")
 })

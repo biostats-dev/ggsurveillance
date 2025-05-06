@@ -36,7 +36,7 @@ label_skip <- function(n = 2, start = "left", labeller = NULL) {
 
   # Validate inputs
   n <- as.integer(n) # Only integer
-  if (n < 1) stop("'n' must be a positive integer")
+  if (n < 1) cli::cli_abort("'n' must be a positive integer")
 
   # Check type of start
   if (is.character(start)) {
@@ -77,6 +77,8 @@ label_skip <- function(n = 2, start = "left", labeller = NULL) {
 
     # Apply skip pattern only to non-NA positions
     show_positions <- seq_along(non_na) %% n == start
+    # The documentation states every nth label is shown. Just to be technically correct.
+    if (n == 1) show_positions <- !show_positions
 
     # Create boolean vector of the length of x
     show_label <- logical(length(x)) # FALSE

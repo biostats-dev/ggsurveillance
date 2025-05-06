@@ -29,19 +29,19 @@ test_that("geom_epicurve handles date_resolution = NA/NULL", {
     date = as.Date("2024-01-01") + 0:10,
     cat = c(rep("A", 5), rep("B", 6))
   )
-  
+
   # Create plot
   p <- ggplot(test_dates, aes(x = date)) +
     geom_vline_year() +
     geom_epicurve(aes(fill = cat), date_resolution = "week") +
     stat_bin_date(aes(y = after_stat(count) * 1.05, label = after_stat(count)),
-                  geom = "text", date_resolution = "week",
+      geom = "text", date_resolution = "week",
     ) +
     # Test label_skip()
     scale_y_cases_5er(labels = label_skip()) +
     theme_mod_legend_top() +
     theme_mod_remove_legend_title()
-  
+
   expect_no_error(p)
   vdiffr::expect_doppelganger("2_geom_epicurve_date_resolutionNA", p)
 })
@@ -129,15 +129,17 @@ test_that("geom_epicurve with stat = 'bin_date'", {
   )
 
   p1 <- ggplot(plot_data_epicurve_imp, aes(x = date, weight = 2)) +
-    geom_epicurve(date_resolution = "month", color = "black", just = 0.5, 
-                  relative.width = 1, stat = "bin_date") +
+    geom_epicurve(
+      date_resolution = "month", color = "black", just = 0.5,
+      relative.width = 1, stat = "bin_date"
+    ) +
     theme_mod_rotate_x_axis_labels_45() +
     theme_mod_remove_minor_grid_y()
   expect_no_error(p1)
   expect_no_warning(vdiffr::expect_doppelganger("7_geom_epicurve_bin_date_res", p1))
 
   p2 <- ggplot(plot_data_epicurve_imp, aes(x = date, weight = 2)) +
-      geom_epicurve(color = "black", just = 0.5, relative.width = 1, stat = "bin_date") + 
+    geom_epicurve(color = "black", just = 0.5, relative.width = 1, stat = "bin_date") +
     theme_mod_rotate_x_axis_labels_30() +
     theme_mod_remove_minor_grid_x()
   expect_no_error(p2)

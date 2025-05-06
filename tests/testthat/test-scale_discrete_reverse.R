@@ -15,7 +15,7 @@ test_that("Test scale_discrete_reverse", {
     "2_scale_reverse",
     ggplot(df, aes(x = value, y = category)) +
       geom_col() +
-      scale_y_discrete_reverse(limits = c("A", "B", "C", "D"))
+      scale_y_discrete_reverse(limits = c("A", "C", "B", "D"))
   )
 
   vdiffr::expect_doppelganger(

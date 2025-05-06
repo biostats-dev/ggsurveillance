@@ -68,7 +68,7 @@ test_that("geom_vline_year works with break_type='week'", {
   # Test with mid-year week
   p3 <- ggplot(test_dates, aes(x = date)) +
     geom_bar() +
-    geom_vline_year(break_type = "week", year_break = "W26")
+    geom_vline_year(break_type = "week", year_break = "W05")
 
   expect_no_error(p3)
   expect_s3_class(p3, "ggplot")
@@ -77,7 +77,7 @@ test_that("geom_vline_year works with break_type='week'", {
   # Test calc MM-DD from week
   p4 <- ggplot(test_dates, aes(x = date)) +
     geom_bar() +
-    geom_vline_year(break_type = "day", year_break = "W26")
+    geom_vline_year(break_type = "day", year_break = "W03")
 
   expect_no_error(p4)
   expect_s3_class(p4, "ggplot")
@@ -108,7 +108,7 @@ test_that("geom_vline_year works with break_type='isoweek' and break_type='epiwe
   # Test US epidemiological week for influenza season (week 40)
   p2 <- ggplot(test_dates, aes(x = date)) +
     geom_bar() +
-    geom_vline_year(break_type = "epiweek", year_break = "W40")
+    geom_vline_year(break_type = "epiweek", year_break = "W48")
 
   expect_no_error(p2)
   expect_s3_class(p2, "ggplot")

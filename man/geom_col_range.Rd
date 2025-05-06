@@ -94,7 +94,7 @@ that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 }
 \value{
-A ggplot2 layer that can be added to a plot created with \code{\link[=ggplot]{ggplot()}}.
+A \code{ggplot2} geom layer that can be added to a plot.
 }
 \description{
 Creates a bar chart with explicitly defined ranges.

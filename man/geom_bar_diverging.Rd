@@ -62,7 +62,7 @@ Useful to plot or calculate the percentages of each category within each bar.}
 \item \code{"never"}: For odd factor levels, the middle categories is treated as positive.
 }}
 
-\item{...}{Other arguments passed on to \code{\link[=layer]{layer()}}.}
+\item{...}{Other arguments passed on to \code{\link[ggplot2]{layer}}.}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with
 a warning. If \code{TRUE}, missing values are silently removed.}

@@ -10,7 +10,7 @@
 #'
 #' `stat_diverging()` calculates the required statistics for diverging
 #' charts and can be used with different geoms. Used for easy labeling of diverging charts.
-#' 
+#'
 #' `geom_area_diverging()` creates a diverging area chart, for continuous data of opposing categories.
 #' x (or y) has to be continuous for this geom.
 #'
@@ -32,7 +32,7 @@
 #' I.e. the total for the positive, negative and, if existent, neutral category.
 #' @param nudge_label_outward Numeric. Relative value to nudge labels outward from `0`. Try `0.05`.
 #' Negative values nudge inward.
-#' @param ... Other arguments passed on to [layer()].
+#' @param ... Other arguments passed on to \code{\link[ggplot2]{layer}}.
 #' @param position Position adjustment.
 #' @inheritParams ggplot2::geom_bar
 #'
@@ -144,11 +144,11 @@ geom_bar_diverging <- function(mapping = NULL, data = NULL, position = "identity
 #' @rdname geom_bar_diverging
 #' @export
 geom_area_diverging <- function(mapping = NULL, data = NULL, position = "identity",
-                               proportion = FALSE, neutral_cat = c("odd", "never"),
-                               # break_cat = NULL, # odd, never, always
-                               ..., na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
+                                proportion = FALSE, neutral_cat = c("odd", "never"),
+                                # break_cat = NULL, # odd, never, always
+                                ..., na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
   neutral_cat <- rlang::arg_match(neutral_cat)
-  
+
   ggplot2::layer(
     geom = GeomAreaDiverging,
     mapping = mapping,
@@ -256,10 +256,9 @@ StatDiverging <- ggproto("StatDiverging", Stat,
     data$weight <- data$weight %||% rep(1, length(data$x))
 
     data <- data |>
-      dplyr::arrange(x, diverging_groups) |>
       dplyr::group_by(x, diverging_groups, group) |>
-      dplyr::tally(wt = weight) # negative or fractional weights?
-
+      dplyr::tally(wt = weight) |> # negative or fractional weights?
+      ungroup()
 
     bars <- data |>
       dplyr::transmute(
@@ -268,7 +267,7 @@ StatDiverging <- ggproto("StatDiverging", Stat,
         group = group,
         count = n,
         default_label = count,
-        prop = n / sum(n), # abs? negative weights?
+        # prop = n / sum(n), # Can only be calculated later
         ymin = count * direction[1],
         ymax = count * direction[2],
         sign = sum(direction),
@@ -294,7 +293,7 @@ StatDiverging <- ggproto("StatDiverging", Stat,
     # Compute group stats
     stats <- lapply(groups, function(group) {
       self$compute_group(data = group, scales = scales, width = width, neutral_cat = neutral_cat)
-    }) |> dplyr::bind_rows()
+    }) |> do.call(rbind, args = _) -> stats
 
     # Calc total numbers and proportions by bar
     stats |>
@@ -312,18 +311,18 @@ StatDiverging <- ggproto("StatDiverging", Stat,
     if (stacked) {
       stats |>
         dplyr::group_by(x) |>
-        # arrange(diverging_groups) |> # needed?
         dplyr::mutate(
           # Stack bars from left (-) to right (+)
           ymin = total_neg[1] + cumsum(dplyr::lag(count, default = 0)),
           ymax = ymin + count,
-          y = (ymin + ymax) / 2, # For stacked y is midpoint of area
+          y = (ymin + ymax) / 2, # For stacked, y is the midpoint of the area
         ) -> stats
     }
 
-    # Reconstruct data
-    lapply(groups, slice_head, n = 1) |>
-      dplyr::bind_rows() |>
+    data |>
+      # Distinct by the same variables as in split() above
+      dplyr::distinct(group, diverging_groups, .keep_all = TRUE) |>
+      arrange(x, diverging_groups, groups) |>
       select(-x) |>
       right_join(stats, by = c("group", "diverging_groups")) -> data
 
@@ -380,20 +379,19 @@ StatDiverging <- ggproto("StatDiverging", Stat,
 )
 
 GeomAreaDiverging <- ggproto("GeomAreaDiverging", GeomRibbon,
-                             setup_data = function(data, params) {
-                               data$flipped_aes <- params$flipped_aes
-                               data <- flip_data(data, params$flipped_aes)
-                               
-                               if (inherits(data$x, "mapped_discrete")) 
-                                 cli::cli_warn("{flipped_names(params$flipped_aes)$x} should be continuous and not discrete.")
-                               
-                               if (is.null(data$ymin) && is.null(data$ymax)) {
-                                 cli::cli_abort("Either {.field {flipped_names(params$flipped_aes)$ymin}} or {.field {flipped_names(params$flipped_aes)$ymax}} must be given as an aesthetic.")
-                               }
-                               data <- data[order(data$PANEL, data$group, data$x), , drop = FALSE]
-                               data$y <- data$ymin %||% data$ymax
-                               flip_data(data, params$flipped_aes)
-                             }
+  setup_data = function(data, params) {
+    data$flipped_aes <- params$flipped_aes
+    data <- flip_data(data, params$flipped_aes)
+
+    if (inherits(data$x, "mapped_discrete")) {
+      cli::cli_warn("{flipped_names(params$flipped_aes)$x} should be continuous and not discrete.")
+    }
+
+    if (is.null(data$ymin) && is.null(data$ymax)) {
+      cli::cli_abort("Either {.field {flipped_names(params$flipped_aes)$ymin}} or {.field {flipped_names(params$flipped_aes)$ymax}} must be given as an aesthetic.")
+    }
+    data <- data[order(data$PANEL, data$group, data$x), , drop = FALSE]
+    data$y <- data$ymin %||% data$ymax
+    flip_data(data, params$flipped_aes)
+  }
 )
-
-

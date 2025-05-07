@@ -165,6 +165,44 @@ test_that("diverging bar charts handle single category gracefully", {
   )
 })
 
+test_that("diverging bar charts with continuous y", {
+  df <- data.frame(
+    name = rep(1:3, each = 4),
+    value = factor(rep(c("++", "+", "-", "--"), 3),
+                   levels = c("++", "+", "-", "--")
+    ),
+    weight = rep(c(10, 5, 15, 20), 3)
+  )
+  
+  p <- ggplot(df, aes(y = name, fill = value)) +
+    geom_bar_diverging() +
+    stat_diverging(size = 3) +
+    scale_x_continuous(labels = c(-2:2))
+  
+  expect_s3_class(p, "ggplot")
+  expect_no_error(p)
+  vdiffr::expect_doppelganger("7_geom_bar_diverging_continuous", p)
+  
+  p1 <- ggplot(df, aes(x = name, fill = value)) +
+    geom_area_diverging() +
+    stat_diverging(size = 3) +
+    scale_y_continuous_diverging(labels = c(-2:2))
+  
+  expect_s3_class(p1, "ggplot")
+  expect_no_error(p1)
+  vdiffr::expect_doppelganger("7_geom_area_diverging_1", p1)
+  
+  p2 <- ggplot(df, aes(x = name, fill = value)) +
+    geom_area_diverging() +
+    stat_diverging(size = 3) +
+    scale_y_continuous_diverging(labels = scales::label_currency())
+  
+  expect_s3_class(p2, "ggplot")
+  expect_no_error(p2)
+  vdiffr::expect_doppelganger("7_geom_area_diverging_2", p2)
+  
+})
+
 test_that("StatDiverging$compute_panel() correctly processes data", {
   # Test data with even number of factor levels
   test_data <- data.frame(

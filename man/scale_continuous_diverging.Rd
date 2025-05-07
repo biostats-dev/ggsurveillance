@@ -97,5 +97,5 @@ ggplot(df, aes(x, y)) +
   geom_point() +
   scale_x_continuous_diverging() +
   scale_y_continuous_diverging()
-  
+
 }

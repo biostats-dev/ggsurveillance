@@ -11,7 +11,9 @@ test_that("geom_bar_diverging creates basic diverging bar charts", {
   p1 <- ggplot(df_even, aes(y = name, fill = value)) +
     geom_bar_diverging() +
     stat_diverging() +
-    scale_x_continuous_diverging()
+    scale_x_continuous_diverging() +
+    theme_mod_rotate_y_axis_labels() +
+    theme_mod_disable_legend()
 
   # Test that the plot is created successfully
   expect_s3_class(p1, "ggplot")
@@ -22,7 +24,8 @@ test_that("geom_bar_diverging creates basic diverging bar charts", {
   p2 <- ggplot(df_even, aes(x = name, fill = value)) +
     geom_bar_diverging() +
     stat_diverging(aes(label = after_stat(fill))) +
-    scale_y_continuous_diverging()
+    scale_y_continuous_diverging() +
+    theme_mod_legend_right()
 
   # Test that the plot is created successfully
   expect_s3_class(p2, "ggplot")
@@ -51,7 +54,8 @@ test_that("geom_bar_diverging handles odd number of factor levels correctly", {
 
   # Test with neutral_cat = "odd" (default)
   p1 <- ggplot(df_odd, aes(y = name, fill = value)) +
-    geom_bar_diverging()
+    geom_bar_diverging() +
+    theme_mod_legend_bottom()
 
   expect_s3_class(p1, "ggplot")
   expect_no_error(p1)

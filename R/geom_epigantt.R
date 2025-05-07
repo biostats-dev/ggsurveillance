@@ -83,7 +83,7 @@ geom_epigantt <- function(mapping = NULL, data = NULL,
 }
 
 #' @import ggplot2
-GeomEpigantt <- ggproto("GeomEpigantt", GeomLinerange,
+GeomEpigantt <- ggplot2::ggproto("GeomEpigantt", GeomLinerange,
   default_aes = ggplot2:::defaults(
     # linewidth = from_theme(borderwidth)
     aes(

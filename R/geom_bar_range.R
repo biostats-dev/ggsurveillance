@@ -41,7 +41,7 @@ geom_col_range <- function(mapping = NULL, data = NULL,
   )
 }
 
-GeomBarRange <- ggproto("GeomBarRange", GeomBar,
+GeomBarRange <- ggplot2::ggproto("GeomBarRange", GeomBar,
   required_aes = c("x|y"), # , "xmin|ymin", "xmax|ymax"
 
   # These aes columns are created by setup_data(). They need to be listed here so

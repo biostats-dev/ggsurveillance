@@ -199,7 +199,7 @@ stat_diverging <- function(mapping = NULL, data = NULL,
   )
 }
 
-StatDiverging <- ggproto("StatDiverging", Stat,
+StatDiverging <- ggplot2::ggproto("StatDiverging", Stat,
   required_aes = c("x|y", "fill|diverging_groups"),
   default_aes = aes(weight = 1, label = after_stat(default_label)),
   extra_params = c("stacked", "proportion", "totals_by_direction", "neutral_cat", "nudge_label_outward", "na.rm"),
@@ -329,7 +329,7 @@ StatDiverging <- ggproto("StatDiverging", Stat,
     if (totals_by_direction) {
       data |>
         dplyr::group_by(x, sign) |>
-        reframe(
+        dplyr::summarise(
           total = total[1],
           total_neg = total_neg[1],
           total_pos = total_pos[1],
@@ -338,7 +338,7 @@ StatDiverging <- ggproto("StatDiverging", Stat,
           ymin = min(ymin),
           ymax = max(ymax),
           # Largest negative values for negative group, largest positive value for pos group, middle is 0.
-          y = sign * max(c(sign * ymin, sign * ymax)),
+          y = sign[1] * max(c(sign * ymin, sign * ymax)),
           count = sum(count),
           prop = count / total,
           default_label = count
@@ -378,7 +378,7 @@ StatDiverging <- ggproto("StatDiverging", Stat,
   dropped_aes = "weight"
 )
 
-GeomAreaDiverging <- ggproto("GeomAreaDiverging", GeomRibbon,
+GeomAreaDiverging <- ggplot2::ggproto("GeomAreaDiverging", GeomRibbon,
   setup_data = function(data, params) {
     data$flipped_aes <- params$flipped_aes
     data <- flip_data(data, params$flipped_aes)

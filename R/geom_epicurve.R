@@ -144,7 +144,7 @@ stat_date_count <- stat_bin_date
 #' @usage NULL
 #' @export
 
-StatEpicurve <- ggproto("StatEpicurve", Stat,
+StatEpicurve <- ggplot2::ggproto("StatEpicurve", Stat,
   required_aes = "x|y",
   default_aes = aes(x = after_stat(count), y = after_stat(count), group = row_number, weight = 1),
   extra_params = c("na.rm", "date_resolution", "week_start"),
@@ -254,7 +254,7 @@ StatEpicurve <- ggproto("StatEpicurve", Stat,
 #' @usage NULL
 #' @export
 
-StatBinDate <- ggproto("StatBinDate", Stat,
+StatBinDate <- ggplot2::ggproto("StatBinDate", Stat,
   required_aes = "x|y",
   default_aes = aes(!!!StatCount$default_aes),
   extra_params = c("na.rm", "date_resolution", "week_start"),
@@ -343,7 +343,8 @@ StatBinDate <- ggproto("StatBinDate", Stat,
     data <- data |>
       dplyr::arrange(x_ll) |>
       dplyr::group_by(x_ll, x_ul) |>
-      dplyr::tally(wt = weight)
+      dplyr::tally(wt = weight) |>
+      dplyr::ungroup()
 
     bars <- data |>
       dplyr::transmute(
@@ -365,14 +366,14 @@ StatBinDate <- ggproto("StatBinDate", Stat,
 #' @format NULL
 #' @usage NULL
 #' @export
-StatDateCount <- ggproto("StatDateCount", StatBinDate)
+StatDateCount <- ggplot2::ggproto("StatDateCount", StatBinDate)
 
 #' @import ggplot2
 #' @import dplyr
 #' @import rlang
 #' @import lubridate
 #' @importFrom cli cli_alert_info cli_alert_warning
-GeomEpicurve <- ggproto("GeomEpicurve", GeomBar,
+GeomEpicurve <- ggplot2::ggproto("GeomEpicurve", GeomBar,
   default_aes = ggplot2:::defaults(
     # colour = from_theme(paper), linewidth = from_theme(borderwidth)
     aes(colour = "white", linewidth = 0.6, linetype = "solid"),

@@ -173,38 +173,37 @@ test_that("diverging bar charts with continuous y", {
   df <- data.frame(
     name = rep(1:3, each = 4),
     value = factor(rep(c("++", "+", "-", "--"), 3),
-                   levels = c("++", "+", "-", "--")
+      levels = c("++", "+", "-", "--")
     ),
     weight = rep(c(10, 5, 15, 20), 3)
   )
-  
+
   p <- ggplot(df, aes(y = name, fill = value)) +
     geom_bar_diverging() +
     stat_diverging(size = 3) +
     scale_x_continuous(labels = c(-2:2))
-  
+
   expect_s3_class(p, "ggplot")
   expect_no_error(p)
   vdiffr::expect_doppelganger("7_geom_bar_diverging_continuous", p)
-  
+
   p1 <- ggplot(df, aes(x = name, fill = value)) +
     geom_area_diverging() +
     stat_diverging(size = 3) +
     scale_y_continuous_diverging(labels = c(-2:2))
-  
+
   expect_s3_class(p1, "ggplot")
   expect_no_error(p1)
   vdiffr::expect_doppelganger("7_geom_area_diverging_1", p1)
-  
+
   p2 <- ggplot(df, aes(x = name, fill = value)) +
     geom_area_diverging() +
     stat_diverging(size = 3) +
     scale_y_continuous_diverging(labels = scales::label_currency())
-  
+
   expect_s3_class(p2, "ggplot")
   expect_no_error(p2)
   vdiffr::expect_doppelganger("7_geom_area_diverging_2", p2)
-  
 })
 
 test_that("StatDiverging$compute_panel() correctly processes data", {
@@ -214,9 +213,10 @@ test_that("StatDiverging$compute_panel() correctly processes data", {
     group = 1:12,
     x = rep(letters[1:3], each = 4),
     weight = 1,
-    diverging_groups = factor(rep(c("++", "+", "-", "--"), 3), levels = c("++", "+", "-", "--"))
+    diverging_groups = factor(rep(c("++", "+", "-", "--"), 3), levels = c("++", "+", "-", "--")),
+    break_pos = 3
   )
-  
+
   # Test with basic parameters
   result <- expect_no_error(
     StatDiverging$compute_panel(
@@ -231,26 +231,28 @@ test_that("StatDiverging$compute_panel() correctly processes data", {
       nudge_label_outward = 0
     )
   )
-  
+
   # Check structure of result
   expect_s3_class(result, "data.frame")
-  expect_true(all(c("x", "diverging_groups", "count", "ymin", "ymax", "sign", "y", "total", 
-                    "total_neg", "total_pos", "prop", "prop_neg", "prop_pos") %in% names(result)))
-  
+  expect_true(all(c(
+    "x", "diverging_groups", "count", "ymin", "ymax", "sign", "y", "total",
+    "total_neg", "total_pos", "prop", "prop_neg", "prop_pos"
+  ) %in% names(result)))
+
   # Check correct calculations
   expect_equal(result$total, rep(4, 12))
-  expect_equal(sum(result$count), nrow(test_data))  # Total count matches input rows
-  
+  expect_equal(sum(result$count), nrow(test_data)) # Total count matches input rows
+
   # Test that signs are correctly assigned (++ and + should be positive, - and -- negative)
   negative_groups <- result$diverging_groups %in% c("++", "+")
   positive_groups <- result$diverging_groups %in% c("-", "--")
   expect_true(all(result$sign[positive_groups] > 0))
   expect_true(all(result$sign[negative_groups] < 0))
-  
+
   # Verify stacking behavior
   expect_true(all(result$ymax[result$diverging_groups == "++"] < 0))
   expect_true(all(result$ymin[result$diverging_groups == "--"] > 0))
-  
+
   # Test with proportion = TRUE
   result_prop <- expect_no_error(
     StatDiverging$compute_panel(
@@ -259,18 +261,18 @@ test_that("StatDiverging$compute_panel() correctly processes data", {
       flipped_aes = FALSE,
       stacked = TRUE,
       width = 0.9,
-      neutral_cat = "odd", 
+      neutral_cat = "odd",
       proportion = TRUE,
       totals_by_direction = FALSE,
       nudge_label_outward = 0
     )
   )
-  
+
   # Check proportion calculations
   expect_true(all(result_prop$ymin >= -1 & result_prop$ymin <= 1))
   expect_true(all(result_prop$ymax >= -1 & result_prop$ymax <= 1))
   expect_equal(sum(result_prop$prop[result_prop$x == "a"]), 1)
-  
+
   # Test with totals_by_direction = TRUE
   result_totals <- expect_no_error(
     StatDiverging$compute_panel(
@@ -285,9 +287,9 @@ test_that("StatDiverging$compute_panel() correctly processes data", {
       nudge_label_outward = 0
     )
   )
-  
+
   # Check totals calculations - should have 2 rows per x value (positive and negative)
-  expect_equal(nrow(result_totals), 6)  # 3 x values × 2 directions
+  expect_equal(nrow(result_totals), 6) # 3 x values × 2 directions
   expect_equal(sum(result_totals$count), sum(test_data$weight))
   expect_true(all(result_totals$sign %in% c(-1, 1)))
 })
@@ -299,9 +301,10 @@ test_that("StatDiverging$compute_panel() handles odd factor levels correctly", {
     group = 1:15,
     x = rep(letters[1:3], each = 5),
     weight = 1,
-    diverging_groups = factor(rep(c("++", "+", "+/-", "-", "--"), 3), levels = c("++", "+", "+/-", "-", "--"))
+    diverging_groups = factor(rep(c("++", "+", "+/-", "-", "--"), 3), levels = c("++", "+", "+/-", "-", "--")),
+    break_pos = 3
   )
-  
+
   # Test with neutral_cat = "odd" (default)
   result_odd <- expect_no_error(
     StatDiverging$compute_panel(
@@ -316,13 +319,13 @@ test_that("StatDiverging$compute_panel() handles odd factor levels correctly", {
       nudge_label_outward = 0
     )
   )
-  
+
   # The middle value "+/-" should be split between positive and negative
   middle_values <- result_odd[result_odd$diverging_groups == "+/-", ]
-  expect_equal(nrow(middle_values), 3)  # One for each name
+  expect_equal(nrow(middle_values), 3) # One for each name
   expect_true(all(middle_values$ymin < 0))
   expect_true(all(middle_values$ymax > 0))
-  
+
   # Test with neutral_cat = "never"
   result_never <- expect_no_error(
     StatDiverging$compute_panel(
@@ -337,7 +340,7 @@ test_that("StatDiverging$compute_panel() handles odd factor levels correctly", {
       nudge_label_outward = 0
     )
   )
-  
+
   # Check that middle values are treated as positive when neutral_cat = "never"
   middle_values_never <- result_never[result_never$diverging_groups == "+/-", ]
   expect_equal(nrow(middle_values_never), 3)
@@ -352,16 +355,17 @@ test_that("StatDiverging$compute_panel() handles nudge_label_outward correctly",
     group = 1:12,
     x = rep(letters[1:3], each = 4),
     weight = 1,
-    diverging_groups = factor(rep(c("++", "+", "-", "--"), 3), levels = c("++", "+", "-", "--"))
+    diverging_groups = factor(rep(c("++", "+", "-", "--"), 3), levels = c("++", "+", "-", "--")),
+    break_pos = 3
   )
-  
+
   # Test with nudge_label_outward = 0
   result_no_nudge <- expect_no_error(
     StatDiverging$compute_panel(
       data = test_data,
       scales = list(),
       flipped_aes = FALSE,
-      stacked = TRUE, 
+      stacked = TRUE,
       width = 0.9,
       neutral_cat = "odd",
       proportion = FALSE,
@@ -369,14 +373,14 @@ test_that("StatDiverging$compute_panel() handles nudge_label_outward correctly",
       nudge_label_outward = 0
     )
   )
-  
+
   # Test with nudge_label_outward = 0.05
   result_nudge <- expect_no_error(
     StatDiverging$compute_panel(
       data = test_data,
       scales = list(),
       flipped_aes = FALSE,
-      stacked = TRUE, 
+      stacked = TRUE,
       width = 0.9,
       neutral_cat = "odd",
       proportion = FALSE,
@@ -384,7 +388,7 @@ test_that("StatDiverging$compute_panel() handles nudge_label_outward correctly",
       nudge_label_outward = 0.05
     )
   )
-  
+
   # Verify that the y-coordinates have been nudged outward
   expect_true(all(result_nudge$y[result_nudge$sign > 0] > result_no_nudge$y[result_no_nudge$sign > 0]))
   expect_true(all(result_nudge$y[result_nudge$sign < 0] < result_no_nudge$y[result_no_nudge$sign < 0]))
@@ -397,9 +401,10 @@ test_that("StatDiverging$compute_panel() works with weight aesthetic", {
     group = 1:12,
     x = rep(letters[1:3], each = 4),
     weight = rep(c(10, 5, 15, 20), 3),
-    diverging_groups = factor(rep(c("++", "+", "-", "--"), 3), levels = c("++", "+", "-", "--"))
+    diverging_groups = factor(rep(c("++", "+", "-", "--"), 3), levels = c("++", "+", "-", "--")),
+    break_pos = 3
   )
-  
+
   result <- expect_no_error(
     StatDiverging$compute_panel(
       data = test_data,
@@ -413,11 +418,11 @@ test_that("StatDiverging$compute_panel() works with weight aesthetic", {
       nudge_label_outward = 0
     )
   )
-  
+
   # Verify weights were applied correctly
   expect_equal(sum(result$count), sum(test_data$weight))
-  expect_equal(result$total, rep(50, 12))  # 10+5+15+20=50 for each name
-  
+  expect_equal(result$total, rep(50, 12)) # 10+5+15+20=50 for each name
+
   # Check specific counts match weights
   expect_equal(result$count[result$diverging_groups == "++" & result$x == "a"], 10)
   expect_equal(result$count[result$diverging_groups == "+" & result$x == "a"], 5)
@@ -433,7 +438,7 @@ test_that("StatDiverging$compute_panel() handles empty data correctly", {
     PANEL = numeric(),
     group = numeric()
   )
-  
+
   result <- StatDiverging$compute_panel(
     data = empty_data,
     scales = list(),
@@ -445,7 +450,7 @@ test_that("StatDiverging$compute_panel() handles empty data correctly", {
     totals_by_direction = FALSE,
     nudge_label_outward = 0
   )
-  
+
   # Check that an empty data frame is returned
   expect_s3_class(result, "data.frame")
   expect_equal(nrow(result), 0)

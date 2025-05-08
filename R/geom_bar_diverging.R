@@ -26,6 +26,19 @@
 #' @param neutral_cat How to handle the middle category for a odd number of factor levels.
 #'  * `"odd"`: If the number of factor levels is odd, the middle category is treated as neutral.
 #'  * `"never"`: For odd factor levels, the middle categories is treated as positive.
+#'  * `"NA"`: observations with `NA` as category will be shown as the neutral category.
+#'  By default the NA category will be in the middle (even number of levels) or
+#'  the first category after the middle (odd number of levels).
+#'  * `"force"`: A neutral category is always shown.
+#'  By default this will be middle (odd number of levels) or
+#'  the first category after the middle (even number of levels).
+#' @param break_pos Only used for `neutral_cat = c("never", "NA", "force")`.
+#' Either a integer position or the name of a factor level. Depending on `neutral_cat`:
+#' * `"never"`: The factor level at break_pos will be the first category in the positive direction.
+#'  * `"NA"`: `break_pos` controls where the neutral NA category will be inserted.
+#'  `NA` will always be inserted before the before the specified factor level (therefore taking its position),
+#'  i.e. 3 means `NA` will be the 3rd category.
+#'  * `"force"`: `break_pos` forces the specified factor level to be neutral.
 #' @param geom `stat_diverging()`: The geometric object to use to display the data, e.g. `"text"` or `"label"`.
 #' @param stacked Logical. If `TRUE`, categories are stacked.
 #' @param totals_by_direction Logical. If `TRUE`, totals are calculated by direction.
@@ -116,8 +129,8 @@
 #' @name geom_bar_diverging
 #' @export
 geom_bar_diverging <- function(mapping = NULL, data = NULL, position = "identity",
-                               proportion = FALSE, neutral_cat = c("odd", "never"),
-                               # break_cat = NULL, # odd, never, always
+                               proportion = FALSE,
+                               neutral_cat = c("odd", "never", "NA", "force"), break_pos = NULL,
                                ..., na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
   neutral_cat <- rlang::arg_match(neutral_cat)
 
@@ -132,6 +145,7 @@ geom_bar_diverging <- function(mapping = NULL, data = NULL, position = "identity
     params = list(
       na.rm = na.rm,
       neutral_cat = neutral_cat,
+      break_pos = break_pos,
       stacked = TRUE,
       proportion = proportion,
       totals_by_direction = FALSE,
@@ -144,8 +158,8 @@ geom_bar_diverging <- function(mapping = NULL, data = NULL, position = "identity
 #' @rdname geom_bar_diverging
 #' @export
 geom_area_diverging <- function(mapping = NULL, data = NULL, position = "identity",
-                                proportion = FALSE, neutral_cat = c("odd", "never"),
-                                # break_cat = NULL, # odd, never, always
+                                proportion = FALSE,
+                                neutral_cat = c("odd", "never", "NA", "force"), break_pos = NULL,
                                 ..., na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
   neutral_cat <- rlang::arg_match(neutral_cat)
 
@@ -160,6 +174,7 @@ geom_area_diverging <- function(mapping = NULL, data = NULL, position = "identit
     params = list(
       na.rm = na.rm,
       neutral_cat = neutral_cat,
+      break_pos = break_pos,
       stacked = TRUE,
       proportion = proportion,
       totals_by_direction = FALSE,
@@ -174,7 +189,7 @@ geom_area_diverging <- function(mapping = NULL, data = NULL, position = "identit
 stat_diverging <- function(mapping = NULL, data = NULL,
                            geom = "text", position = "identity",
                            stacked = TRUE, proportion = FALSE,
-                           neutral_cat = c("odd", "never"),
+                           neutral_cat = c("odd", "never", "NA", "force"), break_pos = NULL,
                            totals_by_direction = FALSE, nudge_label_outward = 0,
                            ..., na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
   neutral_cat <- rlang::arg_match(neutral_cat)
@@ -191,6 +206,7 @@ stat_diverging <- function(mapping = NULL, data = NULL,
       na.rm = na.rm,
       stacked = stacked,
       neutral_cat = neutral_cat,
+      break_pos = break_pos,
       proportion = proportion,
       totals_by_direction = totals_by_direction,
       nudge_label_outward = nudge_label_outward,
@@ -200,14 +216,53 @@ stat_diverging <- function(mapping = NULL, data = NULL,
 }
 
 StatDiverging <- ggplot2::ggproto("StatDiverging", Stat,
-  required_aes = c("x|y", "fill|diverging_groups"),
+  required_aes = c("x|y"),
   default_aes = aes(weight = 1, label = after_stat(default_label)),
-  extra_params = c("stacked", "proportion", "totals_by_direction", "neutral_cat", "nudge_label_outward", "na.rm"),
+  extra_params = c(
+    "stacked", "proportion", "totals_by_direction", "neutral_cat", "break_pos",
+    "nudge_label_outward", "na.rm"
+  ),
   setup_data = function(data, params) {
     data$diverging_groups <- data$diverging_groups %||% data$fill
+    if (is.null(data$diverging_groups)) cli::cli_abort("stat_diverging() needs the aesthetic diverging_groups (or fill).")
     # Convert to factor, since factor levels have to be known
     if (!is.factor(data$diverging_groups)) {
       data$diverging_groups <- as.factor(data$diverging_groups)
+    }
+
+    # Neutral cat the same for odd and force by default, but is ceiling(n_levels/2)
+    # force break_pos < n_levels
+    fac_levels <- data$diverging_groups |> levels()
+    n_levels <- nlevels(data$diverging_groups) + (params$neutral_cat == "NA") # Add one level if NA is added
+    if (!is.null(params$break_pos) & is.character(params$break_pos)) {
+      level_pos <- which(params$break_pos == fac_levels)
+      if (!is_empty(level_pos)) {
+        params$break_pos <- level_pos
+      } else {
+        cli::cli_warn("break_pos: '{params$break_pos}' not one of the factor levels: '{fac_levels}'.")
+        params$break_pos <- NULL
+      }
+    }
+
+    params$break_pos <- (params$break_pos %||% (floor(n_levels / 2) + 1)) |>
+      as.integer() %% (n_levels)
+    # exclude 0 after modulo
+    data$break_pos <- ifelse(params$break_pos > 0, params$break_pos, n_levels)
+
+    # Add NAs as the neutral cat
+    if (params$neutral_cat == "NA") {
+      new_levels <- c(
+        fac_levels[seq_len(data$break_pos[1] - 1)], # Levels before break_pos
+        NA,
+        fac_levels[(data$break_pos[1]):n_levels]
+      ) |> # Levels after break_pos
+        unique()
+
+      data$diverging_groups <- data$diverging_groups |>
+        factor(levels = new_levels, ordered = TRUE, exclude = NULL) # exclude is addNA
+    } else {
+      # Drop NA if not used
+      data <- data[!is.na(data$diverging_groups), ]
     }
 
     if (nlevels(data$diverging_groups) < 2) {
@@ -236,19 +291,26 @@ StatDiverging <- ggplot2::ggproto("StatDiverging", Stat,
       params$width <- resolution(data[[x]], discrete = TRUE) * 0.9
     }
 
-    params$neutral_cat <- match.arg(params$neutral_cat, choices = c("odd", "never"))
+    params$neutral_cat <- rlang::arg_match0(params$neutral_cat, values = c("odd", "never", "NA", "force"))
 
     params
   },
-  compute_group = function(data, scales, width = NULL, neutral_cat = "odd") {
+  compute_group = function(data, scales, width = NULL, neutral_cat = "odd", break_pos) {
     n_levels <- nlevels(data$diverging_groups)
     current_level <- unique(as.numeric(data$diverging_groups))
 
     direction <- case_when(
+      # Force break_pos to be the neutral category
+      (neutral_cat == "force") & current_level == break_pos ~ c(-0.5, 0.5),
+      # Force NA to be the neutral cat
+      (neutral_cat == "NA") & current_level == break_pos ~ c(-0.5, 0.5),
       # Split middle group if odd number of levels
       (neutral_cat == "odd") & current_level == ((n_levels / 2) + 0.5) ~ c(-0.5, 0.5),
-      # Second half is positive,
-      current_level > (n_levels / 2) ~ c(0, 1),
+      # for odd (default) Second half is positive,
+      (neutral_cat == "odd") & (current_level > (n_levels / 2)) ~ c(0, 1),
+      # Else Split aroung break_pos (never, force, NA)
+      # >= for never, break_pos is then the first positive
+      current_level >= break_pos ~ c(0, 1),
       # first half is negative (the rest)
       T ~ c(-1, 0)
     )
@@ -288,11 +350,19 @@ StatDiverging <- ggplot2::ggproto("StatDiverging", Stat,
     if (is.null(data) || nrow(data) == 0 || ncol(data) == 0) {
       return(data.frame())
     }
+
+    # To pass break_pos from setup_data
+    break_pos <- data$break_pos[1]
+    data$break_pos <- NULL
+
     groups <- split(data, ~ group + diverging_groups) |>
       base::Filter(f = nrow) # Drop empty groups
     # Compute group stats
     stats <- lapply(groups, function(group) {
-      self$compute_group(data = group, scales = scales, width = width, neutral_cat = neutral_cat)
+      self$compute_group(
+        data = group, scales = scales, width = width,
+        neutral_cat = neutral_cat, break_pos = break_pos
+      )
     }) |> do.call(rbind, args = _) -> stats
 
     # Calc total numbers and proportions by bar

@@ -11,7 +11,8 @@ geom_bar_diverging(
   data = NULL,
   position = "identity",
   proportion = FALSE,
-  neutral_cat = c("odd", "never"),
+  neutral_cat = c("odd", "never", "NA", "force"),
+  break_pos = NULL,
   ...,
   na.rm = FALSE,
   show.legend = NA,
@@ -23,7 +24,8 @@ geom_area_diverging(
   data = NULL,
   position = "identity",
   proportion = FALSE,
-  neutral_cat = c("odd", "never"),
+  neutral_cat = c("odd", "never", "NA", "force"),
+  break_pos = NULL,
   ...,
   na.rm = FALSE,
   show.legend = NA,
@@ -37,7 +39,8 @@ stat_diverging(
   position = "identity",
   stacked = TRUE,
   proportion = FALSE,
-  neutral_cat = c("odd", "never"),
+  neutral_cat = c("odd", "never", "NA", "force"),
+  break_pos = NULL,
   totals_by_direction = FALSE,
   nudge_label_outward = 0,
   ...,
@@ -60,6 +63,22 @@ Useful to plot or calculate the percentages of each category within each bar.}
 \itemize{
 \item \code{"odd"}: If the number of factor levels is odd, the middle category is treated as neutral.
 \item \code{"never"}: For odd factor levels, the middle categories is treated as positive.
+\item \code{"NA"}: observations with \code{NA} as category will be shown as the neutral category.
+By default the NA category will be in the middle (even number of levels) or
+the first category after the middle (odd number of levels).
+\item \code{"force"}: A neutral category is always shown.
+By default this will be middle (odd number of levels) or
+the first category after the middle (even number of levels).
+}}
+
+\item{break_pos}{Only used for \code{neutral_cat = c("never", "NA", "force")}.
+Either a integer position or the name of a factor level. Depending on \code{neutral_cat}:
+\itemize{
+\item \code{"never"}: The factor level at break_pos will be the first category in the positive direction.
+\item \code{"NA"}: \code{break_pos} controls where the neutral NA category will be inserted.
+\code{NA} will always be inserted before the before the specified factor level (therefore taking its position),
+i.e. 3 means \code{NA} will be the 3rd category.
+\item \code{"force"}: \code{break_pos} forces the specified factor level to be neutral.
 }}
 
 \item{...}{Other arguments passed on to \code{\link[ggplot2]{layer}}.}

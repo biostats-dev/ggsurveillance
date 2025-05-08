@@ -191,7 +191,7 @@ population_german_states |>
   facet_wrap(~state, scales = "free_x") +
   theme_bw()
 
-# Vaccination status for dummy factor level
+# Vaccination status: set neutral category
 set.seed(456)
 cases_vacc <- data.frame(year = 2017:2025) |>
   rowwise() |>
@@ -199,17 +199,16 @@ cases_vacc <- data.frame(year = 2017:2025) |>
   unnest(vacc) |>
   mutate(
     year = as.factor(year),
-    "Vaccination Status" = ordered(vacc,
-      levels = c(1:3, "dummy", 4),
-      labels = c("Fully Vaccinated", "Partially Vaccinated", "Unknown", "dummy", "Unvaccinated")
+    "Vaccination Status" = ordered(vacc, 
+      labels = c("Fully Vaccinated", "Partially Vaccinated", "Unknown", "Unvaccinated")
     )
   )
 
 ggplot(cases_vacc, aes(y = year, fill = `Vaccination Status`)) +
   geom_vline(xintercept = 0) +
-  geom_bar_diverging(proportion = TRUE) +
+  geom_bar_diverging(proportion = TRUE, neutral_cat = "force", break_pos = "Unknown") +
   stat_diverging(
-    size = 3, proportion = TRUE,
+    size = 3, proportion = TRUE, neutral_cat = "force", break_pos = "Unknown",
     totals_by_direction = TRUE, nudge_label_outward = 0.05
   ) +
   scale_x_continuous_diverging(labels = scales::label_percent(), n.breaks = 10) +

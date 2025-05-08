@@ -1,4 +1,4 @@
-#' Limit the x-axis date range to a specific number of days
+#' Limit the x-axis date range to a specific number of days (Pre-Release)
 #'
 #' This function creates a date scale for ggplot2 that limits the x-axis to show
 #' only a specific number of days, with options to control the reference date and
@@ -20,7 +20,7 @@
 #' @param position The position of the axis. One of "top", "bottom" (default), "left", or "right".
 #'
 #' @return A ggplot2 scale object.
-#' @export
+#' @noRd
 #'
 #' @examples
 #' \dontrun{
@@ -91,14 +91,12 @@ scale_x_date_limit_days <- function(name = waiver(),
   )
 }
 
-#' @rdname scale_x_date_limit_days
-#' @export
+# @rdname scale_x_date_limit_days
 scale_x_date_limit_1.5years <- function(limit_scale_to_days = 549, ...) {
   scale_x_date_limit_days(limit_scale_to_days = limit_scale_to_days, ...)
 }
 
-#' @rdname scale_x_date_limit_days
-#' @export
+# @rdname scale_x_date_limit_days
 scale_x_datetime_limit_days <- function(name = waiver(),
                                         limit_scale_to_days = 549, reference_date = NULL, limit_right = FALSE,
                                         ...,

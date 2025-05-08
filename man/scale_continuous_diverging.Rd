@@ -40,8 +40,8 @@ omitted.}
 If \code{NULL} (the default), limits are automatically computed to be
 symmetrical around zero.}
 
-\item{labels}{Either a waiver(), a character vector or a function that takes the breaks
-as input and returns labels as output. By default, absolute values are displayed.}
+\item{labels}{Either \code{waiver()}, a character vector or a function that takes the breaks
+as input and returns labels as output. By default, absolute values are displayed or passed to the label function.}
 
 \item{transform}{Defaults to "identity". Use "reverse" to invert the scale.
 Especially useful to flip the direction of diverging bar charts.}
@@ -79,9 +79,10 @@ expand the scale by 5\% on each side for continuous variables, and by
 A \code{ggplot2} scale object that can be added to a plot.
 }
 \description{
-These scales automatically create symmetrical limits around a center point (zero by default).
+These scales automatically create symmetrical limits around a centre point (zero by default).
 They're useful for diverging continuous variables where the visual encoding should
 be balanced around a center point, such as positive and negative values.
+They are intended to be used with \code{\link[=geom_bar_diverging]{geom_bar_diverging()}}, \code{\link[=geom_area_diverging]{geom_area_diverging()}} and \code{\link[=stat_diverging]{stat_diverging()}}.
 }
 \examples{
 library(ggplot2)
@@ -98,4 +99,7 @@ ggplot(df, aes(x, y)) +
   scale_x_continuous_diverging() +
   scale_y_continuous_diverging()
 
+}
+\seealso{
+\code{\link[=geom_bar_diverging]{geom_bar_diverging()}}, \code{\link[=geom_area_diverging]{geom_area_diverging()}}, \code{\link[=stat_diverging]{stat_diverging()}}
 }

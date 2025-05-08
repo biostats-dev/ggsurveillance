@@ -1,7 +1,7 @@
 #' Create diverging bar charts, diverging area charts or other plots for opposing categorical data.
 #'
 #' @description
-#' `geom_bar_diverging()` creates a diverging bar chart, i.e. stacked bars which are centered at 0.
+#' `geom_bar_diverging()` creates a diverging bar chart, i.e. stacked bars which are centred at 0.
 #' This is useful for visualizing contrasting categories like:
 #'  * case counts by contrasting categories like vaccination status or autochthonous vs imported infection
 #'  * age pyramids,
@@ -9,10 +9,12 @@
 #'  * or any data with natural opposing groups.
 #'
 #' `stat_diverging()` calculates the required statistics for diverging
-#' charts and can be used with different geoms. Used for easy labeling of diverging charts.
+#' charts and can be used with different geoms. Used for easy labelling of diverging charts.
 #'
 #' `geom_area_diverging()` creates a diverging area chart, for continuous data of opposing categories.
 #' x (or y) has to be continuous for this geom.
+#' 
+#' See [scale_x_continuous_diverging()], [scale_y_continuous_diverging()] for the corresponding `ggplot2` scales.
 #'
 #' @section Diverging bar charts:
 #' Diverging bar charts split categories into positive and negative directions based on
@@ -65,6 +67,8 @@
 #' * `count`
 #' * `prop`: Proportion of the category within the stacked bar.
 #' * `sign`: Direction of the category. Either `-1`, `0` or `+1`
+#'
+#' @seealso [scale_x_continuous_diverging()], [scale_y_continuous_diverging()]
 #'
 #' @examples
 #' # Basic example with geom_bar_diverging

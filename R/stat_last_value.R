@@ -8,12 +8,12 @@
 #' There are 5 functions:
 #' * `stat_last_value()`: The core statistical transformation that identifies the last point of a line
 #' (e.g. last date of the time series).
-#' * `geom_last_value_label()`: Adds the last y value or a custom label
+#' * `geom_label_last_value()`: Adds the last y value or a custom label
 #' after the last observation using \code{\link[ggplot2]{geom_label}}.
-#' * `geom_last_value_text()`: Adds the last y value or a custom text
+#' * `geom_text_last_value()`: Adds the last y value or a custom text
 #' after the last observation using \code{\link[ggplot2]{geom_text}}.
-#' * `geom_last_value_label_repel()`: Adds non-overlapping labels with \code{\link[ggrepel]{geom_label_repel}}.
-#' * `geom_last_value_text_repel()`: Adds non-overlapping text with \code{\link[ggrepel]{geom_text_repel}}.
+#' * `geom_label_last_value_repel()`: Adds non-overlapping labels with \code{\link[ggrepel]{geom_label_repel}}.
+#' * `geom_text_last_value_repel()`: Adds non-overlapping text with \code{\link[ggrepel]{geom_text_repel}}.
 #'
 #' @param mapping Set of aesthetic mappings created by \code{\link[ggplot2]{aes}}. Commonly used mappings:
 #'   * **x**: position on x-axis
@@ -53,13 +53,13 @@
 #'
 #' ggplot(economics, aes(x = date, y = unemploy, group = 1)) +
 #'   geom_line() +
-#'   geom_last_value_label()
+#'   geom_label_last_value()
 #'
 #' # Multiple lines with custom labels
 #' ggplot(economics_long, aes(x = date, y = value, color = variable)) +
 #'   geom_line() +
-#'   geom_last_value_label(aes(label = variable))
-#' @name geom_last_value_label/ stat_last_value
+#'   geom_label_last_value(aes(label = variable))
+#' @name geom_label_last_value/ stat_last_value
 #' @rdname stat_last_value
 NULL
 
@@ -94,7 +94,7 @@ stat_last_value <- function(mapping = NULL, data = NULL,
 
 #' @rdname stat_last_value
 #' @export
-geom_last_value_label <- function(mapping = NULL, data = NULL,
+geom_label_last_value <- function(mapping = NULL, data = NULL,
                                   stat = "last_value", position = "identity",
                                   nudge_rel = 0.015, nudge_add = 0,
                                   expand_rel = 0.05, expand_add = 0,
@@ -122,7 +122,7 @@ geom_last_value_label <- function(mapping = NULL, data = NULL,
 
 #' @rdname stat_last_value
 #' @export
-geom_last_value_text <- function(mapping = NULL, data = NULL,
+geom_text_last_value <- function(mapping = NULL, data = NULL,
                                  stat = "last_value", position = "identity",
                                  nudge_rel = 0.015, nudge_add = 0,
                                  expand_rel = 0.035, expand_add = 0,
@@ -150,7 +150,7 @@ geom_last_value_text <- function(mapping = NULL, data = NULL,
 
 #' @rdname stat_last_value
 #' @export
-geom_last_value_label_repel <- function(mapping = NULL, data = NULL,
+geom_label_last_value_repel <- function(mapping = NULL, data = NULL,
                                         stat = "last_value_repel", position = "identity",
                                         nudge_rel = 0.03, nudge_add = 0,
                                         expand_rel = 0.05, expand_add = 0,
@@ -180,7 +180,7 @@ geom_last_value_label_repel <- function(mapping = NULL, data = NULL,
 
 #' @rdname stat_last_value
 #' @export
-geom_last_value_text_repel <- function(mapping = NULL, data = NULL,
+geom_text_last_value_repel <- function(mapping = NULL, data = NULL,
                                        stat = "last_value_repel", position = "identity",
                                        nudge_rel = 0.015, nudge_add = 0,
                                        expand_rel = 0.035, expand_add = 0,

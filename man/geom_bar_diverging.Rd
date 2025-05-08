@@ -111,7 +111,7 @@ Negative values nudge inward.}
 A \code{ggplot2} geom layer that can be added to a plot.
 }
 \description{
-\code{geom_bar_diverging()} creates a diverging bar chart, i.e. stacked bars which are centered at 0.
+\code{geom_bar_diverging()} creates a diverging bar chart, i.e. stacked bars which are centred at 0.
 This is useful for visualizing contrasting categories like:
 \itemize{
 \item case counts by contrasting categories like vaccination status or autochthonous vs imported infection
@@ -121,10 +121,12 @@ This is useful for visualizing contrasting categories like:
 }
 
 \code{stat_diverging()} calculates the required statistics for diverging
-charts and can be used with different geoms. Used for easy labeling of diverging charts.
+charts and can be used with different geoms. Used for easy labelling of diverging charts.
 
 \code{geom_area_diverging()} creates a diverging area chart, for continuous data of opposing categories.
 x (or y) has to be continuous for this geom.
+
+See \code{\link[=scale_x_continuous_diverging]{scale_x_continuous_diverging()}}, \code{\link[=scale_y_continuous_diverging]{scale_y_continuous_diverging()}} for the corresponding \code{ggplot2} scales.
 }
 \section{Diverging bar charts}{
 
@@ -217,4 +219,7 @@ ggplot(cases_vacc, aes(y = year, fill = `Vaccination Status`)) +
   theme_classic() +
   theme_mod_legend_bottom()
 
+}
+\seealso{
+\code{\link[=scale_x_continuous_diverging]{scale_x_continuous_diverging()}}, \code{\link[=scale_y_continuous_diverging]{scale_y_continuous_diverging()}}
 }

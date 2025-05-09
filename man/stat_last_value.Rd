@@ -21,6 +21,7 @@ stat_last_value(
   nudge_add = 0,
   expand_rel = 0,
   expand_add = 0,
+  labeller = NULL,
   ...,
   na.rm = FALSE,
   show.legend = NA,
@@ -36,6 +37,7 @@ geom_label_last_value(
   nudge_add = 0,
   expand_rel = 0.05,
   expand_add = 0,
+  labeller = NULL,
   hjust = 0,
   ...,
   na.rm = FALSE,
@@ -52,6 +54,7 @@ geom_text_last_value(
   nudge_add = 0,
   expand_rel = 0.035,
   expand_add = 0,
+  labeller = NULL,
   hjust = 0,
   ...,
   na.rm = FALSE,
@@ -68,6 +71,7 @@ geom_label_last_value_repel(
   nudge_add = 0,
   expand_rel = 0.05,
   expand_add = 0,
+  labeller = NULL,
   hjust = 0,
   direction = "y",
   min.segment.length = 0.5,
@@ -86,6 +90,7 @@ geom_text_last_value_repel(
   nudge_add = 0,
   expand_rel = 0.035,
   expand_add = 0,
+  labeller = NULL,
   hjust = 0,
   direction = "y",
   min.segment.length = 0.5,
@@ -122,6 +127,9 @@ For repel functions this has to be large enough to place the text to achieve goo
 
 \item{expand_add}{Numeric value specifying an absolute amount to expand the axis limits (in units of the x-axis).}
 
+\item{labeller}{Label function to format the last value.
+E.g. \code{\link[scales:label_percent]{scales::label_percent()}}, \code{\link[scales:label_number]{scales::label_number()}}, \code{\link[scales:label_dictionary]{scales::label_dictionary()}}.}
+
 \item{...}{Other arguments passed to \code{\link[ggplot2]{geom_label}}, \code{\link[ggplot2]{geom_text}},
 \code{\link[ggrepel]{geom_label_repel}} or \code{\link[ggrepel]{geom_text_repel}}.}
 
@@ -151,13 +159,6 @@ the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 A \code{ggplot2} layer that can be added to a plot
 }
 \description{
-The following calculated stats can be used further in aes:
-\itemize{
-\item after_stat(x0): the highest x value
-\item after_stat(y): the y value of the observation with the highest x value.
-}
-}
-\details{
 Creates a label, point or any geom at the last point of a line (highest x value). This is useful for
 line charts where you want to identify each line at its endpoint, write the last value of a
 time series at the endpoint or just add a point at the end of a \code{\link[ggplot2]{geom_line}}. This functions
@@ -175,17 +176,34 @@ after the last observation using \code{\link[ggplot2]{geom_text}}.
 \item \code{geom_text_last_value_repel()}: Adds non-overlapping text with \code{\link[ggrepel]{geom_text_repel}}.
 }
 }
+\details{
+The following calculated stats can be used further in aes:
+\itemize{
+\item after_stat(x0): the highest x value
+\item after_stat(y): the y value of the observation with the highest x value.
+\item after_stat(label_formatted): the formatted y value using the \code{labbeller}.
+}
+}
 \examples{
 # Basic example with last value labels
 library(ggplot2)
 
-ggplot(economics, aes(x = date, y = unemploy, group = 1)) +
+ggplot(economics, aes(x = date, y = unemploy)) +
   geom_line() +
-  geom_label_last_value()
+  geom_text_last_value()
+
+# Percentages
+ggplot(economics, aes(x = date, y = unemploy / pop)) +
+  geom_line() +
+  geom_label_last_value(labeller = scales::label_percent(accuracy = 0.1))
 
 # Multiple lines with custom labels
 ggplot(economics_long, aes(x = date, y = value, color = variable)) +
   geom_line() +
-  geom_label_last_value(aes(label = variable))
+  stat_last_value() + # Add a point at the end
+  geom_label_last_value_repel(aes(label = variable),
+    expand_rel = 0.13, nudge_rel = 0.05
+  ) +
+  scale_y_log10()
 }
 \keyword{datasets}

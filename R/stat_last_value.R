@@ -1,5 +1,6 @@
 #' Add labels or points to the last value of a line chart
-#'
+#
+#' @description
 #' Creates a label, point or any geom at the last point of a line (highest x value). This is useful for
 #' line charts where you want to identify each line at its endpoint, write the last value of a
 #' time series at the endpoint or just add a point at the end of a \code{\link[ggplot2]{geom_line}}. This functions
@@ -32,16 +33,19 @@
 #'        relative to the range of the x-values of the data. This can be used to create room for longer text/labels.
 #' For repel functions this has to be large enough to place the text to achieve good results.
 #' @param expand_add Numeric value specifying an absolute amount to expand the axis limits (in units of the x-axis).
+#' @param labeller Label function to format the last value.
+#' E.g. [scales::label_percent()], [scales::label_number()], [scales::label_dictionary()].
 #' @param hjust Horizontal text alignment. Defaults to left aligned (0).
 #' @param direction Direction in which to repel the labels. See \code{\link[ggrepel]{geom_text_repel}}.
 #' @param min.segment.length Minimum length of the leader line segments. See \code{\link[ggrepel]{geom_text_repel}}.
 #' @param ... Other arguments passed to \code{\link[ggplot2]{geom_label}}, \code{\link[ggplot2]{geom_text}},
 #' \code{\link[ggrepel]{geom_label_repel}} or \code{\link[ggrepel]{geom_text_repel}}.
 #'
-#' @description
+#' @details
 #' The following calculated stats can be used further in aes:
 #' * after_stat(x0): the highest x value
 #' * after_stat(y): the y value of the observation with the highest x value.
+#' * after_stat(label_formatted): the formatted y value using the `labbeller`.
 #'
 #' @inheritParams ggplot2::geom_label
 #' @inheritParams ggrepel::geom_label_repel
@@ -51,14 +55,23 @@
 #' # Basic example with last value labels
 #' library(ggplot2)
 #'
-#' ggplot(economics, aes(x = date, y = unemploy, group = 1)) +
+#' ggplot(economics, aes(x = date, y = unemploy)) +
 #'   geom_line() +
-#'   geom_label_last_value()
+#'   geom_text_last_value()
+#'
+#' # Percentages
+#' ggplot(economics, aes(x = date, y = unemploy / pop)) +
+#'   geom_line() +
+#'   geom_label_last_value(labeller = scales::label_percent(accuracy = 0.1))
 #'
 #' # Multiple lines with custom labels
 #' ggplot(economics_long, aes(x = date, y = value, color = variable)) +
 #'   geom_line() +
-#'   geom_label_last_value(aes(label = variable))
+#'   stat_last_value() + # Add a point at the end
+#'   geom_label_last_value_repel(aes(label = variable),
+#'     expand_rel = 0.13, nudge_rel = 0.05
+#'   ) +
+#'   scale_y_log10()
 #' @name geom_label_last_value/ stat_last_value
 #' @rdname stat_last_value
 NULL
@@ -69,6 +82,7 @@ stat_last_value <- function(mapping = NULL, data = NULL,
                             geom = "point", position = "identity",
                             nudge_rel = 0, nudge_add = 0,
                             expand_rel = 0, expand_add = 0,
+                            labeller = NULL,
                             ...,
                             na.rm = FALSE,
                             show.legend = NA,
@@ -87,6 +101,7 @@ stat_last_value <- function(mapping = NULL, data = NULL,
       nudge_add = nudge_add,
       expand_rel = expand_rel,
       expand_add = expand_add,
+      labeller = labeller,
       ...
     )
   )
@@ -98,7 +113,7 @@ geom_label_last_value <- function(mapping = NULL, data = NULL,
                                   stat = "last_value", position = "identity",
                                   nudge_rel = 0.015, nudge_add = 0,
                                   expand_rel = 0.05, expand_add = 0,
-                                  hjust = 0,
+                                  labeller = NULL, hjust = 0,
                                   ..., na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE) {
   ggplot2::layer(
     geom = ggplot2::GeomLabel,
@@ -114,6 +129,7 @@ geom_label_last_value <- function(mapping = NULL, data = NULL,
       nudge_add = nudge_add,
       expand_rel = expand_rel,
       expand_add = expand_add,
+      labeller = labeller,
       hjust = hjust,
       ...
     )
@@ -126,7 +142,7 @@ geom_text_last_value <- function(mapping = NULL, data = NULL,
                                  stat = "last_value", position = "identity",
                                  nudge_rel = 0.015, nudge_add = 0,
                                  expand_rel = 0.035, expand_add = 0,
-                                 hjust = 0,
+                                 labeller = NULL, hjust = 0,
                                  ..., na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE) {
   ggplot2::layer(
     geom = ggplot2::GeomText,
@@ -142,6 +158,7 @@ geom_text_last_value <- function(mapping = NULL, data = NULL,
       nudge_add = nudge_add,
       expand_rel = expand_rel,
       expand_add = expand_add,
+      labeller = labeller,
       hjust = hjust,
       ...
     )
@@ -154,8 +171,9 @@ geom_label_last_value_repel <- function(mapping = NULL, data = NULL,
                                         stat = "last_value_repel", position = "identity",
                                         nudge_rel = 0.03, nudge_add = 0,
                                         expand_rel = 0.05, expand_add = 0,
-                                        hjust = 0, direction = "y", min.segment.length = 0.5,
+                                        labeller = NULL, hjust = 0, direction = "y", min.segment.length = 0.5,
                                         ..., na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE) {
+  rlang::check_installed("ggrepel", reason = "for geom_label_last_value_repel().")
   ggplot2::layer(
     geom = ggrepel::GeomLabelRepel,
     mapping = mapping,
@@ -170,6 +188,7 @@ geom_label_last_value_repel <- function(mapping = NULL, data = NULL,
       nudge_add = nudge_add,
       expand_rel = expand_rel,
       expand_add = expand_add,
+      labeller = labeller,
       hjust = hjust,
       direction = direction,
       min.segment.length = min.segment.length,
@@ -184,8 +203,9 @@ geom_text_last_value_repel <- function(mapping = NULL, data = NULL,
                                        stat = "last_value_repel", position = "identity",
                                        nudge_rel = 0.015, nudge_add = 0,
                                        expand_rel = 0.035, expand_add = 0,
-                                       hjust = 0, direction = "y", min.segment.length = 0.5,
+                                       labeller = NULL, hjust = 0, direction = "y", min.segment.length = 0.5,
                                        ..., na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE) {
+  rlang::check_installed("ggrepel", reason = "for geom_label_last_value_repel().")
   ggplot2::layer(
     geom = ggrepel::GeomTextRepel,
     mapping = mapping,
@@ -200,6 +220,7 @@ geom_text_last_value_repel <- function(mapping = NULL, data = NULL,
       nudge_add = nudge_add,
       expand_rel = expand_rel,
       expand_add = expand_add,
+      labeller = labeller,
       hjust = hjust,
       direction = direction,
       min.segment.length = min.segment.length,
@@ -218,14 +239,16 @@ geom_text_last_value_repel <- function(mapping = NULL, data = NULL,
 # TODO: Custom Label function, Add x0 to docs
 StatLastValue <- ggproto("StatLastValue", Stat,
   required_aes = c("x", "y"),
-  extra_params = c("na.rm", "nudge_rel", "nudge_add", "expand_rel", "expand_add"),
-  default_aes = aes(label = after_stat(y)),
+  extra_params = c("na.rm", "nudge_rel", "nudge_add", "expand_rel", "expand_add", "labeller"),
+  default_aes = aes(label = after_stat(label_formatted)),
   setup_params = function(self, data, params) {
     params$flipped_aes <- ggplot2::has_flipped_aes(data, params, main_is_orthogonal = FALSE)
+    params$labeller <- params$labeller %||% identity
     params
   },
   compute_group = function(data, scales, flipped_aes = NA,
-                           nudge_rel = 0, nudge_add = 0, expand_rel = 0, expand_add = 0, ...) {
+                           nudge_rel = 0, nudge_add = 0, expand_rel = 0, expand_add = 0,
+                           labeller, ...) {
     flipped_aes <- flipped_aes %||% any(data$flipped_aes) %||% FALSE
 
     if (!flipped_aes) {
@@ -245,7 +268,8 @@ StatLastValue <- ggproto("StatLastValue", Stat,
       dplyr::mutate(
         x0 = x,
         x = x + nudge_rel * scale_width + nudge_add, # recalc x depending on length of x-axis (scale)
-        xmax = x + expand_rel * scale_width + expand_add
+        xmax = x + expand_rel * scale_width + expand_add,
+        label_formatted = labeller(y)
       ) |>
       ggplot2::flip_data(flipped_aes)
   },
@@ -258,16 +282,10 @@ StatLastValue <- ggproto("StatLastValue", Stat,
 #' @format NULL
 #' @usage NULL
 #' @export
-StatLastValueRepel <- ggproto("StatLastValueRepel", Stat,
-  required_aes = c("x", "y"),
-  extra_params = c("na.rm", "nudge_rel", "nudge_add", "expand_rel", "expand_add"),
-  default_aes = aes(label = after_stat(y)),
-  setup_params = function(self, data, params) {
-    params$flipped_aes <- ggplot2::has_flipped_aes(data, params, main_is_orthogonal = FALSE)
-    params
-  },
+StatLastValueRepel <- ggproto("StatLastValueRepel", StatLastValue,
   compute_group = function(data, scales, flipped_aes = NA,
-                           nudge_rel = 0, nudge_add = 0, expand_rel = 0, expand_add = 0, ...) {
+                           nudge_rel = 0, nudge_add = 0, expand_rel = 0, expand_add = 0,
+                           labeller, ...) {
     flipped_aes <- flipped_aes %||% any(data$flipped_aes) %||% FALSE
 
     if (!flipped_aes) {
@@ -286,9 +304,9 @@ StatLastValueRepel <- ggproto("StatLastValueRepel", Stat,
         x0 = x, # x0 is a by ggplot recognized x value (for flipping etc.)
         x = x,
         nudge_x = x + nudge_rel * scale_width + nudge_add, # Nudging for ggrepel (new x coordinate)
-        xmax = nudge_x + expand_rel * scale_width + expand_add # Force extension of the x-axis scale limits
+        xmax = nudge_x + expand_rel * scale_width + expand_add, # Force extension of the x-axis scale limits
+        label_formatted = labeller(y)
       ) |>
       ggplot2::flip_data(flipped_aes)
-  },
-  dropped_aes = "weight"
+  }
 )

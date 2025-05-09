@@ -34,7 +34,7 @@ Imports:
     tidyr,
     tidyselect
 Suggests:
-    ggrepel (>= 0.9.6),
+    ggrepel,
     Hmisc,
     knitr,
     outbreaks,

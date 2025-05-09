@@ -50,6 +50,7 @@ i.e. year is only labelled when the year changes.
 \examples{
 library(tidyr)
 library(outbreaks)
+library(ggplot2)
 
 # Change locale of date labels to Italian
 sars_canada_2003 |> # SARS dataset from outbreaks

@@ -116,3 +116,25 @@ ggplot(df_stays_long) +
 ```
 
 ![Epigantt chart of a fictional hospital outbreak](man/figures/epigantt_plot_readme.png)
+
+### Create Diverging Bar Charts
+
+Useful for age pyramids, vaccination status, likert scales (sentiment) etc.
+
+``` r
+library(dplyr)
+library(ggplot2)
+library(ggsurveillance)
+
+population_german_states |>
+  filter(state %in% c("Berlin", "Mecklenburg-Vorpommern"), age < 90) |>
+  ggplot(aes(y = age, fill = sex, weight = n)) +
+  geom_bar_diverging(width = 1) +
+  geom_vline(xintercept = 0) +
+  scale_x_continuous_diverging(n.breaks = 7) +
+  facet_wrap(~state, scales = "free_x") +
+  theme_bw() +
+  theme_mod_legend_top()
+```
+
+![Age pyramids of Berlin and Mecklenburg-Vorpommern](man/figures/diverging_bar_chart_age_pyramid_readme.png)

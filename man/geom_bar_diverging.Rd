@@ -50,7 +50,7 @@ stat_diverging(
 )
 }
 \arguments{
-\item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{ggplot2::aes()}}.}
+\item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{ggplot2::aes()}}. See the section Aesthetics below for more details.}
 
 \item{data}{The data to be displayed in this layer.}
 
@@ -114,8 +114,8 @@ A \code{ggplot2} geom layer that can be added to a plot.
 \code{geom_bar_diverging()} creates a diverging bar chart, i.e. stacked bars which are centred at 0.
 This is useful for visualizing contrasting categories like:
 \itemize{
-\item case counts by contrasting categories like vaccination status or autochthonous vs imported infection
-\item age pyramids,
+\item case counts by contrasting categories like vaccination status or autochthonous (local) vs imported infections
+\item age pyramids
 \item likert scales for e.g. agreement (sentiment analysis)
 \item or any data with natural opposing groups.
 }

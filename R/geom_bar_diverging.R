@@ -3,8 +3,8 @@
 #' @description
 #' `geom_bar_diverging()` creates a diverging bar chart, i.e. stacked bars which are centred at 0.
 #' This is useful for visualizing contrasting categories like:
-#'  * case counts by contrasting categories like vaccination status or autochthonous vs imported infection
-#'  * age pyramids,
+#'  * case counts by contrasting categories like vaccination status or autochthonous (local) vs imported infections
+#'  * age pyramids
 #'  * likert scales for e.g. agreement (sentiment analysis)
 #'  * or any data with natural opposing groups.
 #'
@@ -21,7 +21,7 @@
 #' factor level order. Categories in the first half of factor levels go in the negative
 #' direction, while categories in the second half go in the positive direction.
 #'
-#' @param mapping Set of aesthetic mappings created by [ggplot2::aes()].
+#' @param mapping Set of aesthetic mappings created by [ggplot2::aes()]. See the section Aesthetics below for more details.
 #' @param data The data to be displayed in this layer.
 #' @param proportion Logical. If `TRUE`, each stacked bar are normalized to 100%.
 #' Useful to plot or calculate the percentages of each category within each bar.

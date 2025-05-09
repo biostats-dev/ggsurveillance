@@ -179,9 +179,9 @@ after the last observation using \code{\link[ggplot2]{geom_text}}.
 \details{
 The following calculated stats can be used further in aes:
 \itemize{
-\item after_stat(x0): the highest x value
-\item after_stat(y): the y value of the observation with the highest x value.
-\item after_stat(label_formatted): the formatted y value using the \code{labbeller}.
+\item \code{after_stat(x0)}: the highest x value
+\item \code{after_stat(y)}: the y value of the observation with the highest x value.
+\item \code{after_stat(label_formatted)}: the formatted y value using the \code{labbeller}.
 }
 }
 \examples{

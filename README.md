@@ -20,6 +20,12 @@
 
 -   `create_agegroups()`: Create reproducible age groups with highly customizable labels.
 
+-   `geom_bar_diverging()`: A geom for diverging bar charts, which can be used to plot age pyramids, likert scales (sentiment analyses) and other data with opposing categories, like vaccination status or imported vs autochthonous (local) infections.
+
+    -   `stat_diverging()` for easy labeling of these charts with category counts/percentages or total counts/percentages
+    -   `scale_x_continuous_diverging()` for symmetric diverging scales
+    -   `geom_area_diverging()` for continuous variables (e.g. changes over time)
+
 -   `geom_epigantt()`: A geom for epigantt plots. Helpful to visualize overlapping time intervals for contact tracing (e.g. hospital outbreaks).
 
     -   including `scale_y_discrete_reverse()` which reverses the order of the categorical scale.

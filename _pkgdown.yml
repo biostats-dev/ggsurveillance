@@ -11,3 +11,71 @@ navbar:
   structure:
     left:  [intro, reference, articles, tutorials, news]
     right: [search, github, lightswitch]
+
+reference:
+- title: "Epidemic Curves"
+  desc: "Functions for creating and styling epidemic curves"
+  contents:
+  - geom_epicurve
+  - scale_y_cases_5er
+  - geom_vline_year
+
+- title: "Diverging Bar Charts and Diverging Area Charts"
+  desc: "Functions for diverging plots for age pyramids, likert scales, etc."
+  contents:
+  - geom_bar_diverging
+  - scale_x_continuous_diverging
+  - scale_y_discrete_reverse
+
+- title: "Seasonal Data Alignment"
+  desc: "Functions for aligning and comparing data across seasons"
+  contents:
+  - align_dates_seasonal
+  - align_and_bin_dates_seasonal
+
+- title: "EpiGantt Charts"
+  desc: "Functions for EpiGantt Charts"
+  contents:
+  - geom_epigantt
+  - scale_y_discrete_reverse
+
+- title: "Data Manipulation helpers"
+  desc: "Various functions helper functions for common epi tasks"
+  contents:
+  - create_agegroups
+  - geometric_mean
+  - expand_counts
+
+- title: "Datasets"
+  desc: "Included datasets for examples and demonstrations"
+  contents:
+  - influenza_germany
+  - linelist_hospital_outbreak
+  - population_german_states
+
+- title: ggplot2 layers and functions
+
+- subtitle: "Geoms and Stats"
+  desc: "Geoms and Stats in this package"
+  contents:
+  - starts_with("geom_")
+  - starts_with("stat_")
+
+- subtitle: "Scales Utilities"
+  desc: "ggplot2 scales in this package"
+  contents:
+  - starts_with("scale_")
+
+- subtitle: "Labeling and Formatting"
+  desc: "Functions for formatting labels and annotations"
+  contents:
+  - label_date
+  - label_skip
+
+- subtitle: "Theming and Styling"
+  desc: "Functions for customizing plot appearance"
+  contents:
+  - theme_mod_disable_legend
+  - theme_mod_legend_position
+  - theme_mod_remove_minor_grid
+  - theme_mod_rotate_axis_labels

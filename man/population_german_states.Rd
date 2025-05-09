@@ -26,4 +26,17 @@ population_german_states
 \description{
 German Population data by state in 2023
 }
+\examples{
+# Age pyramid
+library(ggplot2)
+population_german_states |>
+  filter(age < 90) |>
+  ggplot(aes(y = age, fill = sex, weight = n)) +
+  geom_bar_diverging(width = 1) +
+  geom_vline(xintercept = 0) +
+  scale_x_continuous_diverging() +
+  facet_wrap(~state, scales = "free_x") +
+  theme_bw(base_size = 8) +
+  theme_mod_legend_top()
+}
 \keyword{datasets}

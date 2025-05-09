@@ -11,6 +11,20 @@
 #' }
 #' @source License CC-BY 4.0: Robert Koch-Institut (2025): Laborbestätigte Influenzafälle in Deutschland. Dataset. Zenodo.
 #' DOI:10.5281/zenodo.14619502. \url{https://github.com/robert-koch-institut/Influenzafaelle_in_Deutschland}
+#' @examples
+#' library(ggplot2)
+#'
+#' influenza_germany |>
+#'   align_dates_seasonal(
+#'     dates_from = ReportingWeek, date_resolution = "isoweek", start = 28
+#'   ) -> df_flu_aligned
+#'
+#' ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence, color = season)) +
+#'   geom_line() +
+#'   facet_wrap(~AgeGroup) +
+#'   theme_bw() +
+#'   theme_mod_rotate_x_axis_labels_45()
+#'
 "influenza_germany"
 
 #' Population of the German states (2023)
@@ -29,6 +43,18 @@
 #' Bevölkerung: Bundesländer, Stichtag, Geschlecht, Altersjahre (12411-0013).
 #' Data licence Germany (\href{https://www.govdata.de/dl-de/by-2-0}{dl-de/by-2-0})
 #' \url{https://www-genesis.destatis.de/datenbank/online/statistic/12411/table/12411-0013}
+#' @examples
+#' # Age pyramid
+#' library(ggplot2)
+#' population_german_states |>
+#'   filter(age < 90) |>
+#'   ggplot(aes(y = age, fill = sex, weight = n)) +
+#'   geom_bar_diverging(width = 1) +
+#'   geom_vline(xintercept = 0) +
+#'   scale_x_continuous_diverging() +
+#'   facet_wrap(~state, scales = "free_x") +
+#'   theme_bw(base_size = 8) +
+#'   theme_mod_legend_top()
 "population_german_states"
 
 #' Line list of a fictional hospital outbreak (Data)

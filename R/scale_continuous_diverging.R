@@ -2,7 +2,7 @@
 #'
 #' These scales automatically create symmetrical limits around a centre point (zero by default).
 #' They're useful for diverging continuous variables where the visual encoding should
-#' be balanced around a center point, such as positive and negative values. 
+#' be balanced around a center point, such as positive and negative values.
 #' They are intended to be used with [geom_bar_diverging()], [geom_area_diverging()] and [stat_diverging()].
 #'
 #' @inheritParams ggplot2::scale_x_continuous

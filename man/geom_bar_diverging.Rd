@@ -153,10 +153,11 @@ Optional aesthetics:
 
 \section{Calculated stats}{
 
+The following calculated stats can be used further in aes:
 \itemize{
-\item \code{count}
-\item \code{prop}: Proportion of the category within the stacked bar.
-\item \code{sign}: Direction of the category. Either \code{-1}, \code{0} or \code{+1}
+\item \code{after_stat(count)}
+\item \code{after_stat(prop)}: Proportion of the category within the stacked bar.
+\item \code{after_stat(sign)}: Direction of the category. Either \code{-1}, \code{0} or \code{+1}
 }
 }
 
@@ -201,7 +202,7 @@ cases_vacc <- data.frame(year = 2017:2025) |>
   unnest(vacc) |>
   mutate(
     year = as.factor(year),
-    "Vaccination Status" = ordered(vacc, 
+    "Vaccination Status" = ordered(vacc,
       labels = c("Fully Vaccinated", "Partially Vaccinated", "Unknown", "Unvaccinated")
     )
   )

@@ -13,7 +13,7 @@
 #'
 #' `geom_area_diverging()` creates a diverging area chart, for continuous data of opposing categories.
 #' x (or y) has to be continuous for this geom.
-#' 
+#'
 #' See [scale_x_continuous_diverging()], [scale_y_continuous_diverging()] for the corresponding `ggplot2` scales.
 #'
 #' @section Diverging bar charts:
@@ -64,9 +64,10 @@
 #' * `weight`: Adjust the weight of observations. Can be used to pass case counts or incidences.
 #'
 #' @section Calculated stats:
-#' * `count`
-#' * `prop`: Proportion of the category within the stacked bar.
-#' * `sign`: Direction of the category. Either `-1`, `0` or `+1`
+#' The following calculated stats can be used further in aes:
+#' * `after_stat(count)`
+#' * `after_stat(prop)`: Proportion of the category within the stacked bar.
+#' * `after_stat(sign)`: Direction of the category. Either `-1`, `0` or `+1`
 #'
 #' @seealso [scale_x_continuous_diverging()], [scale_y_continuous_diverging()]
 #'
@@ -111,7 +112,7 @@
 #'   unnest(vacc) |>
 #'   mutate(
 #'     year = as.factor(year),
-#'     "Vaccination Status" = ordered(vacc, 
+#'     "Vaccination Status" = ordered(vacc,
 #'       labels = c("Fully Vaccinated", "Partially Vaccinated", "Unknown", "Unvaccinated")
 #'     )
 #'   )

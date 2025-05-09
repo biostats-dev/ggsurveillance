@@ -23,4 +23,19 @@ influenza_germany
 \description{
 A subset of the weekly German influenza surveillance data from January 2020 to January 2025.
 }
+\examples{
+library(ggplot2)
+
+influenza_germany |>
+  align_dates_seasonal(
+    dates_from = ReportingWeek, date_resolution = "isoweek", start = 28
+  ) -> df_flu_aligned
+
+ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence, color = season)) +
+  geom_line() +
+  facet_wrap(~AgeGroup) +
+  theme_bw() +
+  theme_mod_rotate_x_axis_labels_45()
+
+}
 \keyword{datasets}

@@ -202,8 +202,9 @@ ggplot(economics_long, aes(x = date, y = value, color = variable)) +
   geom_line() +
   stat_last_value() + # Add a point at the end
   geom_label_last_value_repel(aes(label = variable),
-    expand_rel = 0.13, nudge_rel = 0.05
+    expand_rel = 0.1, nudge_rel = 0.05
   ) +
-  scale_y_log10()
+  scale_y_log10() +
+  theme_mod_disable_legend()
 }
 \keyword{datasets}

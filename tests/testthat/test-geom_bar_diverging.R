@@ -455,3 +455,140 @@ test_that("StatDiverging$compute_panel() handles empty data correctly", {
   expect_s3_class(result, "data.frame")
   expect_equal(nrow(result), 0)
 })
+
+test_that("geom_bar_diverging handles neutral_cat = NA correctly", {
+  # Test data with even number of factor levels
+  df <- data.frame(
+    name = rep(letters[1:3], each = 5),
+    value = factor(rep(c("++", "+", "0", "-", "--"), 3),
+                   levels = c("++", "+", "-", "--")
+    )
+  )
+  
+  # Test with neutral_cat = "NA" with default break_pos
+  p1 <- ggplot(df, aes(y = name, fill = value)) +
+    geom_bar_diverging(neutral_cat = "NA") +
+    stat_diverging(neutral_cat = "NA", size = 3)
+  
+  expect_s3_class(p1, "ggplot")
+  expect_no_error(p1)
+  vdiffr::expect_doppelganger("8_geom_bar_diverging_NA_default", p1)
+  
+  # Test with neutral_cat = "NA" with custom break_pos as integer
+  p2 <- ggplot(df, aes(y = name, fill = value)) +
+    geom_bar_diverging(neutral_cat = "NA", break_pos = 2) +
+    stat_diverging(neutral_cat = "NA", break_pos = 2, size = 3)
+  
+  expect_s3_class(p2, "ggplot")
+  expect_no_error(p2)
+  vdiffr::expect_doppelganger("8_geom_bar_diverging_NA_break_pos1", p2)
+  
+  # Test with neutral_cat = "NA" with custom break_pos as factor level
+  p3 <- ggplot(df, aes(y = name, fill = value)) +
+    geom_bar_diverging(neutral_cat = "NA", break_pos = "--") +
+    stat_diverging(neutral_cat = "NA", break_pos = "--", size = 3)
+  
+  expect_s3_class(p3, "ggplot")
+  expect_no_error(p3)
+  vdiffr::expect_doppelganger("8_geom_bar_diverging_NA_break_pos2", p3)
+})
+
+test_that("geom_bar_diverging handles neutral_cat = force correctly", {
+  # Test data with even number of factor levels
+  df_even <- data.frame(
+    name = rep(letters[1:3], each = 4),
+    value = factor(rep(c("++", "+", "-", "--"), 3),
+      levels = c("++", "+", "-", "--")
+    )
+  )
+
+  # Test with neutral_cat = "force" with default break_pos (3 for even levels)
+  p1 <- ggplot(df_even, aes(y = name, fill = value)) +
+    geom_bar_diverging(neutral_cat = "force") +
+    stat_diverging(neutral_cat = "force", size = 3)
+
+  expect_s3_class(p1, "ggplot")
+  expect_no_error(p1)
+  vdiffr::expect_doppelganger("9_geom_bar_diverging_force", p1)
+
+  # Test with neutral_cat = "force" with custom break_pos as integer
+  p2 <- ggplot(df_even, aes(y = name, fill = value)) +
+    geom_bar_diverging(neutral_cat = "force", break_pos = 2) +
+    stat_diverging(neutral_cat = "force", break_pos = 2, size = 3)
+
+  expect_s3_class(p2, "ggplot")
+  expect_no_error(p2)
+  vdiffr::expect_doppelganger("9_geom_bar_diverging_force_break_pos1", p2)
+
+  # Test with neutral_cat = "force" with custom break_pos as factor level
+  p3 <- ggplot(df_even, aes(y = name, fill = value)) +
+    geom_bar_diverging(neutral_cat = "force", break_pos = "-") +
+    stat_diverging(neutral_cat = "force", break_pos = "-", size = 3)
+
+  expect_s3_class(p3, "ggplot")
+  expect_no_error(p3)
+  vdiffr::expect_doppelganger("9_geom_bar_diverging_force_break_pos2", p3)
+  
+  # Test with odd number of factor levels
+  df_odd <- data.frame(
+    name = rep(letters[1:3], each = 5),
+    value = factor(rep(c("++", "+", "+/-", "-", "--"), 3),
+      levels = c("++", "+", "+/-", "-", "--")
+    )
+  )
+  
+  # Test force with odd levels and specific break_pos
+  p4 <- ggplot(df_odd, aes(y = name, fill = value)) +
+    geom_bar_diverging(neutral_cat = "force", break_pos = "+") +
+    stat_diverging(neutral_cat = "force", break_pos = "+", size = 3)
+
+  expect_s3_class(p4, "ggplot")
+  expect_no_error(p4)
+  vdiffr::expect_doppelganger("9_geom_bar_diverging_force_break_pos3", p4)
+})
+
+test_that("break_pos parameter correctly affects position of the neutral/break point", {
+  # Test data 
+  df <- data.frame(
+    name = rep(letters[1:3], each = 4),
+    value = factor(rep(c("++", "+", "-", "--"), 3),
+      levels = c("++", "+", "-", "--")
+    )
+  )
+  
+  # Test with neutral_cat = "never" and break_pos
+  p1 <- ggplot(df, aes(y = name, fill = value)) +
+    geom_bar_diverging(neutral_cat = "never", break_pos = 1) +
+    stat_diverging(neutral_cat = "never", break_pos = 1, size = 3)
+
+  expect_s3_class(p1, "ggplot")
+  expect_no_error(p1)
+  vdiffr::expect_doppelganger("10_break_pos_never_1", p1)
+  
+  # Compare with a different break_pos value
+  p2 <- ggplot(df, aes(y = name, fill = value)) +
+    geom_bar_diverging(neutral_cat = "never", break_pos = 4) +
+    stat_diverging(neutral_cat = "never", break_pos = 4, size = 3)
+
+  expect_s3_class(p2, "ggplot")
+  expect_no_error(p2)
+  vdiffr::expect_doppelganger("10_break_pos_never_4", p2)
+  
+  # Test with factor level name as break_pos
+  p3 <- ggplot(df, aes(y = name, fill = value)) +
+    geom_bar_diverging(neutral_cat = "never", break_pos = "--") +
+    stat_diverging(neutral_cat = "never", break_pos = "--", size = 3)
+
+  expect_s3_class(p3, "ggplot")
+  expect_no_error(p3)
+  vdiffr::expect_doppelganger("10_break_pos_never_last_level", p3)
+  
+  # Test the default behavior when break_pos > n_levels
+  p4 <- ggplot(df, aes(y = name, fill = value)) +
+    geom_bar_diverging(neutral_cat = "never", break_pos = 10) +
+    stat_diverging(neutral_cat = "never", break_pos = 10, size = 3)
+
+  expect_s3_class(p4, "ggplot")
+  expect_no_error(p4)
+  vdiffr::expect_doppelganger("10_break_pos_over_limit", p4)
+})

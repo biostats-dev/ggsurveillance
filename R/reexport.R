@@ -45,6 +45,28 @@ expand_counts <- tidyr::uncount
 #'
 #' @return A character vector of formatted dates.
 #'
+#' @examples
+#' library(tidyr)
+#' library(outbreaks)
+#'
+#' # Change locale of date labels to Italian
+#' sars_canada_2003 |> # SARS dataset from outbreaks
+#'   pivot_longer(starts_with("cases"), names_prefix = "cases_", names_to = "origin") |>
+#'   ggplot(aes(x = date, weight = value, fill = origin)) +
+#'   geom_epicurve(date_resolution = "week") +
+#'   scale_x_date(labels = label_date("%B %Y", locale = "it"), date_breaks = "1 month") +
+#'   scale_y_cases_5er() +
+#'   theme_classic()
+#'
+#' # label_date_short()
+#' sars_canada_2003 |> # SARS dataset from outbreaks
+#'   pivot_longer(starts_with("cases"), names_prefix = "cases_", names_to = "origin") |>
+#'   ggplot(aes(x = date, weight = value, fill = origin)) +
+#'   geom_epicurve(date_resolution = "week") +
+#'   scale_x_date(labels = label_date_short(), date_breaks = "1 week") +
+#'   scale_y_cases_5er() +
+#'   theme_classic()
+#'
 #' @importFrom scales label_date
 #' @name label_date
 #' @rdname label_date

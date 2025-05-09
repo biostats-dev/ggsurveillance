@@ -19,6 +19,7 @@ reference:
   - geom_epicurve
   - scale_y_cases_5er
   - geom_vline_year
+  - label_date
 
 - title: "Diverging Bar Charts and Diverging Area Charts"
   desc: "Functions for diverging plots for age pyramids, likert scales, etc."
@@ -39,7 +40,7 @@ reference:
   - geom_epigantt
   - scale_y_discrete_reverse
 
-- title: "Data Manipulation helpers"
+- title: "Data Manipulation Helpers"
   desc: "Various functions helper functions for common epi tasks"
   contents:
   - create_agegroups
@@ -53,7 +54,7 @@ reference:
   - linelist_hospital_outbreak
   - population_german_states
 
-- title: ggplot2 layers and functions
+- title: "ggplot2 Layers and Functions"
 
 - subtitle: "Geoms and Stats"
   desc: "Geoms and Stats in this package"

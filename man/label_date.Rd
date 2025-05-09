@@ -47,3 +47,26 @@ i.e. year is only labelled when the year changes.
 \item See \code{\link[scales:label_date]{scales::label_date()}} and \code{\link[scales:label_date]{scales::label_date_short()}} for more details.
 }
 }
+\examples{
+library(tidyr)
+library(outbreaks)
+
+# Change locale of date labels to Italian
+sars_canada_2003 |> # SARS dataset from outbreaks
+  pivot_longer(starts_with("cases"), names_prefix = "cases_", names_to = "origin") |>
+  ggplot(aes(x = date, weight = value, fill = origin)) +
+  geom_epicurve(date_resolution = "week") +
+  scale_x_date(labels = label_date("\%B \%Y", locale = "it"), date_breaks = "1 month") +
+  scale_y_cases_5er() +
+  theme_classic()
+
+# label_date_short()
+sars_canada_2003 |> # SARS dataset from outbreaks
+  pivot_longer(starts_with("cases"), names_prefix = "cases_", names_to = "origin") |>
+  ggplot(aes(x = date, weight = value, fill = origin)) +
+  geom_epicurve(date_resolution = "week") +
+  scale_x_date(labels = label_date_short(), date_breaks = "1 week") +
+  scale_y_cases_5er() +
+  theme_classic()
+
+}

@@ -1,19 +1,21 @@
 Package: ggsurveillance
 Title: Tools for Outbreak Investigation/Infectious Disease Surveillance
-Version: 0.4.0
+Version: 0.4.0.9000
 Authors@R: 
     person("Alexander", "Bartel", , "alexander.bartel@fu-berlin.de", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-1280-6138"))
-Description: Create epicurves or epigantt charts in 'ggplot2'. Prepare
-    data for visualisation or other reporting for infectious disease
-    surveillance and outbreak investigation. Includes tidy functions to solve
-    date based transformations for common reporting tasks, like 
-    (A) seasonal date alignment for respiratory disease surveillance, 
-    (B) date-based case binning based on specified time intervals like
-    isoweek, epiweek, month and more, (C) automated detection and marking
-    of the new year based on the date/datetime axis of the 'ggplot2'. 
-    An introduction on how to use epicurves can be found on the US CDC website 
-    (2012, <https://www.cdc.gov/training/quicklearns/epimode/index.html>).
+Description: Create epicurves, epigantt or diverging bar charts in
+    'ggplot2'. Prepare data for visualisation or other reporting for
+    infectious disease surveillance and outbreak investigation (time
+    series data).  Includes tidy functions to solve date based
+    transformations for common reporting tasks, like (A) seasonal date
+    alignment for respiratory disease surveillance, (B) date-based case
+    binning based on specified time intervals like isoweek, epiweek, month
+    and more, (C) automated detection and marking of the new year based on
+    the date/datetime axis of the 'ggplot2', (D) labelling of the last
+    value of a time-series.  An introduction on how to use epicurves can
+    be found on the US CDC website (2012,
+    <https://www.cdc.gov/training/quicklearns/epimode/index.html>).
 License: GPL (>= 3)
 URL: https://ggsurveillance.biostats.dev,
     https://github.com/biostats-dev/ggsurveillance

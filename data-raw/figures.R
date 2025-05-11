@@ -12,8 +12,23 @@ sars_canada_2003 |> # Sars dataset from outbreaks
   theme_classic()
 
 ggsave("man/figures/epicurve_readme.png", width = 7, height = 4, dpi = 600)
+
 ggsave("man/figures/epicurve_readme.svg", width = 7, height = 4, dpi = 600)
 
+# ggplot2 extension gallery thumbnail https://exts.ggplot2.tidyverse.org/gallery/
+sars_canada_2003 |> # Sars dataset from outbreaks
+  pivot_longer(starts_with("cases"), names_prefix = "cases_", names_to = "origin") |>
+  ggplot(aes(x = date, weight = value, fill = origin)) +
+  geom_epicurve(date_resolution = "week") +
+  scale_x_date(date_labels = "W%V'%g", date_breaks = "2 weeks") +
+  scale_y_cases_5er() +
+  scale_fill_brewer(type = "qual", palette = 6) +
+  theme_classic() +
+  theme_mod_legend_position(position.inside = c(0.5, 0.98)) +
+  theme_mod_rotate_x_axis_labels_45() +
+  theme_mod_remove_legend_title() +
+  theme(legend.direction = "horizontal")
+ggsave("man/figures/ggsurveillance.png", width = 350/80, height = 300/80, dpi = 300)
 
 ## Influenza
 library(ggplot2)

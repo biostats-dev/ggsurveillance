@@ -2,6 +2,9 @@ url: https://ggsurveillance.biostats.dev
 template:
   bootstrap: 5
   math-rendering: mathjax
+  includes:
+    after_body: >
+      <script data-goatcounter="https://biostats-dev.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
 authors:
   Alexander Bartel:
@@ -22,7 +25,7 @@ reference:
   - label_date
 
 - title: "Diverging Bar Charts and Diverging Area Charts"
-  desc: "Functions for diverging plots for age pyramids, likert scales, etc."
+  desc: "Functions for diverging plots for population pyramids, likert scales, etc."
   contents:
   - geom_bar_diverging
   - scale_x_continuous_diverging

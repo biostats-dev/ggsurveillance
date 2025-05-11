@@ -1,4 +1,4 @@
-#' Germany Influenza (FLU) Surveillance data
+#' German Influenza (FLU) Surveillance data
 #'
 #' A subset of the weekly German influenza surveillance data from January 2020 to January 2025.
 #'
@@ -44,7 +44,7 @@
 #' Data licence Germany (\href{https://www.govdata.de/dl-de/by-2-0}{dl-de/by-2-0})
 #' \url{https://www-genesis.destatis.de/datenbank/online/statistic/12411/table/12411-0013}
 #' @examples
-#' # Age pyramid
+#' # Population pyramid
 #' library(ggplot2)
 #' library(dplyr)
 #' population_german_states |>

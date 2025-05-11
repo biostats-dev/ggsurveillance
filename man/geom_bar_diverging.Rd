@@ -115,7 +115,7 @@ A \code{ggplot2} geom layer that can be added to a plot.
 This is useful for visualizing contrasting categories like:
 \itemize{
 \item case counts by contrasting categories like vaccination status or autochthonous (local) vs imported infections
-\item age pyramids
+\item population pyramids
 \item likert scales for e.g. agreement (sentiment analysis)
 \item or any data with natural opposing groups.
 }
@@ -184,7 +184,7 @@ ggplot(df_6cat, aes(y = name, fill = value)) +
   scale_x_continuous_diverging() + # Scale
   theme_classic()
 
-# Age pyramid
+# Population pyramid
 population_german_states |>
   filter(state \%in\% c("Berlin", "Mecklenburg-Vorpommern"), age < 90) |>
   ggplot(aes(y = age, fill = sex, weight = n)) +

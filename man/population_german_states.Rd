@@ -27,7 +27,7 @@ population_german_states
 German Population data by state in 2023
 }
 \examples{
-# Age pyramid
+# Population pyramid
 library(ggplot2)
 library(dplyr)
 population_german_states |>

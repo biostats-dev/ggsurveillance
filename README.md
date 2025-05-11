@@ -20,7 +20,7 @@
 
 -   `create_agegroups()`: Create reproducible age groups with highly customizable labels.
 
--   `geom_bar_diverging()`: A geom for diverging bar charts, which can be used to plot age pyramids, likert scales (sentiment analyses) and other data with opposing categories, like vaccination status or imported vs autochthonous (local) infections.
+-   `geom_bar_diverging()`: A geom for diverging bar charts, which can be used to plot population pyramids, likert scales (sentiment analyses) and other data with opposing categories, like vaccination status or imported vs autochthonous (local) infections.
 
     -   `stat_diverging()` for easy labeling of these charts with category counts/percentages or total counts/percentages
     -   `scale_x_continuous_diverging()` for symmetric diverging scales
@@ -125,7 +125,7 @@ ggplot(df_stays_long) +
 
 ### Create Diverging Bar Charts
 
-Useful for age pyramids, vaccination status, likert scales (sentiment) etc.
+Useful for population pyramids, vaccination status, likert scales (sentiment) etc.
 
 ``` r
 library(dplyr)
@@ -143,4 +143,4 @@ population_german_states |>
   theme_mod_legend_top()
 ```
 
-![Age pyramids of Berlin and Mecklenburg-Vorpommern](man/figures/diverging_bar_chart_age_pyramid_readme.png)
+![Population pyramids of Berlin and Mecklenburg-Vorpommern](man/figures/diverging_bar_chart_age_pyramid_readme.png)

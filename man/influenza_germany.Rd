@@ -3,7 +3,7 @@
 \docType{data}
 \name{influenza_germany}
 \alias{influenza_germany}
-\title{Germany Influenza (FLU) Surveillance data}
+\title{German Influenza (FLU) Surveillance data}
 \format{
 A data frame with 1,037 rows and 4 columns:
 \describe{

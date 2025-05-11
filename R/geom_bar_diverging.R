@@ -4,7 +4,7 @@
 #' `geom_bar_diverging()` creates a diverging bar chart, i.e. stacked bars which are centred at 0.
 #' This is useful for visualizing contrasting categories like:
 #'  * case counts by contrasting categories like vaccination status or autochthonous (local) vs imported infections
-#'  * age pyramids
+#'  * population pyramids
 #'  * likert scales for e.g. agreement (sentiment analysis)
 #'  * or any data with natural opposing groups.
 #'
@@ -94,7 +94,7 @@
 #'   scale_x_continuous_diverging() + # Scale
 #'   theme_classic()
 #'
-#' # Age pyramid
+#' # Population pyramid
 #' population_german_states |>
 #'   filter(state %in% c("Berlin", "Mecklenburg-Vorpommern"), age < 90) |>
 #'   ggplot(aes(y = age, fill = sex, weight = n)) +

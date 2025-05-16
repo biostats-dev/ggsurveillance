@@ -266,7 +266,7 @@ StatDiverging <- ggplot2::ggproto("StatDiverging", Stat,
         factor(levels = new_levels, ordered = TRUE, exclude = NULL) # exclude is addNA
     } else {
       # Drop NA if not used
-      data <- data[!is.na(data$diverging_groups), ]
+      data <- ggplot2::remove_missing(data, na.rm = params$na.rm, vars = "diverging_groups", name = "stat_diverging")
     }
 
     if (nlevels(data$diverging_groups) < 2) {

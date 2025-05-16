@@ -28,7 +28,7 @@ sars_canada_2003 |> # Sars dataset from outbreaks
   theme_mod_rotate_x_axis_labels_45() +
   theme_mod_remove_legend_title() +
   theme(legend.direction = "horizontal")
-ggsave("man/figures/ggsurveillance.png", width = 350/80, height = 300/80, dpi = 300)
+ggsave("man/figures/ggsurveillance.png", width = 350 / 80, height = 300 / 80, dpi = 300)
 
 ## Influenza
 library(ggplot2)

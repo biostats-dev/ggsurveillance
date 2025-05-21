@@ -29,6 +29,7 @@ Imports:
     ggplot2 (>= 3.5.0),
     glue,
     ISOweek,
+    legendry,
     lubridate,
     rlang,
     scales (>= 1.4.0),

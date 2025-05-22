@@ -108,6 +108,8 @@ geom_hline_year <- function(mapping = NULL, position = "identity",
 }
 
 # TODO: VlineYear from Geom to Stat for plotly
+# TODO: add flip_aes function for handling flipping (maybe stat needed for this)
+# TODO: Shaded area for repeating seasons (Mosquito season)
 GeomVlineYear <- ggplot2::ggproto("GeomVlineYear", Geom,
   extra_params = c(GeomSegment$extra_params, "flipped_aes", "year_break", "break_type", "just"),
   draw_panel = function(data, panel_params, coord, lineend = "butt",
@@ -116,10 +118,8 @@ GeomVlineYear <- ggplot2::ggproto("GeomVlineYear", Geom,
     # Check for CoordFlip since it flips some thing and not others
     if (xor(!flipped_aes, (inherits(coord, "CoordFlip")))) {
       sel_scale <- panel_params$x$scale
-      sel_axis <- "x-axis"
     } else {
       sel_scale <- panel_params$y$scale
-      sel_axis <- "y-axis"
     }
 
     break_type <- match.arg(break_type, choices = c("day", "week", "isoweek", "epiweek"))
@@ -151,7 +151,7 @@ GeomVlineYear <- ggplot2::ggproto("GeomVlineYear", Geom,
       just <- just * (24 * 60 * 60) # Transform just from days to seconds
     } else {
       is_date <- TRUE
-      cli::cli_warn("{sel_axis} is not date or datetime. Assuming date scale.")
+      cli::cli_warn("{sel_scale$aesthetics[1]}-axis is not date or datetime. Assuming date scale.")
     }
 
     # Get range of x and y scale

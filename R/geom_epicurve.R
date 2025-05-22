@@ -180,20 +180,16 @@ StatEpicurve <- ggplot2::ggproto("StatEpicurve", Stat,
     # Check for CoordFlip since it flips some thing and not others
     if (!flipped_aes) {
       sel_scale <- scales$panel_scales_x[[1]]
-      sel_axis <- "x-axis"
     } else {
       sel_scale <- scales$panel_scales_y[[1]]
-      sel_axis <- "y-axis"
     }
 
     # Check scale class to detect date or datetime
-    if (inherits(sel_scale, "ScaleContinuousDate")) {
-      is_date <- TRUE
-    } else if (inherits(sel_scale, "ScaleContinuousDatetime")) {
-      is_date <- FALSE
+    if (inherits(sel_scale, c("ScaleContinuousDate", "ScaleContinuousDatetime"))) {
+      trans <- sel_scale$trans # Use Transformation of the scale
     } else {
-      is_date <- TRUE
-      cli::cli_warn("{sel_axis} is not date or datetime. Assuming date scale.")
+      trans <- scales::transform_date()
+      cli::cli_warn("{sel_scale$aesthetics[1]}-axis is not date or datetime. Assuming date scale.")
     }
 
     # Drop missing x
@@ -206,7 +202,7 @@ StatEpicurve <- ggplot2::ggproto("StatEpicurve", Stat,
     }
 
     if (!is.na(date_resolution)) {
-      if (is_date) data$x <- lubridate::as_date(data$x) else data$x <- lubridate::as_datetime(data$x)
+      data$x <- trans$inverse(data$x) # Transform to date or datetime
 
       data$x_ll <- as.numeric(lubridate::floor_date(data$x,
         unit = date_resolution,
@@ -223,7 +219,7 @@ StatEpicurve <- ggplot2::ggproto("StatEpicurve", Stat,
       data$x_ul <- data$x
     }
 
-    if (is.na(date_resolution) & !is_date) {
+    if (is.na(date_resolution) & inherits(sel_scale, "ScaleContinuousDatetime")) {
       cli::cli_warn("It seems you provided a datetime format. Column used as specified.
                           Please use date_resolution = 'day' to round to day (stat_epicurve).")
     }
@@ -295,22 +291,17 @@ StatBinDate <- ggplot2::ggproto("StatBinDate", Stat,
     # Check for CoordFlip since it flips some thing and not others
     if (!flipped_aes) {
       sel_scale <- scales$x
-      sel_axis <- "x-axis"
     } else {
       sel_scale <- scales$y
-      sel_axis <- "y-axis"
     }
 
     # Check scale class to detect date or datetime
-    if (inherits(sel_scale, "ScaleContinuousDate")) {
-      is_date <- TRUE
-    } else if (inherits(sel_scale, "ScaleContinuousDatetime")) {
-      is_date <- FALSE
+    if (inherits(sel_scale, c("ScaleContinuousDate", "ScaleContinuousDatetime"))) {
+      trans <- sel_scale$trans # Use Transformation of the scale
     } else {
-      is_date <- TRUE
-      cli::cli_warn("{sel_axis} is not date or datetime. Assuming date scale.")
+      trans <- scales::transform_date()
+      cli::cli_warn("{sel_scale$aesthetics[1]}-axis is not date or datetime. Assuming date scale.")
     }
-
     # Drop missing x
     complete <- stats::complete.cases(data$x)
     data <- data |> dplyr::filter(complete)
@@ -321,7 +312,7 @@ StatBinDate <- ggplot2::ggproto("StatBinDate", Stat,
     }
 
     if (!is.na(date_resolution)) {
-      if (is_date) data$x <- lubridate::as_date(data$x) else data$x <- lubridate::as_datetime(data$x)
+      data$x <- trans$inverse(data$x)
 
       data$x_ll <- as.numeric(lubridate::floor_date(data$x,
         unit = date_resolution,
@@ -411,7 +402,6 @@ GeomEpicurve <- ggplot2::ggproto("GeomEpicurve", GeomBar,
         dplyr::arrange(x) -> data_width
 
       # Adjust Bars to avoid jittering when using months
-      # TODO: Call this function only when needed?
       if (nrow(data_width) > 1 & dplyr::n_distinct(data_width$width) != 1) {
         for (i in 2:nrow(data_width)) {
           # Check if there is a space between bars

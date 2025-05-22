@@ -65,23 +65,6 @@ scale_x_date_limit_days <- function(name = waiver(),
     }
   }
 
-  # Partial Application of the limit function
-  limit_days_by_range <- function(limit_scale_to_days, reference_date, limit_right) {
-    function(range) {
-      if (!is_empty(reference_date) & is.Date(reference_date)) {
-        upper_limit <- reference_date
-      } else {
-        upper_limit <- range[2]
-      }
-      # TODO: floor_date?
-      if (!limit_right) {
-        return(c(upper_limit - lubridate::days(limit_scale_to_days), range[2]))
-      } else {
-        return(c(upper_limit - lubridate::days(limit_scale_to_days), upper_limit))
-      }
-    }
-  }
-
   ggplot2::scale_x_date(
     name = name,
     limits = limit_days_by_range(limit_scale_to_days, reference_date, limit_right),
@@ -115,24 +98,6 @@ scale_x_datetime_limit_days <- function(name = waiver(),
     }
   }
 
-  # Partial Application of the limit function
-  limit_days_by_range <- function(limit_scale_to_days, reference_date, limit_right) {
-    function(range) {
-      if (!is_empty(reference_date) & is.POSIXt(reference_date)) {
-        upper_limit <- reference_date
-      } else {
-        upper_limit <- range[2]
-        # lubridate/scales fix
-        class(upper_limit) <- c("POSIXct", "POSIXt")
-      }
-      if (!limit_right) {
-        return(c(upper_limit - lubridate::days(limit_scale_to_days), range[2]))
-      } else {
-        return(c(upper_limit - lubridate::days(limit_scale_to_days), upper_limit))
-      }
-    }
-  }
-
   ggplot2::scale_x_datetime(
     name = name,
     limits = limit_days_by_range(limit_scale_to_days, reference_date, limit_right),
@@ -140,4 +105,25 @@ scale_x_datetime_limit_days <- function(name = waiver(),
     expand = expand,
     position = position
   )
+}
+
+
+# Partial Application of the limit function
+# TODO: Argument naming?
+limit_days_by_range <- function(limit_scale_to_days, reference_date, limit_right) {
+  force_all(limit_scale_to_days, reference_date, limit_right)
+  # TODO: Check reference_date here
+  function(range) {
+    if (!is_empty(reference_date)) { # & is.Date(reference_date)
+      upper_limit <- reference_date
+    } else {
+      upper_limit <- range[2]
+    }
+    # TODO: floor_date?
+    if (!limit_right) {
+      return(c(upper_limit - lubridate::days(limit_scale_to_days), range[2]))
+    } else {
+      return(c(upper_limit - lubridate::days(limit_scale_to_days), upper_limit))
+    }
+  }
 }

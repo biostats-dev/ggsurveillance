@@ -8,7 +8,7 @@
 \usage{
 scale_x_continuous_diverging(
   name = waiver(),
-  limits = NULL,
+  limits = waiver(),
   labels = NULL,
   transform = "identity",
   ...,
@@ -37,8 +37,8 @@ mapping used for that aesthetic. If \code{NULL}, the legend title will be
 omitted.}
 
 \item{limits}{Numeric vector of length two providing limits of the scale.
-If \code{NULL} (the default), limits are automatically computed to be
-symmetrical around zero.}
+If \code{waiver()} (the default), limits are automatically computed to be
+symmetrical around zero. Use \code{NULL} for default \code{ggplot2} limits.}
 
 \item{labels}{Either \code{waiver()}, a character vector or a function that takes the breaks
 as input and returns labels as output. By default, absolute values are displayed or passed to the label function.}

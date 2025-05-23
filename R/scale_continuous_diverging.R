@@ -8,8 +8,8 @@
 #' @inheritParams ggplot2::scale_x_continuous
 #' @inheritParams ggplot2::scale_y_continuous
 #' @param limits Numeric vector of length two providing limits of the scale.
-#'   If `NULL` (the default), limits are automatically computed to be
-#'   symmetrical around zero.
+#'   If `waiver()` (the default), limits are automatically computed to be
+#'   symmetrical around zero. Use `NULL` for default `ggplot2` limits.
 #' @param labels Either `waiver()`, a character vector or a function that takes the breaks
 #'   as input and returns labels as output. By default, absolute values are displayed or passed to the label function.
 #' @param transform Defaults to "identity". Use "reverse" to invert the scale.
@@ -38,7 +38,7 @@ NULL
 
 #' @rdname scale_continuous_diverging
 #' @export
-scale_x_continuous_diverging <- function(name = waiver(), limits = NULL, labels = NULL,
+scale_x_continuous_diverging <- function(name = waiver(), limits = waiver(), labels = NULL,
                                          transform = "identity", ...,
                                          breaks = waiver(), n.breaks = NULL,
                                          expand = waiver(), position = "bottom") {
@@ -55,7 +55,8 @@ scale_x_continuous_diverging <- function(name = waiver(), limits = NULL, labels 
     labeller <- abs
   }
 
-  limits <- limits %||% limit_symmetrical
+  # Replace with ggplot2::is_waiver(limits) for future ggplot2 versions
+  if (inherits(limits, "waiver")) limits <- limit_symmetrical
 
   ggplot2::scale_x_continuous(
     name = name,

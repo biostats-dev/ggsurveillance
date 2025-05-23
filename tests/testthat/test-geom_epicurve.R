@@ -64,27 +64,26 @@ test_that("geom_epicurve handles flipped aes", {
   expect_s3_class(p, "ggplot")
   expect_no_error(p)
   vdiffr::expect_doppelganger("3_geom_epicurve_flipped_aes", p)
-  
+
   p1 <- ggplot(test_dates, aes(y = date, fill = cat)) +
     geom_hline_year() +
     geom_epicurve(date_resolution = "day") +
     scale_x_cases_5er(n = 10, n.min = 9, u5.bias = 3) +
     theme_mod_legend_left() +
     coord_flip()
-  
+
   # Test that the plot is created successfully
   expect_s3_class(p1, "ggplot")
   expect_no_error(p1)
   vdiffr::expect_doppelganger("3_geom_epicurve_flipped_aes_back", p1)
-  
-  
+
   p2 <- ggplot(test_dates, aes(y = date, fill = cat)) +
     geom_hline_year() +
     geom_epicurve(date_resolution = "day") +
     scale_x_cases_5er(n = 10, n.min = 9, u5.bias = 3) +
     theme_mod_legend_left() +
     facet_wrap(~cat)
-  
+
   # Test that the plot is created successfully
   expect_s3_class(p2, "ggplot")
   expect_no_error(p2)

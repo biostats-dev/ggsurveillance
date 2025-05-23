@@ -7,8 +7,6 @@
 #' @param mapping Mapping created using [ggplot2::aes()]. Can be used to add the lines to the legend.
 #' E.g. `aes(linetype = 'End of Year')`. Cannot access data specified in [ggplot2::ggplot()].
 #' Panels created by [ggplot2::facet_wrap()] or [ggplot2::facet_grid()] are available with `aes(linetype = PANEL)`.
-#' @param position Position adjustment, either as a string, or the result of a call to
-#'   a position adjustment function.
 #' @param year_break String specifying the month and day ("MM-DD") or week ("W01") of the year break .
 #' Defaults to: `"01-01"` for January 1.
 #' "Week" and "MM-DD" are converted automatically based on a leap year (366 days) which starts on Monday.
@@ -59,20 +57,19 @@
 #'   theme_bw()
 #'
 #' @export
-geom_vline_year <- function(mapping = NULL, position = "identity",
+geom_vline_year <- function(mapping = NULL,
                             year_break = "01-01", break_type = c("day", "week", "isoweek", "epiweek"),
                             just = NULL,
                             ..., show.legend = NA) {
   ggplot2::layer(
     data = data.frame(x = 1),
     mapping = mapping,
-    stat = StatIdentity,
-    geom = GeomVlineYear,
-    position = position,
+    stat = StatLineYear,
+    geom = GeomVline,
+    position = PositionIdentity,
     show.legend = show.legend,
     inherit.aes = FALSE,
     params = list2(
-      na.rm = FALSE,
       flipped_aes = FALSE,
       year_break = year_break,
       break_type = break_type,
@@ -84,20 +81,19 @@ geom_vline_year <- function(mapping = NULL, position = "identity",
 
 #' @rdname geom_vline_year
 #' @export
-geom_hline_year <- function(mapping = NULL, position = "identity",
+geom_hline_year <- function(mapping = NULL,
                             year_break = "01-01", break_type = c("day", "week", "isoweek", "epiweek"),
                             just = NULL,
                             ..., show.legend = NA) {
   ggplot2::layer(
-    data = data.frame(y = 1),
-    mapping = NULL,
-    stat = StatIdentity,
-    geom = GeomVlineYear,
-    position = position,
+    data = data.frame(x = 1),
+    mapping = mapping,
+    stat = StatLineYear,
+    geom = GeomHline,
+    position = PositionIdentity,
     show.legend = show.legend,
     inherit.aes = FALSE,
     params = list2(
-      na.rm = FALSE,
       flipped_aes = TRUE,
       year_break = year_break,
       break_type = break_type,
@@ -107,19 +103,18 @@ geom_hline_year <- function(mapping = NULL, position = "identity",
   )
 }
 
-# TODO: VlineYear from Geom to Stat for plotly
-# TODO: add flip_aes function for handling flipping (maybe stat needed for this)
-# TODO: Shaded area for repeating seasons (Mosquito season)
-GeomVlineYear <- ggplot2::ggproto("GeomVlineYear", Geom,
-  extra_params = c(GeomSegment$extra_params, "flipped_aes", "year_break", "break_type", "just"),
-  draw_panel = function(data, panel_params, coord, lineend = "butt",
-                        flipped_aes, year_break, break_type, just, debug = FALSE) {
+# TODO stat_line_year(): axis = c("x", "y"), which default geom? text? Remove Line from name?
+
+# TODO: StatAreaYear for Shaded area for repeating seasons (Mosquito season), oob = squish?
+StatLineYear <- ggplot2::ggproto("StatLineYear", Stat,
+  extra_params = c("flipped_aes", "year_break", "break_type", "just", "na.rm"),
+  compute_panel = function(self, data, scales, flipped_aes = FALSE, year_break, break_type, just, debug = FALSE) {
     # Setup vline (x) oder hline (y)
     # Check for CoordFlip since it flips some thing and not others
-    if (xor(!flipped_aes, (inherits(coord, "CoordFlip")))) {
-      sel_scale <- panel_params$x$scale
+    if (!flipped_aes) {
+      sel_scale <- scales$x
     } else {
-      sel_scale <- panel_params$y$scale
+      sel_scale <- scales$y
     }
 
     break_type <- match.arg(break_type, choices = c("day", "week", "isoweek", "epiweek"))
@@ -144,64 +139,42 @@ GeomVlineYear <- ggplot2::ggproto("GeomVlineYear", Geom,
     )
 
     # Check scale class to detect date or datetime
-    if (inherits(sel_scale, "ScaleContinuousDate")) {
-      is_date <- TRUE
-    } else if (inherits(sel_scale, "ScaleContinuousDatetime")) {
-      is_date <- FALSE
-      just <- just * (24 * 60 * 60) # Transform just from days to seconds
+    if (inherits(sel_scale, c("ScaleContinuousDate", "ScaleContinuousDatetime"))) {
+      trans <- sel_scale$trans # Use Transformation of the scale
     } else {
-      is_date <- TRUE
+      trans <- scales::transform_date()
       cli::cli_warn("{sel_scale$aesthetics[1]}-axis is not date or datetime. Assuming date scale.")
     }
 
-    # Get range of x and y scale
-    ranges <- coord$backtransform_range(panel_params)
+    range <- trans$inverse(sel_scale$range$range)
+    year <- .calc_visible_years(range, year_break, break_type)
 
-    # Setup Lines
-    if (!flipped_aes) {
-      year <- .calc_visible_years(ranges$x, is_date, year_break, break_type)
-
-      data <- data |>
-        dplyr::distinct_all() |>
-        dplyr::cross_join(data.frame(x = year + just, xend = year + just)) |>
-        dplyr::mutate(y = ranges$y[1], yend = ranges$y[2])
-    } else {
-      year <- .calc_visible_years(ranges$y, is_date, year_break, break_type)
-
-      data <- data |>
-        dplyr::distinct_all() |>
-        dplyr::cross_join(data.frame(y = year + just, yend = year + just)) |>
-        dplyr::mutate(x = ranges$x[1], xend = ranges$x[2])
+    # TODO: Use ggplot trans
+    if (inherits(sel_scale, "ScaleContinuousDatetime")) {
+      year <- lubridate::as_datetime(year)
+      just <- just * (24 * 60 * 60) # Transform just from days to seconds
     }
 
-    # For test_that
-    if (debug) {
-      return(list(data = data, just = just, year = year))
-    }
+    year_just <- trans$transform(year) + just
 
-    # Draw Lines
-    GeomSegment$draw_panel(data, panel_params, coord, lineend = lineend)
-  },
-  default_aes = GeomSegment$default_aes,
-  draw_key = draw_key_vline,
-  rename_size = TRUE,
-  check_constant_aes = FALSE
+    data <- data.frame(
+      date = year,
+      x = year_just,
+      xend = year_just,
+      xintercept = year_just
+    )
+
+    ggplot2::flip_data(data, flipped_aes)
+  }
 )
 
 # Get the dates of the day (year_break) for each year covered by the axis range
-.calc_visible_years <- function(range, is_date = TRUE, year_break = "01-01",
+.calc_visible_years <- function(range, year_break = "01-01",
                                 break_type = c("day", "week"), week_start = 1) {
   break_type <- match.arg(break_type)
 
-  if (is_date) {
-    func_convert <- lubridate::as_date
-  } else {
-    func_convert <- lubridate::as_datetime
-  }
-
   # Gets years covered by the axis
-  year_range <- func_convert(range) |>
-    lubridate::year()
+  year_range <- lubridate::year(range)
 
   if (break_type == "day") {
     # Convert week to MM-DD
@@ -216,8 +189,7 @@ GeomVlineYear <- ggplot2::ggproto("GeomVlineYear", Geom,
     # Convert years back to date or datetime and then numeric for ggplot
     years <- year_range[1]:year_range[2] |>
       paste0("-", year_break) |>
-      func_convert() |>
-      as.numeric()
+      lubridate::as_date()
   } else if (break_type == "week") {
     # Convert MM-DD to week
     if (stringr::str_detect(year_break, "^(0[1-9]|1[0-2])\\-(0[1-9]|[12][0-9]|3[01])$")) {
@@ -233,9 +205,7 @@ GeomVlineYear <- ggplot2::ggproto("GeomVlineYear", Geom,
     # Convert years back using isoweek specification
     years <- year_range[1]:year_range[2] |>
       paste0("-", year_break, "-1") |>
-      ISOweek::ISOweek2date() |>
-      func_convert() |>
-      as.numeric()
+      ISOweek::ISOweek2date()
   }
 
   # Filter visible year breaks

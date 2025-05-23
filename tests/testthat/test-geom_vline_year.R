@@ -165,27 +165,43 @@ test_that("geom_hline_year works with flipped coordinates", {
 
 test_that("Test draw_panel of GeomVline directly", {
   # Mock data for panel_params
-  dummy_panel_params <- list(
-    x = list(scale = ggplot2::ScaleContinuousDate)
+  dummy_scale <- list(
+    x = ggplot2::ScaleContinuousDate
   )
 
-  dummy_coord <- ggplot2::CoordCartesian
-  dummy_coord$backtransform_range <- function(params) {
-    list(
-      x = as.numeric(as_date(c("2022-12-15", "2023-01-24"))),
-      y = c(0, 10)
-    )
-  }
+  dummy_scale$x$range$range <- as.numeric(as_date(c("2022-12-15", "2023-01-24")))
+  dummy_scale$x$trans <- scales::transform_date()
 
   # Create a mock data frame
   dummy_data <- data.frame(PANEL = 1)
 
   # Test with default parameters
   result <- expect_no_error(
-    GeomVlineYear$draw_panel(
+    StatLineYear$compute_panel(
       data = dummy_data,
-      panel_params = dummy_panel_params,
-      coord = dummy_coord,
+      scale = dummy_scale,
+      flipped_aes = FALSE,
+      year_break = "01-01",
+      break_type = "day",
+      just = NULL
+    )
+  )
+
+  expect_identical(result$date, as_date("2023-01-01"))
+  expect_identical(result$x, as.numeric(as_date("2023-01-01")) + -0.5)
+
+  dummy_scale <- list(
+    x = ggplot2::ScaleContinuousDatetime
+  )
+  
+  dummy_scale$x$range$range <- as.numeric(as_datetime(c("2022-12-15", "2023-01-24")))
+  dummy_scale$x$trans <- scales::transform_time()
+
+  # Test with default parameters
+  result <- expect_no_error(
+    StatLineYear$compute_panel(
+      data = dummy_data,
+      scale = dummy_scale,
       flipped_aes = FALSE,
       year_break = "01-01",
       break_type = "day",
@@ -194,47 +210,14 @@ test_that("Test draw_panel of GeomVline directly", {
     )
   )
 
-  expect_identical(result$just, -0.5)
-  expect_identical(result$year, as.numeric(as_date("2023-01-01")))
-  expect_identical(result$data$x, as.numeric(as_date("2023-01-01")) + -0.5)
-
-  # Mock data for panel_params
-  dummy_panel_params <- list(
-    x = list(scale = ggplot2::ScaleContinuousDatetime)
-  )
-
-  dummy_coord <- ggplot2::CoordCartesian
-  dummy_coord$backtransform_range <- function(params) {
-    list(
-      x = as.numeric(as.POSIXct(c("2022-12-15", "2023-01-24"))),
-      y = c(0, 10)
-    )
-  }
+  expect_identical(result$date, as_datetime("2023-01-01"))
+  expect_identical(result$x, as.numeric(as_datetime("2023-01-01")) + -0.5 * 60 * 60 * 24)
 
   # Test with default parameters
   result <- expect_no_error(
-    GeomVlineYear$draw_panel(
+    StatLineYear$compute_panel(
       data = dummy_data,
-      panel_params = dummy_panel_params,
-      coord = dummy_coord,
-      flipped_aes = FALSE,
-      year_break = "01-01",
-      break_type = "day",
-      just = NULL,
-      debug = TRUE
-    )
-  )
-
-  expect_identical(result$just, -0.5 * 60 * 60 * 24)
-  expect_identical(result$year, as.numeric(as_datetime("2023-01-01")))
-  expect_identical(result$data$x, as.numeric(as_datetime("2023-01-01")) + -0.5 * 60 * 60 * 24)
-
-  # Test with default parameters
-  result <- expect_no_error(
-    GeomVlineYear$draw_panel(
-      data = dummy_data,
-      panel_params = dummy_panel_params,
-      coord = dummy_coord,
+      scale = dummy_scale,
       flipped_aes = FALSE,
       year_break = "01-01",
       break_type = "day",
@@ -243,16 +226,14 @@ test_that("Test draw_panel of GeomVline directly", {
     )
   )
 
-  expect_identical(result$just, -2 * 60 * 60 * 24)
-  expect_identical(result$year, as.numeric(as_datetime("2023-01-01")))
-  expect_identical(result$data$x, as.numeric(as_datetime("2023-01-01")) + -2 * 60 * 60 * 24)
+  expect_identical(result$date, as_datetime("2023-01-01"))
+  expect_identical(result$x, as.numeric(as_datetime("2023-01-01")) + -2 * 60 * 60 * 24)
 
 
   result <- expect_no_error(
-    GeomVlineYear$draw_panel(
+    StatLineYear$compute_panel(
       data = dummy_data,
-      panel_params = dummy_panel_params,
-      coord = dummy_coord,
+      scale = dummy_scale,
       flipped_aes = FALSE,
       year_break = "01-01",
       break_type = "week",
@@ -261,67 +242,66 @@ test_that("Test draw_panel of GeomVline directly", {
     )
   )
 
-  expect_identical(result$just, -3.5 * 60 * 60 * 24)
-  expect_identical(result$year, as.numeric(as_datetime("2023-01-02")))
-  expect_identical(result$data$x, as.numeric(as_datetime("2023-01-02")) + -3.5 * 60 * 60 * 24)
+  expect_identical(result$date, as_datetime("2023-01-02"))
+  expect_identical(result$x, as.numeric(as_datetime("2023-01-02")) + -3.5 * 60 * 60 * 24)
 })
 
 test_that("calc_visible_years handles date ranges correctly", {
   # Test basic date range spanning multiple years
   range <- as_date(c("2023-06-01", "2025-06-01"))
-  years <- .calc_visible_years(as.numeric(range), is_date = TRUE)
-  expect_equal(years, as.numeric(as_date(c("2024-01-01", "2025-01-01"))))
+  years <- .calc_visible_years(range)
+  expect_equal(years, as_date(c("2024-01-01", "2025-01-01")))
 
-  years <- .calc_visible_years(as.numeric(range), is_date = TRUE, year_break = "W01")
-  expect_equal(years, as.numeric(as_date(c("2024-01-01", "2025-01-01"))))
+  years <- .calc_visible_years(range, year_break = "W01")
+  expect_equal(years, as_date(c("2024-01-01", "2025-01-01")))
 
-  years <- .calc_visible_years(as.numeric(range), is_date = TRUE, break_type = "week")
-  expect_equal(years, as.numeric(as_date(c("2024-01-01", "2024-12-30"))))
+  years <- .calc_visible_years(range, break_type = "week")
+  expect_equal(years, as_date(c("2024-01-01", "2024-12-30")))
 
-  years <- .calc_visible_years(as.numeric(range), is_date = TRUE, break_type = "week", year_break = "W01")
-  expect_equal(years, as.numeric(as_date(c("2024-01-01", "2024-12-30"))))
+  years <- .calc_visible_years(range, break_type = "week", year_break = "W01")
+  expect_equal(years, as_date(c("2024-01-01", "2024-12-30")))
 
   expect_error(
-    .calc_visible_years(as.numeric(range), is_date = TRUE, break_type = "week", year_break = "test")
+    .calc_visible_years(range, break_type = "week", year_break = "test")
   )
 
   expect_warning(expect_warning( # 2 warnings need 2 expect_warning() calls.
-    .calc_visible_years(as.numeric(range), is_date = TRUE, break_type = "day", year_break = "test")
+    .calc_visible_years(range, break_type = "day", year_break = "test")
   ))
 
   # Test date range within single year
   range <- as_date(c("2023-03-01", "2023-09-01"))
-  years <- .calc_visible_years(as.numeric(range), is_date = TRUE)
+  years <- .calc_visible_years(range)
   expect_equal(length(years), 0) # No year breaks visible
 
   # Test custom year break (fiscal year starting April 1)
   range <- as_date(c("2023-01-01", "2024-12-31"))
-  years <- .calc_visible_years(as.numeric(range), is_date = TRUE, year_break = "04-01")
+  years <- .calc_visible_years(range, year_break = "04-01")
   expect_equal(years, as.numeric(as_date(c("2023-04-01", "2024-04-01"))))
 })
 
 test_that("calc_visible_years handles datetime ranges correctly", {
   # Test datetime range spanning multiple years
   range <- as_datetime(c("2023-12-31 18:00:00", "2024-01-01 06:00:00"))
-  years <- .calc_visible_years(as.numeric(range), is_date = FALSE)
-  expect_equal(years, as.numeric(as_datetime("2024-01-01 00:00:00")))
+  years <- .calc_visible_years(range)
+  expect_equal(years, as_date("2024-01-01 00:00:00"))
 
   # Test datetime range within single year
   range <- as_datetime(c("2023-06-01 00:00:00", "2023-12-30 23:59:59"))
-  years <- .calc_visible_years(as.numeric(range), is_date = FALSE)
+  years <- .calc_visible_years(range)
   expect_equal(length(years), 0) # No year breaks visible
 })
 
 test_that("calc_visible_years handles edge cases", {
   # Test range exactly at year boundaries, years are inclusive at borders
   range <- as_date(c("2023-01-01", "2024-01-01"))
-  years <- .calc_visible_years(as.numeric(range), is_date = TRUE)
-  expect_equal(years, as.numeric(as_date(c("2023-01-01", "2024-01-01"))))
+  years <- .calc_visible_years(range)
+  expect_equal(years, as_date(c("2023-01-01", "2024-01-01")))
 
   # Test very short range around new year
   range <- as_date(c("2023-12-31", "2024-01-01"))
-  years <- .calc_visible_years(as.numeric(range), is_date = TRUE)
-  expect_equal(years, as.numeric(as_date("2024-01-01")))
+  years <- .calc_visible_years(range)
+  expect_equal(years, as_date("2024-01-01"))
 })
 
 test_that("calc_week_from_mm_dd calculates week numbers correctly", {

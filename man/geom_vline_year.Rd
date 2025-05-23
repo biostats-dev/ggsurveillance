@@ -7,7 +7,6 @@
 \usage{
 geom_vline_year(
   mapping = NULL,
-  position = "identity",
   year_break = "01-01",
   break_type = c("day", "week", "isoweek", "epiweek"),
   just = NULL,
@@ -17,7 +16,6 @@ geom_vline_year(
 
 geom_hline_year(
   mapping = NULL,
-  position = "identity",
   year_break = "01-01",
   break_type = c("day", "week", "isoweek", "epiweek"),
   just = NULL,
@@ -29,9 +27,6 @@ geom_hline_year(
 \item{mapping}{Mapping created using \code{\link[ggplot2:aes]{ggplot2::aes()}}. Can be used to add the lines to the legend.
 E.g. \code{aes(linetype = 'End of Year')}. Cannot access data specified in \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}}.
 Panels created by \code{\link[ggplot2:facet_wrap]{ggplot2::facet_wrap()}} or \code{\link[ggplot2:facet_grid]{ggplot2::facet_grid()}} are available with \code{aes(linetype = PANEL)}.}
-
-\item{position}{Position adjustment, either as a string, or the result of a call to
-a position adjustment function.}
 
 \item{year_break}{String specifying the month and day ("MM-DD") or week ("W01") of the year break .
 Defaults to: \code{"01-01"} for January 1.

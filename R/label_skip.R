@@ -51,12 +51,12 @@ label_skip <- function(n = 2, start = c("left", "right"), labeller = NULL) {
   if (!is.null(labeller)) {
     # if labels are a list of functions compose, else treat them as labels
     if (
-      any(sapply(c(labeller), is.function)) ||
-        all(sapply(as.character(labeller), exists, mode = "function"))) {
+      any(vapply(c(labeller), is.function, FUN.VALUE = logical(1))) ||
+        all(vapply(as.character(labeller), exists, mode = "function", FUN.VALUE = logical(1)))) {
       # TODO: remove identity function
       labeller <- do.call(scales::compose_label, c(identity, labeller))
     } else {
-      cli::cli_abort("label_skip(): {labeller} not a function.")
+      cli::cli_abort("label_skip(): function '{labeller}' not found.")
     }
   }
 

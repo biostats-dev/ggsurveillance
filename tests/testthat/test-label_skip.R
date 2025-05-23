@@ -63,5 +63,5 @@ test_that("label_skip throws appropriate errors", {
   expect_error(label_skip(start = TRUE), "'start' must be either 'left', 'right', or an integer")
 
   # Test with invalid labeller
-  expect_error(label_skip(labeller = "not_a_function"), "not a function")
+  expect_error(label_skip(labeller = "not_a_function"), "not found")
 })

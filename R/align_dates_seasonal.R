@@ -76,7 +76,7 @@
 align_dates_seasonal <- function(
     x, dates_from = NULL, date_resolution = c("week", "isoweek", "epiweek", "day", "month"),
     start = NULL, target_year = NULL, drop_leap_week = TRUE) {
-  date_resolution <- match.arg(date_resolution)
+  date_resolution <- rlang::arg_match(date_resolution)
 
   # Enframe if vector supplied
   if (!is.data.frame(x) & rlang::is_vector(x)) {

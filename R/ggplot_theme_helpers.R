@@ -84,7 +84,7 @@ theme_mod_disable_legend <- function() ggplot2::theme(legend.position = "none")
 #' @export
 theme_mod_legend_position <- function(
     position = c("top", "bottom", "left", "right", "none", "inside"), position.inside = NULL) {
-  position <- match.arg(position)
+  position <- rlang::arg_match(position)
   if (!is.null(position.inside)) position <- "inside"
   # TODO: Check if position.inside is vector
   ggplot2::theme(legend.position = position, legend.position.inside = position.inside)

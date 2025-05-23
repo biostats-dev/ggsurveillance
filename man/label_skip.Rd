@@ -4,7 +4,7 @@
 \alias{label_skip}
 \title{Skip labels on an axis}
 \usage{
-label_skip(n = 2, start = "left", labeller = NULL)
+label_skip(n = 2, start = c("left", "right"), labeller = NULL)
 }
 \arguments{
 \item{n}{Integer. Display every nth label. Default is \code{2}.}

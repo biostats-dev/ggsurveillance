@@ -73,7 +73,7 @@ geometric_mean <- function(x, na.rm = FALSE, replace_value = NULL, replace = c("
     return(NA_real_)
   }
 
-  replace <- match.arg(replace)
+  replace <- rlang::arg_match(replace)
   # Define the replacement function based on replace
   switch(replace,
     "all" = f_replace <- \(x) (x < replace_value),

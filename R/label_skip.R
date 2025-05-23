@@ -31,7 +31,7 @@
 #'
 #' @export
 
-label_skip <- function(n = 2, start = "left", labeller = NULL) {
+label_skip <- function(n = 2, start = c("left", "right"), labeller = NULL) {
   force_all(n, start, labeller)
 
   # Validate inputs
@@ -40,7 +40,7 @@ label_skip <- function(n = 2, start = "left", labeller = NULL) {
 
   # Check type of start
   if (is.character(start)) {
-    start <- match.arg(start, c("left", "right"))
+    start <- rlang::arg_match(start)
   } else if (is.numeric(start)) {
     # convert start to be an integer between 0 and n-1
     start <- as.integer(start) %% n

@@ -117,7 +117,7 @@ StatLineYear <- ggplot2::ggproto("StatLineYear", Stat,
       sel_scale <- scales$y
     }
 
-    break_type <- match.arg(break_type, choices = c("day", "week", "isoweek", "epiweek"))
+    break_type <- rlang::arg_match0(break_type, c("day", "week", "isoweek", "epiweek"))
 
     # isoweek and epiweek defaults
     if (break_type == "isoweek") { # ISO
@@ -171,7 +171,7 @@ StatLineYear <- ggplot2::ggproto("StatLineYear", Stat,
 # Get the dates of the day (year_break) for each year covered by the axis range
 .calc_visible_years <- function(range, year_break = "01-01",
                                 break_type = c("day", "week"), week_start = 1) {
-  break_type <- match.arg(break_type)
+  break_type <- rlang::arg_match0(break_type, c("day", "week"))
 
   # Gets years covered by the axis
   year_range <- lubridate::year(range)

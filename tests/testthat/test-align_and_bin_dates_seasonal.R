@@ -311,4 +311,34 @@ test_that("align_and_bin_dates_seasonal fills gaps correctly", {
     ) -> df_flu_aligned
 
   expect_identical(nrow(df_flu_aligned), 263L)
+  
+  set.seed(130)
+  df_align_fill_gaps <- data.frame(
+    date = rep(as.Date("2024-01-01") + (0:30), times = rpois(31, 1.5))
+    # category = rep(c("A", "B"), times = 7)
+  )
+    
+  result <- df_align_fill_gaps |>
+    align_and_bin_dates_seasonal(dates_from = date, date_resolution = "day")
+    
+  expect_identical(nrow(result), 24L)
+  expect_identical(all(result$n > 0), TRUE)
+    
+  result2 <- df_align_fill_gaps |>
+    align_and_bin_dates_seasonal(dates_from = date, date_resolution = "day", fill_gaps = TRUE)
+    
+  expect_identical(nrow(result2), 31L)
+  expect_identical(all(result2$n > 0), FALSE)
+  
+  set.seed(123)
+  df_align_fill_gaps_group <- data.frame(
+    date = rep(as.Date("2024-01-01") + (0:30), times = rpois(31, 2))
+  ) |> dplyr::mutate(category = rbinom(n(), 1, 0.5))
+  
+  result3 <- df_align_fill_gaps_group |>
+    group_by(category) |>
+    align_and_bin_dates_seasonal(dates_from = date, date_resolution = "day", fill_gaps = TRUE)
+  
+  expect_identical(nrow(result3), 2L*31L)
+  expect_identical(unique(result3$category), c(0L, 1L))
 })

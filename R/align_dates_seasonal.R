@@ -45,6 +45,8 @@
 #' are dropped if they are not in the most recent season. Disable if data should be returned.
 #' Dropping week 53 from historical data is the most common approach. Otherwise historical data for week 53 would
 #' map to week 52 if the target season has no leap week, resulting in a doubling of the case counts.
+#' 
+#' @param .groups See [dplyr::summarise()].
 #'
 #' @return A data frame with standardized date columns:
 #'   * `year`: Calendar year from original date
@@ -156,7 +158,7 @@ align_dates_seasonal <- function(
 align_and_bin_dates_seasonal <- function(
     x, n = 1, dates_from, population = 1, fill_gaps = FALSE,
     date_resolution = c("week", "isoweek", "epiweek", "day", "month"),
-    start = NULL, target_year = NULL, drop_leap_week = TRUE) {
+    start = NULL, target_year = NULL, drop_leap_week = TRUE, .groups = "drop") {
   current_season <- wt <- incidence <- NULL
 
   # rlang check quo to detect character column names
@@ -184,9 +186,6 @@ align_and_bin_dates_seasonal <- function(
       {{ dates_from }} := .coerce_to_date({{ dates_from }})
     ) -> x
 
-  # Save existing grouping of the df
-  grouping <- dplyr::group_vars(x)
-
   # Calculate incidence
   x |>
     dplyr::mutate(
@@ -198,12 +197,20 @@ align_and_bin_dates_seasonal <- function(
   # Fill gaps in time series with 0
   if (fill_gaps) {
     rlang::check_installed("tsibble", reason = "to fill the gaps in the time series.")
-    suppressWarnings(x |>
-      tsibble::as_tsibble(index = {{ dates_from }}, key = grouping) |>
-      tsibble::fill_gaps(wt = 0, incidence = 0) |>
-      as.data.frame() |>
-      # TODO: Group by gives a warning. How to fix?
-      dplyr::group_by(dplyr::pick(grouping)) -> x)
+    # Save existing grouping of the df
+    group_list <- dplyr::group_vars(x)
+    # Create full time index for all groups
+    x |>
+      distinct({{ dates_from }}) |>
+      tsibble::as_tsibble(index = {{ dates_from }}, key = all_of(group_list)) |>
+      tsibble::fill_gaps(.full = TRUE) |>
+      as.data.frame() -> df_full_dates
+    # Join with data and create observations with weight 0
+    # Suppress joining by message
+    suppressMessages(x <- x |> 
+      dplyr::full_join(df_full_dates) |> 
+      tidyr::replace_na(list(wt = 0, incidence = 0))
+    )
   }
 
   align_dates_seasonal(
@@ -214,7 +221,7 @@ align_and_bin_dates_seasonal <- function(
     dplyr::summarise(
       n = sum(wt, na.rm = TRUE),
       incidence = sum(incidence, na.rm = TRUE),
-      .groups = "drop"
+      .groups = .groups
     )
 }
 

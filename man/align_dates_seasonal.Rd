@@ -23,7 +23,8 @@ align_and_bin_dates_seasonal(
   date_resolution = c("week", "isoweek", "epiweek", "day", "month"),
   start = NULL,
   target_year = NULL,
-  drop_leap_week = TRUE
+  drop_leap_week = TRUE,
+  .groups = "drop"
 )
 }
 \arguments{
@@ -67,6 +68,8 @@ map to week 52 if the target season has no leap week, resulting in a doubling of
 \item{population}{A number or a numeric column with the population size. Used to calculate the incidence.}
 
 \item{fill_gaps}{Logical; If \code{TRUE}, gaps in the time series will be filled with 0 cases.}
+
+\item{.groups}{See \code{\link[dplyr:summarise]{dplyr::summarise()}}.}
 }
 \value{
 A data frame with standardized date columns:

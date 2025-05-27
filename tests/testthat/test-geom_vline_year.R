@@ -193,7 +193,7 @@ test_that("Test draw_panel of GeomVline directly", {
   dummy_scale <- list(
     x = ggplot2::ScaleContinuousDatetime
   )
-  
+
   dummy_scale$x$range$range <- as.numeric(as_datetime(c("2022-12-15", "2023-01-24")))
   dummy_scale$x$trans <- scales::transform_time()
 

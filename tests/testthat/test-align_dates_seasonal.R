@@ -124,12 +124,12 @@ test_that("align_dates_seasonal errors on invalid inputs", {
 
 test_that("align_dates_seasonal errors on invalid inputs", {
   dates <- seq(as.Date("2020-01-01"), as.Date("2024-03-01"), by = "week")
-  
+
   # Test invalid date resolution
   expect_error(
     align_dates_seasonal(dates, date_resolution = "invalid")
   )
-  
+
   # Test invalid date format
   invalid_dates <- data.frame(date = c("invalid", "dates"))
   expect_error(

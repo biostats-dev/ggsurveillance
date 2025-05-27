@@ -16,8 +16,8 @@ align_dates_seasonal(
 
 align_and_bin_dates_seasonal(
   x,
-  n = 1,
   dates_from,
+  n = 1,
   population = 1,
   fill_gaps = FALSE,
   date_resolution = c("week", "isoweek", "epiweek", "day", "month"),

@@ -45,7 +45,7 @@
 #' are dropped if they are not in the most recent season. Disable if data should be returned.
 #' Dropping week 53 from historical data is the most common approach. Otherwise historical data for week 53 would
 #' map to week 52 if the target season has no leap week, resulting in a doubling of the case counts.
-#' 
+#'
 #' @param .groups See [dplyr::summarise()].
 #'
 #' @return A data frame with standardized date columns:
@@ -156,72 +156,17 @@ align_dates_seasonal <- function(
 #' @export
 
 align_and_bin_dates_seasonal <- function(
-    x, n = 1, dates_from, population = 1, fill_gaps = FALSE,
+    x, dates_from, n = 1, population = 1, fill_gaps = FALSE,
     date_resolution = c("week", "isoweek", "epiweek", "day", "month"),
     start = NULL, target_year = NULL, drop_leap_week = TRUE, .groups = "drop") {
-  current_season <- wt <- incidence <- NULL
-
-  # rlang check quo to detect character column names
-  if (!rlang::quo_is_symbol(rlang::enquo(dates_from))) dates_from <- rlang::sym(dates_from)
-  date_var <- rlang::as_name(rlang::enquo(dates_from))
-  # Check if col exists
-  tidyselect::eval_select(date_var, data = x)
-  # Check grouping
-  if (date_var %in% (dplyr::group_vars(x))) {
-    warning(cli::format_warning(
-      "Data.frame grouped by date column: { date_var }. Please remove variable from grouping."
-    ))
-  }
-
-  if (!rlang::quo_is_symbol(rlang::enquo(n))) {
-    if (is.character(n)) n <- rlang::sym(n)
-  }
-
-  if (!rlang::quo_is_symbol(rlang::enquo(population))) {
-    if (is.character(population)) population <- rlang::sym(population)
-  }
-
   x |>
-    dplyr::mutate(
-      {{ dates_from }} := .coerce_to_date({{ dates_from }})
-    ) -> x
-
-  # Calculate incidence
-  x |>
-    dplyr::mutate(
-      wt = !!rlang::enquo(n),
-      population = !!rlang::enquo(population)
+    bin_dates(
+      dates_from = {{ dates_from }}, n = {{ n }}, population = {{ population }},
+      date_resolution = date_resolution, fill_gaps = fill_gaps, .groups = .groups
     ) |>
-    dplyr::mutate(incidence = wt / population) -> x
-
-  # Fill gaps in time series with 0
-  if (fill_gaps) {
-    rlang::check_installed("tsibble", reason = "to fill the gaps in the time series.")
-    # Save existing grouping of the df
-    group_list <- dplyr::group_vars(x)
-    # Create full time index for all groups
-    x |>
-      distinct({{ dates_from }}) |>
-      tsibble::as_tsibble(index = {{ dates_from }}, key = all_of(group_list)) |>
-      tsibble::fill_gaps(.full = TRUE) |>
-      as.data.frame() -> df_full_dates
-    # Join with data and create observations with weight 0
-    # Suppress joining by message
-    suppressMessages(x <- x |> 
-      dplyr::full_join(df_full_dates) |> 
-      tidyr::replace_na(list(wt = 0, incidence = 0))
-    )
-  }
-
-  align_dates_seasonal(
-    x = x, dates_from = {{ dates_from }}, date_resolution = date_resolution,
-    start = start, target_year = target_year, drop_leap_week = drop_leap_week
-  ) |>
-    dplyr::group_by(dplyr::pick(year:current_season), .add = TRUE) |>
-    dplyr::summarise(
-      n = sum(wt, na.rm = TRUE),
-      incidence = sum(incidence, na.rm = TRUE),
-      .groups = .groups
+    align_dates_seasonal(
+      dates_from = {{ dates_from }}, date_resolution = date_resolution,
+      start = start, target_year = target_year, drop_leap_week = drop_leap_week
     )
 }
 
@@ -346,7 +291,7 @@ align_and_bin_dates_seasonal <- function(
   if (lubridate::is.Date(dates)) {
     return(dates)
   } else if (all(lubridate::is.POSIXct(dates), na.rm = TRUE)) {
-    return(lubridate::as_date(dates))
+    return(lubridate::as_datetime(dates))
   } else if (is.character(dates) && all(stringr::str_detect(dates, date_iso_pattern), na.rm = TRUE)) {
     return(lubridate::as_date(dates))
   } else if (is.character(dates) && all(stringr::str_detect(dates, year_month_pattern), na.rm = TRUE)) {

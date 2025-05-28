@@ -32,6 +32,7 @@ stat_bin_date(
   position = "identity",
   date_resolution = NULL,
   week_start = getOption("lubridate.week.start", 1),
+  fill_gaps = FALSE,
   ...,
   na.rm = FALSE,
   show.legend = NA,
@@ -45,6 +46,7 @@ stat_date_count(
   position = "identity",
   date_resolution = NULL,
   week_start = getOption("lubridate.week.start", 1),
+  fill_gaps = FALSE,
   ...,
   na.rm = FALSE,
   show.legend = NA,
@@ -108,6 +110,8 @@ the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 \item{geom}{The geometric object to use to display the data for this layer.
 When using a \verb{stat_*()} function to construct a layer, the \code{geom} argument
 can be used to override the default coupling between stats and geoms.}
+
+\item{fill_gaps}{Logical; If \code{TRUE}, gaps in the time series will be filled with a count of 0.}
 }
 \value{
 A \code{ggplot2} geom layer that can be added to a plot

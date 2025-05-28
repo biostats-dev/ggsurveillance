@@ -24,6 +24,7 @@
 #' @param week_start Integer specifying the start of the week (1 = Monday, 7 = Sunday). \cr
 #'        Only used when date_resolution includes weeks. Defaults to 1 (Monday). \cr
 #'        For isoweek use \code{week_start = 1} and for epiweek use \code{week_start = 7}.
+#' @param fill_gaps Logical; If `TRUE`, gaps in the time series will be filled with a count of 0.
 #' @param width Numeric value specifying the width of the bars. If \code{NULL}, calculated
 #'        based on resolution and relative.width
 #' @param relative.width Numeric value between 0 and 1 adjusting the relative width

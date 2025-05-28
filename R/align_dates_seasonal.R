@@ -159,7 +159,10 @@ align_and_bin_dates_seasonal <- function(
     x, dates_from, n = 1, population = 1, fill_gaps = FALSE,
     date_resolution = c("week", "isoweek", "epiweek", "day", "month"),
     start = NULL, target_year = NULL, drop_leap_week = TRUE, .groups = "drop") {
-  x |>
+  # Check here for better error message
+  date_resolution <- rlang::arg_match(date_resolution)
+
+    x |>
     bin_dates(
       dates_from = {{ dates_from }}, n = {{ n }}, population = {{ population }},
       date_resolution = date_resolution, fill_gaps = fill_gaps, .groups = .groups

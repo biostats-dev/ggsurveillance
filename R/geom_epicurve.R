@@ -271,7 +271,7 @@ StatBinDate <- ggplot2::ggproto("StatBinDate", Stat,
 
     params
   },
-  compute_group = function(self, data, scales, flipped_aes = FALSE, 
+  compute_group = function(self, data, scales, flipped_aes = FALSE,
                            date_resolution = NA, week_start = 1, fill_gaps = FALSE) {
     date_resolution <- date_resolution %||% NA
     week_start <- week_start %||% 1
@@ -316,32 +316,40 @@ StatBinDate <- ggplot2::ggproto("StatBinDate", Stat,
     }
 
     data$weight <- data$weight %||% rep(1, length(data$x))
-    
+
     if (!is.na(date_resolution)) {
       data$x <- trans$inverse(data$x)
-      
+      org_tz <- lubridate::tz(data$x)
+
       data <- data |>
-        bin_dates(dates_from = x, n = weight, fill_gaps = fill_gaps, 
-                  week_start = week_start, date_resolution = date_resolution)
-      
+        bin_dates(
+          dates_from = x, n = weight, fill_gaps = fill_gaps,
+          week_start = week_start, date_resolution = date_resolution
+        )
+
+      if (is.numeric(data$x)) {
+        # For isoyear and epiyear set date to 1st January, binning is still correct
+        date_resolution <- "year"
+        if (trans$name == "date") {
+          data$x <- paste0(data$x, "-01-01") |> lubridate::ymd()
+        } else {
+          data$x <- paste0(data$x, "-01-01") |> lubridate::ymd(tz = org_tz)
+        }
+      }
+
       data$x_ll <- as.numeric(data$x)
-      
-      if (lubridate::is.Date(data$x) | lubridate::is.POSIXct(data$x)) {
-      # Use ceiling to be able to infer resolution in days
-        data$x_ul <- as.numeric(lubridate::ceiling_date(data$x,
-          unit = date_resolution,
-          week_start = week_start,
-          change_on_boundary = TRUE
-        ))
-      } else data$x_ul <- data$x_ll + 1 
+      data$x_ul <- as.numeric(lubridate::ceiling_date(data$x,
+        unit = date_resolution,
+        week_start = week_start,
+        change_on_boundary = TRUE
+      ))
     } else {
-      
       data <- data |>
         dplyr::arrange(x) |>
         dplyr::group_by(x) |>
         dplyr::tally(wt = weight) |>
         dplyr::ungroup()
-      
+
       data$x_ll <- data$x
       data$x_ul <- data$x
     }

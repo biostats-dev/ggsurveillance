@@ -162,7 +162,7 @@ align_and_bin_dates_seasonal <- function(
   # Check here for better error message
   date_resolution <- rlang::arg_match(date_resolution)
 
-    x |>
+  x |>
     bin_dates(
       dates_from = {{ dates_from }}, n = {{ n }}, population = {{ population }},
       date_resolution = date_resolution, fill_gaps = fill_gaps, .groups = .groups

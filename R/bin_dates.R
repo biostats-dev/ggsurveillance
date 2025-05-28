@@ -51,6 +51,8 @@ bin_dates <- function(
     # Create full time index for all groups
     # This has to be done before binning, to avoid wrong auto detection of resolution
     x |>
+      select({{ dates_from }}) |> # TODO: add warning
+      mutate_if(is.POSIXct, floor_date) |> # select + mutate are fixes for double precission problems in tsibble
       distinct({{ dates_from }}) |>
       tsibble::as_tsibble(index = {{ dates_from }}, key = all_of(group_list)) |>
       tsibble::fill_gaps(.full = TRUE) |>

@@ -170,6 +170,42 @@ test_that("geom_epicurve with stat = 'bin_date'", {
   expect_warning(vdiffr::expect_doppelganger("7_geom_epicurve_bin_date_no_res", p2))
 })
 
+test_that("stat_bin_date: test fill_gaps", {
+  set.seed(123)
+  plot_data_epicurve_imp <- data.frame(
+    date = rep(as.Date("2024-11-01") + ((0:300) * 1), times = rpois(301, 0.5))
+    # category = rep(c("A", "B"), times = 7)
+  )
+  
+  p1 <- ggplot(plot_data_epicurve_imp, aes(x = date, weight = 2)) +
+    stat_bin_date(date_resolution = "week") +
+    scale_y_cases_5er()
+  expect_no_error(p1)
+  vdiffr::expect_doppelganger("8_stat_bin_date_base", p1)
+  
+  p2 <- ggplot(plot_data_epicurve_imp, aes(x = date, weight = 2)) +
+    stat_bin_date(date_resolution = "week", fill_gaps = TRUE) +
+    scale_y_cases_5er()
+  expect_no_error(p2)
+  vdiffr::expect_doppelganger("8_stat_bin_date_fill_gaps", p2)
+  
+  p3 <- ggplot(plot_data_epicurve_imp, aes(x = date, weight = 2)) +
+    stat_bin_date(aes(label = after_stat(count)), date_resolution = "year", geom = "text")
+  expect_no_error(p3)
+  vdiffr::expect_doppelganger("8_stat_bin_date_year", p3)
+  
+  p4 <- ggplot(plot_data_epicurve_imp, aes(x = date, weight = 2)) +
+    stat_bin_date(aes(label = after_stat(count)), date_resolution = "isoyear", geom = "text")
+  expect_no_error(p4)
+  vdiffr::expect_doppelganger("8_stat_bin_date_isoyear", p4)
+  
+  p5 <- ggplot(plot_data_epicurve_imp, aes(x = date, weight = 2)) +
+    stat_bin_date(aes(label = after_stat(count)), date_resolution = "epiyear", geom = "text")
+  expect_no_error(p5)
+  vdiffr::expect_doppelganger("8_stat_bin_date_epiyear", p5)
+  
+})
+
 test_that("scale_y_cases_5er: .auto_pretty", {
   expect_identical(.auto_pretty()(1:100), (0:10) * 10)
   expect_identical(.auto_pretty()(1:200), (0:10) * 20)

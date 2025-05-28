@@ -110,6 +110,7 @@ stat_bin_date <- function(mapping = NULL, data = NULL,
                           geom = "line", position = "identity",
                           date_resolution = NULL,
                           week_start = getOption("lubridate.week.start", 1),
+                          fill_gaps = FALSE,
                           ...,
                           na.rm = FALSE,
                           show.legend = NA,
@@ -125,6 +126,7 @@ stat_bin_date <- function(mapping = NULL, data = NULL,
     params = list(
       date_resolution = date_resolution,
       week_start = week_start,
+      fill_gaps = fill_gaps,
       na.rm = na.rm,
       ...
     )
@@ -253,7 +255,7 @@ StatEpicurve <- ggplot2::ggproto("StatEpicurve", Stat,
 StatBinDate <- ggplot2::ggproto("StatBinDate", Stat,
   required_aes = "x|y",
   default_aes = aes(!!!StatCount$default_aes),
-  extra_params = c("na.rm", "date_resolution", "week_start"),
+  extra_params = c("na.rm", "date_resolution", "week_start", "fill_gaps"),
   setup_params = function(self, data, params) {
     params$flipped_aes <- ggplot2::has_flipped_aes(data, params, main_is_orthogonal = FALSE)
 
@@ -268,7 +270,8 @@ StatBinDate <- ggplot2::ggproto("StatBinDate", Stat,
 
     params
   },
-  compute_group = function(self, data, scales, flipped_aes = FALSE, date_resolution = NA, week_start = 1) {
+  compute_group = function(self, data, scales, flipped_aes = FALSE, 
+                           date_resolution = NA, week_start = 1, fill_gaps = FALSE) {
     date_resolution <- date_resolution %||% NA
     week_start <- week_start %||% 1
     flipped_aes <- flipped_aes %||% any(data$flipped_aes) %||% FALSE
@@ -311,31 +314,36 @@ StatBinDate <- ggplot2::ggproto("StatBinDate", Stat,
       ))
     }
 
+    data$weight <- data$weight %||% rep(1, length(data$x))
+    
     if (!is.na(date_resolution)) {
       data$x <- trans$inverse(data$x)
-
-      data$x_ll <- as.numeric(lubridate::floor_date(data$x,
-        unit = date_resolution,
-        week_start = week_start
-      ))
+      
+      data <- data |>
+        bin_dates(dates_from = x, n = weight, fill_gaps = fill_gaps, 
+                  week_start = week_start, date_resolution = date_resolution)
+      
+      data$x_ll <- as.numeric(data$x)
+      
+      if (lubridate::is.Date(data$x) | lubridate::is.POSIXct(data$x)) {
       # Use ceiling to be able to infer resolution in days
-      data$x_ul <- as.numeric(lubridate::ceiling_date(data$x,
-        unit = date_resolution,
-        week_start = week_start,
-        change_on_boundary = TRUE
-      ))
+        data$x_ul <- as.numeric(lubridate::ceiling_date(data$x,
+          unit = date_resolution,
+          week_start = week_start,
+          change_on_boundary = TRUE
+        ))
+      } else data$x_ul <- data$x_ll + 1 
     } else {
+      
+      data <- data |>
+        dplyr::arrange(x) |>
+        dplyr::group_by(x) |>
+        dplyr::tally(wt = weight) |>
+        dplyr::ungroup()
+      
       data$x_ll <- data$x
       data$x_ul <- data$x
     }
-
-    data$weight <- data$weight %||% rep(1, length(data$x))
-
-    data <- data |>
-      dplyr::arrange(x_ll) |>
-      dplyr::group_by(x_ll, x_ul) |>
-      dplyr::tally(wt = weight) |>
-      dplyr::ungroup()
 
     bars <- data |>
       dplyr::transmute(
@@ -345,7 +353,7 @@ StatBinDate <- ggplot2::ggproto("StatBinDate", Stat,
         x = x_ll,
         x_ul = x_ul,
         width = if (!is.na(date_resolution)) x_ul - x_ll else NULL,
-        .size = length(data$n),
+        .size = length(n),
         flipped_aes = flipped_aes
       )
     ggplot2::flip_data(bars, flipped_aes)

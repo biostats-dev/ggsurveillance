@@ -11,8 +11,8 @@ scale_y_cases_5er(
   min.n = 5,
   u5.bias = 4,
   expand = NULL,
+  limits = c(0, NA),
   labels = waiver(),
-  limits = NULL,
   oob = scales::censor,
   na.value = NA_real_,
   transform = "identity",
@@ -28,8 +28,8 @@ scale_x_cases_5er(
   min.n = 5,
   u5.bias = 4,
   expand = NULL,
+  limits = c(0, NA),
   labels = waiver(),
-  limits = NULL,
   oob = scales::censor,
   na.value = NA_real_,
   transform = "identity",
@@ -55,6 +55,11 @@ push the breaks more strongly toward multiples of 5. Defaults to 4.}
 \item{expand}{Uses own expansion logic. Use \code{expand = waiver()} to restore ggplot defaults
 or \code{\link[ggplot2:expansion]{ggplot2::expansion()}} to modify}
 
+\item{limits}{The lower limit defaults to 0 and the upper limits is chosen based on the data.
+This is the recommended approach for visualizing case numbers and incidences,
+i.e. the scale starts at 0 and is only positive.
+To use the default \code{ggplot2} limits use \code{limits = NULL}.}
+
 \item{labels}{One of:
 \itemize{
 \item \code{NULL} for no labels
@@ -65,19 +70,6 @@ transformation object
 \item A function that takes the breaks as input and returns labels
 as output. Also accepts rlang \link[rlang:as_function]{lambda} function
 notation.
-}}
-
-\item{limits}{One of:
-\itemize{
-\item \code{NULL} to use the default scale range
-\item A numeric vector of length two providing limits of the scale.
-Use \code{NA} to refer to the existing minimum or maximum
-\item A function that accepts the existing (automatic) limits and returns
-new limits. Also accepts rlang \link[rlang:as_function]{lambda} function
-notation.
-Note that setting limits on positional scales will \strong{remove} data outside of the limits.
-If the purpose is to zoom, use the limit argument in the coordinate system
-(see \code{\link[ggplot2:coord_cartesian]{coord_cartesian()}}).
 }}
 
 \item{oob}{One of:

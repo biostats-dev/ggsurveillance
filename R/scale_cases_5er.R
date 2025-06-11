@@ -11,6 +11,10 @@
 #'   push the breaks more strongly toward multiples of 5. Defaults to 4.
 #' @param expand Uses own expansion logic. Use \code{expand = waiver()} to restore ggplot defaults
 #' or [ggplot2::expansion()] to modify
+#' @param limits The lower limit defaults to 0 and the upper limits is chosen based on the data.
+#' This is the recommended approach for visualizing case numbers and incidences,
+#' i.e. the scale starts at 0 and is only positive.
+#' To use the default `ggplot2` limits use `limits = NULL`.
 #' @param ... Additional arguments passed on to [base::pretty()].
 #'
 #' @return A `ggplot2` scale object that can be added to a plot.
@@ -31,8 +35,8 @@
 scale_y_cases_5er <- function(
     name = waiver(),
     n = 8, min.n = 5, u5.bias = 4,
-    expand = NULL,
-    labels = waiver(), limits = NULL,
+    expand = NULL, limits = c(0, NA),
+    labels = waiver(),
     oob = scales::censor, na.value = NA_real_,
     transform = "identity", position = "left",
     sec.axis = waiver(), guide = waiver(), ...) {
@@ -61,8 +65,8 @@ scale_y_cases_5er <- function(
 scale_x_cases_5er <- function(
     name = waiver(),
     n = 8, min.n = 5, u5.bias = 4,
-    expand = NULL,
-    labels = waiver(), limits = NULL,
+    expand = NULL, limits = c(0, NA),
+    labels = waiver(),
     oob = scales::censor, na.value = NA_real_,
     transform = "identity", position = "bottom",
     sec.axis = waiver(), guide = waiver(), ...) {

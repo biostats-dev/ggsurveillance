@@ -181,7 +181,13 @@ test_that("stat_bin_date: test fill_gaps", {
     stat_bin_date(date_resolution = "week") +
     scale_y_cases_5er()
   expect_no_error(p1)
-  vdiffr::expect_doppelganger("8_stat_bin_date_base", p1)
+  vdiffr::expect_doppelganger("8_stat_bin_date_base_new", p1)
+
+  p1_1 <- ggplot(plot_data_epicurve_imp, aes(x = date, weight = 2)) +
+    stat_bin_date(date_resolution = "week") +
+    scale_y_cases_5er(limits = NULL)
+  expect_no_error(p1)
+  vdiffr::expect_doppelganger("8_stat_bin_date_base", p1_1)
 
   p2 <- ggplot(plot_data_epicurve_imp, aes(x = date, weight = 2)) +
     stat_bin_date(date_resolution = "week", fill_gaps = TRUE) +

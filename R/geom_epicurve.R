@@ -476,7 +476,7 @@ GeomEpicurve <- ggplot2::ggproto("GeomEpicurve", GeomBar,
     data <- fix_linewidth(data, snake_class(self))
 
     coords <- coord$transform(data, panel_params)
-    
+
     # Create grob for border rectangle (inset by half linewidth to stay within bounds)
     border_rect <- grid::rectGrob(
       x = grid::unit((coords$xmin + coords$xmax) / 2, units = "native"), # center x
@@ -518,14 +518,18 @@ GeomEpicurve <- ggplot2::ggproto("GeomEpicurve", GeomBar,
     #ggname("geom_rect", grid::gTree(children = grid::gList(rect_old, fill_rect, border_rect))) #
     ggname("geom_rect", border_rect)
     #ggname("geom_rect", rect_old)
+    
+    #GeomRect$draw_panel(data, panel_params, coord, lineend = lineend, linejoin = linejoin)
+    
   },
   rename_size = TRUE
 )
 
-
+#' @rdname geom_epicurve
+#' @export
 geom_epicurve_text <- function(mapping = NULL, data = NULL,
                                stat = "epicurve", 
-                               position = position_stack(vjust = 0.5),
+                               position = position_stack(vjust = 0.54),
                                date_resolution = NULL, fontface = "plain",
                                week_start = getOption("lubridate.week.start", 1),
                                ..., na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
@@ -546,3 +550,29 @@ geom_epicurve_text <- function(mapping = NULL, data = NULL,
     )
   )
 }
+
+#' @rdname geom_epicurve
+#' @export
+geom_epicurve_point <- function(mapping = NULL, data = NULL,
+                               stat = "epicurve", 
+                               position = position_stack(vjust = 0.48),
+                               date_resolution = NULL,
+                               week_start = getOption("lubridate.week.start", 1),
+                               ..., na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
+  ggplot2::layer(
+    geom = GeomPoint,
+    mapping = mapping,
+    data = data,
+    stat = stat,
+    position = position,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+    params = list(
+      date_resolution = date_resolution,
+      week_start = week_start,
+      na.rm = na.rm,
+      ...
+    )
+  )
+}
+

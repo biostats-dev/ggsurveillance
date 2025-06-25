@@ -26,3 +26,18 @@ register_plotly_methods <- function() {
 
 # Evaluates all arguments (see https://github.com/r-lib/scales/pull/81)
 force_all <- function(...) list(...)
+
+# ggplot2 grid utils: https://github.com/tidyverse/ggplot2/blob/main/R/utilities-grid.R
+ggname <- function(prefix, grob) {
+  grob$name <- grid::grobName(grob, prefix)
+  grob
+}
+
+# ggplot2 utils From https://github.com/tidyverse/ggplot2/blob/main/R/geom-.R
+fix_linewidth <- function(data, name) {
+  if (is.null(data$linewidth) && !is.null(data$size)) {
+    deprecate_warn0("3.4.0", I(paste0("Using the `size` aesthetic with ", name)), I("the `linewidth` aesthetic"))
+    data$linewidth <- data$size
+  }
+  data
+}

@@ -387,7 +387,8 @@ GeomEpicurve <- ggplot2::ggproto("GeomEpicurve", GeomBar,
     aes(colour = "white", linewidth = 0.6, linetype = "solid"),
     GeomBar$default_aes
   ),
-  extra_params = c(GeomBar$extra_params, "date_resolution", "relative.width"),
+  # TODO: respect width
+  extra_params = c(GeomBar$extra_params, "date_resolution", "relative.width", "width"),
   setup_params = function(data, params) {
     params <- GeomBar$setup_params(data, params)
     # Disable date binning if not specified
@@ -468,6 +469,96 @@ GeomEpicurve <- ggplot2::ggproto("GeomEpicurve", GeomBar,
       width = NULL, just = NULL
     )
     flip_data(data, params$flipped_aes)
+  },  
+  
+  draw_panel = function(self, data, panel_params, coord, lineend = "square", linejoin = "mitre") {
+    # Rename size to linewidth
+    data <- fix_linewidth(data, snake_class(self))
+
+    coords <- coord$transform(data, panel_params)
+
+    lwd <- coords$linewidth * 1.9 #To avoid gaps when rounding
+    browser()
+    # Create grob for filled rectangle (without border)
+    fill_rect <- grid::rectGrob(
+      x = grid::unit((coords$xmin + coords$xmax) / 2, units = "native"), # center x
+      y = grid::unit((coords$ymin + coords$ymax) / 2, units = "native"), # center y
+      width = grid::unit(coords$xmax - coords$xmin, units = "native") - grid::unit(lwd, "points"),
+      height = grid::unit(coords$ymax - coords$ymin, units = "native") - grid::unit(lwd, "points"),
+      default.units = "native",
+      just = "centre",
+      gp = grid::gpar(
+        col = NA,  # No border
+        fill = fill_alpha(coords$fill, 0.2), #fill = fill_alpha(coords$fill, coords$alpha),
+        lwd = 0
+      ))
+    
+    # Create grob for border rectangle (inset by half linewidth to stay within bounds)
+    border_rect <- grid::rectGrob(
+      x = grid::unit((coords$xmin + coords$xmax) / 2, units = "native"), # center x
+      y = grid::unit((coords$ymin + coords$ymax) / 2, units = "native"), # center y
+      width = grid::unit(coords$xmax - coords$xmin, units = "native") - grid::unit(coords$linewidth, "points"),
+      height = grid::unit(coords$ymax - coords$ymin, units = "native") - grid::unit(coords$linewidth, "points"),
+      default.units = "native",
+      just = "centre",
+      gp = grid::gpar(
+        col = ggplot2::alpha("blue", 0.4), #coords$colour,
+        fill = "transparent",  # Transparent fill
+        lwd = coords$linewidth * .pt / 2,
+        lty = coords$linetype,
+        linejoin = linejoin,
+        lineend = lineend
+      )
+    )
+
+    
+    rect_old <- grid::rectGrob(
+      x = (coords$xmin + coords$xmax) / 2,  # center x
+      y = (coords$ymin + coords$ymax) / 2,  # center y
+      width = coords$xmax - coords$xmin,
+      height = coords$ymax - coords$ymin,
+      default.units = "native",
+      just = "centre",
+      gp = grid::gpar(
+        col = ggplot2::alpha("white", 0.4),
+        fill = ggplot2::fill_alpha("green", 0.1), 
+        lwd = coords$linewidth * .pt,
+        lty = coords$linetype,
+        linejoin = linejoin,
+        lineend = lineend
+      )
+    )
+    
+    #ggname("geom_rect", grid::gTree(children = grid::gList(fill_rect, border_rect))) #fill_rect,
+    #ggname("geom_rect", grid::gTree(children = grid::gList(rect_old, border_rect))) #fill_rect,
+    #ggname("geom_rect", grid::gTree(children = grid::gList(rect_old, fill_rect, border_rect))) #
+    ggname("geom_rect", fill_rect)
+    #ggname("geom_rect", rect_old)
   },
   rename_size = TRUE
 )
+
+
+geom_epicurve_text <- function(mapping = NULL, data = NULL,
+                               stat = "epicurve", 
+                               position = position_stack(vjust = 0.5),
+                               date_resolution = NULL, fontface = "plain",
+                               week_start = getOption("lubridate.week.start", 1),
+                               ..., na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
+  ggplot2::layer(
+    geom = GeomText,
+    mapping = mapping,
+    data = data,
+    stat = stat,
+    position = position,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+    params = list(
+      date_resolution = date_resolution,
+      week_start = week_start,
+      fontface = fontface,
+      na.rm = na.rm,
+      ...
+    )
+  )
+}

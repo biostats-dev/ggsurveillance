@@ -476,35 +476,19 @@ GeomEpicurve <- ggplot2::ggproto("GeomEpicurve", GeomBar,
     data <- fix_linewidth(data, snake_class(self))
 
     coords <- coord$transform(data, panel_params)
-
-    lwd <- coords$linewidth * 1.9 #To avoid gaps when rounding
-    browser()
-    # Create grob for filled rectangle (without border)
-    fill_rect <- grid::rectGrob(
-      x = grid::unit((coords$xmin + coords$xmax) / 2, units = "native"), # center x
-      y = grid::unit((coords$ymin + coords$ymax) / 2, units = "native"), # center y
-      width = grid::unit(coords$xmax - coords$xmin, units = "native") - grid::unit(lwd, "points"),
-      height = grid::unit(coords$ymax - coords$ymin, units = "native") - grid::unit(lwd, "points"),
-      default.units = "native",
-      just = "centre",
-      gp = grid::gpar(
-        col = NA,  # No border
-        fill = fill_alpha(coords$fill, 0.2), #fill = fill_alpha(coords$fill, coords$alpha),
-        lwd = 0
-      ))
     
     # Create grob for border rectangle (inset by half linewidth to stay within bounds)
     border_rect <- grid::rectGrob(
       x = grid::unit((coords$xmin + coords$xmax) / 2, units = "native"), # center x
       y = grid::unit((coords$ymin + coords$ymax) / 2, units = "native"), # center y
-      width = grid::unit(coords$xmax - coords$xmin, units = "native") - grid::unit(coords$linewidth, "points"),
-      height = grid::unit(coords$ymax - coords$ymin, units = "native") - grid::unit(coords$linewidth, "points"),
+      width = grid::unit(coords$xmax - coords$xmin, units = "native") - grid::unit(coords$linewidth * 2, "points"),
+      height = grid::unit(coords$ymax - coords$ymin, units = "native") - grid::unit(coords$linewidth * 2, "points"),
       default.units = "native",
       just = "centre",
       gp = grid::gpar(
-        col = ggplot2::alpha("blue", 0.4), #coords$colour,
-        fill = "transparent",  # Transparent fill
-        lwd = coords$linewidth * .pt / 2,
+        col = coords$colour,
+        fill = fill_alpha(coords$fill, coords$alpha),
+        lwd = coords$linewidth * .pt,
         lty = coords$linetype,
         linejoin = linejoin,
         lineend = lineend
@@ -532,7 +516,7 @@ GeomEpicurve <- ggplot2::ggproto("GeomEpicurve", GeomBar,
     #ggname("geom_rect", grid::gTree(children = grid::gList(fill_rect, border_rect))) #fill_rect,
     #ggname("geom_rect", grid::gTree(children = grid::gList(rect_old, border_rect))) #fill_rect,
     #ggname("geom_rect", grid::gTree(children = grid::gList(rect_old, fill_rect, border_rect))) #
-    ggname("geom_rect", fill_rect)
+    ggname("geom_rect", border_rect)
     #ggname("geom_rect", rect_old)
   },
   rename_size = TRUE

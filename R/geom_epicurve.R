@@ -471,3 +471,55 @@ GeomEpicurve <- ggplot2::ggproto("GeomEpicurve", GeomBar,
   },
   rename_size = TRUE
 )
+
+#' @rdname geom_epicurve
+#' @export
+geom_epicurve_text <- function(mapping = NULL, data = NULL,
+                               stat = "epicurve", 
+                               position = position_stack(vjust = 0.54),
+                               date_resolution = NULL, fontface = "plain",
+                               week_start = getOption("lubridate.week.start", 1),
+                               ..., na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
+  ggplot2::layer(
+    geom = GeomText,
+    mapping = mapping,
+    data = data,
+    stat = stat,
+    position = position,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+    params = list(
+      date_resolution = date_resolution,
+      week_start = week_start,
+      fontface = fontface,
+      na.rm = na.rm,
+      ...
+    )
+  )
+}
+
+#' @rdname geom_epicurve
+#' @export
+geom_epicurve_point <- function(mapping = NULL, data = NULL,
+                               stat = "epicurve", 
+                               position = position_stack(vjust = 0.48),
+                               date_resolution = NULL,
+                               week_start = getOption("lubridate.week.start", 1),
+                               ..., na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
+  ggplot2::layer(
+    geom = GeomPoint,
+    mapping = mapping,
+    data = data,
+    stat = stat,
+    position = position,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+    params = list(
+      date_resolution = date_resolution,
+      week_start = week_start,
+      na.rm = na.rm,
+      ...
+    )
+  )
+}
+

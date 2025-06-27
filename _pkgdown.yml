@@ -75,6 +75,7 @@ reference:
   contents:
   - label_date
   - label_skip
+  - label_power10
 
 - subtitle: "Theming and Styling"
   desc: "Functions for customizing plot appearance"

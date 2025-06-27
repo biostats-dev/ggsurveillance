@@ -13,7 +13,7 @@ theme_classic_light <- function(base_size = 11, base_family = "", base_line_size
 }
 
 theme_classic_light_x_axis <- function(base_size = 11, base_family = "", base_line_size = base_size / 22,
-                                              base_rect_size = base_size / 22) {
+                                       base_rect_size = base_size / 22) {
   theme_classic(
     base_size = base_size, base_family = base_family,
     base_line_size = base_line_size, base_rect_size = base_rect_size

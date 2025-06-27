@@ -8,6 +8,8 @@
 \alias{StatEpicurve}
 \alias{StatBinDate}
 \alias{StatDateCount}
+\alias{geom_epicurve_text}
+\alias{geom_epicurve_point}
 \title{Create an epidemic curve plot or bin/count observations by date periods}
 \usage{
 geom_epicurve(
@@ -47,6 +49,33 @@ stat_date_count(
   date_resolution = NULL,
   week_start = getOption("lubridate.week.start", 1),
   fill_gaps = FALSE,
+  ...,
+  na.rm = FALSE,
+  show.legend = NA,
+  inherit.aes = TRUE
+)
+
+geom_epicurve_text(
+  mapping = NULL,
+  data = NULL,
+  stat = "epicurve",
+  vjust = 0.5,
+  date_resolution = NULL,
+  fontface = "plain",
+  week_start = getOption("lubridate.week.start", 1),
+  ...,
+  na.rm = FALSE,
+  show.legend = NA,
+  inherit.aes = TRUE
+)
+
+geom_epicurve_point(
+  mapping = NULL,
+  data = NULL,
+  stat = "epicurve",
+  vjust = 0.5,
+  date_resolution = NULL,
+  week_start = getOption("lubridate.week.start", 1),
   ...,
   na.rm = FALSE,
   show.legend = NA,
@@ -112,6 +141,14 @@ When using a \verb{stat_*()} function to construct a layer, the \code{geom} argu
 can be used to override the default coupling between stats and geoms.}
 
 \item{fill_gaps}{Logical; If \code{TRUE}, gaps in the time series will be filled with a count of 0.}
+
+\item{vjust}{Vertical justification of the text or shape. Value between 0 and 1.
+Used by \code{geom_epicurve_text} and \code{geom_epicurve_point} to control
+vertical positioning within the case rectangles. Defaults to 0.5 (center).}
+
+\item{fontface}{Font face for text labels. Used by \code{geom_epicurve_text}.
+Options include "plain", "bold", "italic", "bold.italic". Defaults to "plain".
+\code{fontfamily} is also supported in \code{...}.}
 }
 \value{
 A \code{ggplot2} geom layer that can be added to a plot
@@ -124,6 +161,8 @@ date-based aggregation of cases (e.g. per week or month and many more).
 \item For week aggregation both isoweek (World + ECDC) and epiweek (US CDC) are supported.
 \item \code{stat_bin_date} and its alias \code{stat_date_count} provide date based binning only. After binning the by date, these
 stats behave like \link[ggplot2:geom_bar]{ggplot2::stat_count}.
+\item \code{geom_epicurve_text} adds text labels to cases on epicurve plots.
+\item \code{geom_epicurve_point} adds points/shapes to cases on epicurve plots.
 }
 }
 \details{

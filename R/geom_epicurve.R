@@ -6,6 +6,8 @@
 #' - For week aggregation both isoweek (World + ECDC) and epiweek (US CDC) are supported.
 #' - `stat_bin_date` and its alias `stat_date_count` provide date based binning only. After binning the by date, these
 #' stats behave like [ggplot2::stat_count].
+#' - `geom_epicurve_text` adds text labels to cases on epicurve plots.
+#' - `geom_epicurve_point` adds points/shapes to cases on epicurve plots.
 #'
 #' @param mapping Set of aesthetic mappings created by \code{\link[ggplot2]{aes}}. Commonly used mappings:
 #'   * **x or y**: date or datetime. Numeric is technically supported.
@@ -29,6 +31,12 @@
 #'        based on resolution and relative.width
 #' @param relative.width Numeric value between 0 and 1 adjusting the relative width
 #'        of bars. Defaults to 1
+#' @param vjust Vertical justification of the text or shape. Value between 0 and 1.
+#'        Used by \code{geom_epicurve_text} and \code{geom_epicurve_point} to control
+#'        vertical positioning within the case rectangles. Defaults to 0.5 (center).
+#' @param fontface Font face for text labels. Used by \code{geom_epicurve_text}.
+#'        Options include "plain", "bold", "italic", "bold.italic". Defaults to "plain".
+#'        `fontfamily` is also supported in `...`
 #' @param geom  The geometric object to use to display the data for this layer.
 #'   When using a `stat_*()` function to construct a layer, the `geom` argument
 #'   can be used to override the default coupling between stats and geoms.
@@ -475,8 +483,8 @@ GeomEpicurve <- ggplot2::ggproto("GeomEpicurve", GeomBar,
 #' @rdname geom_epicurve
 #' @export
 geom_epicurve_text <- function(mapping = NULL, data = NULL,
-                               stat = "epicurve", 
-                               position = position_stack(vjust = 0.54),
+                               stat = "epicurve",
+                               vjust = 0.5,
                                date_resolution = NULL, fontface = "plain",
                                week_start = getOption("lubridate.week.start", 1),
                                ..., na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
@@ -485,7 +493,7 @@ geom_epicurve_text <- function(mapping = NULL, data = NULL,
     mapping = mapping,
     data = data,
     stat = stat,
-    position = position,
+    position = position_stack(vjust = vjust),
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(
@@ -501,17 +509,17 @@ geom_epicurve_text <- function(mapping = NULL, data = NULL,
 #' @rdname geom_epicurve
 #' @export
 geom_epicurve_point <- function(mapping = NULL, data = NULL,
-                               stat = "epicurve", 
-                               position = position_stack(vjust = 0.48),
-                               date_resolution = NULL,
-                               week_start = getOption("lubridate.week.start", 1),
-                               ..., na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
+                                stat = "epicurve",
+                                vjust = 0.5,
+                                date_resolution = NULL,
+                                week_start = getOption("lubridate.week.start", 1),
+                                ..., na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
   ggplot2::layer(
     geom = GeomPoint,
     mapping = mapping,
     data = data,
     stat = stat,
-    position = position,
+    position = position_stack(vjust = vjust),
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(
@@ -522,4 +530,3 @@ geom_epicurve_point <- function(mapping = NULL, data = NULL,
     )
   )
 }
-

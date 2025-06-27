@@ -42,20 +42,26 @@
 #' label_power10()(c(1000, 10000, 100000, -1000))
 #'
 #' # Use in ggplot2
-#' ggplot(data.frame(x = 1:5, y = c(1, 50000, 75000, 100000, 200000)),
-#'        aes(x, y)) +
+#' ggplot(
+#'   data.frame(x = 1:5, y = c(1, 50000, 75000, 100000, 200000)),
+#'   aes(x, y)
+#' ) +
 #'   geom_point() +
 #'   scale_y_continuous(labels = label_power10())
-#' 
+#'
 #' # Use in ggplot2 with options
-#' ggplot(data.frame(x = 1:5, y = c(1, 50000, 75000, 100000, 200000)),
-#'        aes(x, y)) +
+#' ggplot(
+#'   data.frame(x = 1:5, y = c(1, 50000, 75000, 100000, 200000)),
+#'   aes(x, y)
+#' ) +
 #'   geom_point() +
 #'   scale_y_continuous(labels = label_power10(decimal.mark = ",", digits = 2, suffix = " CFU"))
 #'
 #' # Magnitude only for cleaner labels with log scales
-#' ggplot(data.frame(x = 1:5, y = c(1000, 10000, 100000, 1000000, 10000000)),
-#'        aes(x, y)) +
+#' ggplot(
+#'   data.frame(x = 1:5, y = c(1000, 10000, 100000, 1000000, 10000000)),
+#'   aes(x, y)
+#' ) +
 #'   geom_point() +
 #'   scale_y_log10(labels = label_power10(magnitude_only = TRUE))
 #'
@@ -92,7 +98,7 @@ label_power10 <- function(decimal.mark = NULL, digits = 3, scale = 1, prefix = "
       }
     }
 
-    sign <- ifelse(substr(mant,1,1) == "-", "-", "")
+    sign <- ifelse(substr(mant, 1, 1) == "-", "-", "")
 
     # Formatting depending on exponent
     dplyr::case_when(

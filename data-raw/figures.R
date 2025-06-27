@@ -6,6 +6,10 @@ sars_canada_2003 |> # Sars dataset from outbreaks
   pivot_longer(starts_with("cases"), names_prefix = "cases_", names_to = "origin") |>
   ggplot(aes(x = date, weight = value, fill = origin)) +
   geom_epicurve(date_resolution = "week") +
+  geom_epicurve_text(aes(label = ifelse(origin == "travel", "🛪", "")),
+    date_resolution = "week",
+    size = 1.5, color = "white"
+  ) +
   scale_x_date(date_labels = "W%V'%g", date_breaks = "2 weeks") +
   scale_y_cases_5er() +
   scale_fill_brewer(type = "qual", palette = 6) +

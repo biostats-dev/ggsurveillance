@@ -1,5 +1,5 @@
-label_power10 <- function(decimal.mark = NULL, digits = 3, scale = 1, prefix = "", suffix = "", ...) {
-  force_all(decimal.mark, digits, scale, prefix, suffix, ...)
+label_power10 <- function(decimal.mark = NULL, digits = 3, scale = 1, prefix = "", suffix = "", magnitude_only = FALSE, ...) {
+  force_all(decimal.mark, digits, scale, prefix, suffix, magnitude_only, ...)
 
   function(x) {
     decimal.mark <- decimal.mark %||% getOption("scales.decimal.mark", default = ".")
@@ -30,10 +30,15 @@ label_power10 <- function(decimal.mark = NULL, digits = 3, scale = 1, prefix = "
       }
     }
 
+    sign <- ifelse(substr(mant,1,1) == "-", "-", "")
+
     # Formatting depending on exponent
     dplyr::case_when(
+      magnitude_only & expn == 0 ~ paste0(sign, "1"),
       expn == 0 ~ mant,
+      magnitude_only & expn == 1 ~ paste0(sign, "10"),
       expn == 1 ~ paste0(mant, " %*% 10"),
+      magnitude_only & (expn > 1 | expn < 0) ~ paste0(sign, "10^", expn),
       TRUE ~ paste0(mant, " %*% 10^", expn)
     ) |>
       # Wrap it in pre and suffix
@@ -43,10 +48,11 @@ label_power10 <- function(decimal.mark = NULL, digits = 3, scale = 1, prefix = "
   }
 }
 
-# label_power10(suffix = "kg", decimal.mark = ".")(523)
 
-# label_power10(decimal.mark = ".")(c(52, 10))
-
+# Example with magnitude_only = TRUE to show only order of magnitude
+# label_power10(magnitude_only = TRUE)(100000)  # Will show 10^5
+# label_power10(magnitude_only = FALSE)(100000) # Will show 1 × 10^5 (default)
+# label_power10(magnitude_only = TRUE)(250000)  # Will show 10^5 (same magnitude)
 
 # plot(c(1), xlab = label_power10(suffix = "kg", prefix = "test ", decimal.mark = ".", digits = 4)(0.5234))
 # options(OutDec = ".")

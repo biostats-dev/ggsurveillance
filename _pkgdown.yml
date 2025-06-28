@@ -65,10 +65,11 @@ reference:
   - starts_with("geom_")
   - starts_with("stat_")
 
-- subtitle: "Scales Utilities"
-  desc: "ggplot2 scales in this package"
+- subtitle: "Scales and Guides"
+  desc: "ggplot2 scales and guides in this package"
   contents:
   - starts_with("scale_")
+  - starts_with("guide_")
 
 - subtitle: "Labeling and Formatting"
   desc: "Functions for formatting labels and annotations"

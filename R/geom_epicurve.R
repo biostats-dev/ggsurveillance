@@ -40,12 +40,12 @@
 #' @param ... Other arguments passed to \code{\link[ggplot2]{layer}}. For example:
 #'   * **colour**: Colour of the outlines around cases. Disable with colour = NA. Defaults to "white".
 #'   * **linewidth**:  Width of the case outlines.
-#' 
+#'
 #' For `geom_epicurve_text()` additional \code{\link[ggplot2]{geom_text}} arguments are supported:
 #'   * **fontface**: Font face for text labels: one of "plain", "bold", "italic", "bold.italic".
 #'   * **family**: The font family.
 #'   * **size**: The font size.
-#' 
+#'
 #' @inheritParams ggplot2::geom_bar
 #'
 #' @details

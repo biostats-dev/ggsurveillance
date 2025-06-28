@@ -164,7 +164,7 @@ date-based aggregation of cases (e.g. per week or month and many more).
 \item \code{stat_bin_date} and its alias \code{stat_date_count} provide date based binning only. After binning the by date, these
 stats behave like \link[ggplot2:geom_bar]{ggplot2::stat_count}.
 \item \code{geom_epicurve_text} adds text labels to cases on epicurve plots.
-\item \strong{\code{geom_epicurve_point}} adds points/shapes to cases on epicurve plots.
+\item \code{geom_epicurve_point} adds points/shapes to cases on epicurve plots.
 }
 }
 \details{

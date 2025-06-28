@@ -41,6 +41,10 @@ test_that("geom_epicurve handles date_resolution = NA/NULL", {
     ) +
     # Test label_skip()
     scale_y_cases_5er(labels = label_skip()) +
+    scale_x_date(
+      date_breaks = "week", date_labels = "W%V.%G",
+      guide = guide_axis_nested_date()
+    ) +
     theme_mod_legend_top() +
     theme_mod_remove_legend_title()
 
@@ -57,9 +61,13 @@ test_that("geom_epicurve handles flipped aes", {
 
   # Create plot
   p <- ggplot(test_dates, aes(y = date, fill = cat)) +
-    geom_hline_year() +
     geom_epicurve(date_resolution = "day") +
+    geom_hline_year() +
     scale_x_cases_5er(n = 10, n.min = 9, u5.bias = 3) +
+    scale_y_date(
+      date_breaks = "day", date_labels = "%d.%b",
+      guide = guide_axis_nested_date(type = "fence")
+    ) +
     theme_mod_legend_left()
 
   # Test that the plot is created successfully
@@ -181,7 +189,11 @@ test_that("stat_bin_date: test fill_gaps", {
 
   p1 <- ggplot(plot_data_epicurve_imp, aes(x = date, weight = 2)) +
     stat_bin_date(date_resolution = "week") +
-    scale_y_cases_5er()
+    scale_y_cases_5er() +
+    scale_x_date(
+      date_breaks = "month", date_labels = "%b.%Y",
+      guide = guide_axis_nested_date(type = "fence")
+    )
   expect_no_error(p1)
   vdiffr::expect_doppelganger("8_stat_bin_date_base_new", p1)
 

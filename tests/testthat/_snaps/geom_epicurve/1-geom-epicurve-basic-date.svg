@@ -39,6 +39,28 @@
 <rect x='513.07' y='90.42' width='56.75' height='436.35' style='stroke-width: 1.28; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #00BFC4;' />
 <rect x='569.82' y='90.42' width='56.75' height='436.35' style='stroke-width: 1.28; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #00BFC4;' />
 <rect x='626.56' y='90.42' width='56.75' height='436.35' style='stroke-width: 1.28; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #00BFC4;' />
+<circle cx='87.48' cy='395.86' r='1.95' style='stroke-width: 0.71; stroke: none; fill: #000000;' />
+<circle cx='144.23' cy='395.86' r='1.95' style='stroke-width: 0.71; stroke: none; fill: #000000;' />
+<circle cx='200.97' cy='395.86' r='1.95' style='stroke-width: 0.71; stroke: none; fill: #000000;' />
+<circle cx='257.72' cy='395.86' r='1.95' style='stroke-width: 0.71; stroke: none; fill: #000000;' />
+<circle cx='314.46' cy='395.86' r='1.95' style='stroke-width: 0.71; stroke: none; fill: #000000;' />
+<polygon points='371.21,392.82 373.84,397.38 368.58,397.38 ' style='stroke-width: 0.71; stroke: none; fill: #000000;' />
+<polygon points='427.96,392.82 430.59,397.38 425.32,397.38 ' style='stroke-width: 0.71; stroke: none; fill: #000000;' />
+<polygon points='484.70,392.82 487.33,397.38 482.07,397.38 ' style='stroke-width: 0.71; stroke: none; fill: #000000;' />
+<polygon points='541.45,392.82 544.08,397.38 538.81,397.38 ' style='stroke-width: 0.71; stroke: none; fill: #000000;' />
+<polygon points='598.19,392.82 600.82,397.38 595.56,397.38 ' style='stroke-width: 0.71; stroke: none; fill: #000000;' />
+<polygon points='654.94,392.82 657.57,397.38 652.31,397.38 ' style='stroke-width: 0.71; stroke: none; fill: #000000;' />
+<text x='87.48' y='181.49' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='7.37px' lengthAdjust='spacingAndGlyphs'>A</text>
+<text x='144.23' y='181.49' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='7.37px' lengthAdjust='spacingAndGlyphs'>A</text>
+<text x='200.97' y='181.49' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='7.37px' lengthAdjust='spacingAndGlyphs'>A</text>
+<text x='257.72' y='181.49' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='7.37px' lengthAdjust='spacingAndGlyphs'>A</text>
+<text x='314.46' y='181.49' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='7.37px' lengthAdjust='spacingAndGlyphs'>A</text>
+<text x='371.21' y='181.49' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='7.37px' lengthAdjust='spacingAndGlyphs'>B</text>
+<text x='427.96' y='181.49' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='7.37px' lengthAdjust='spacingAndGlyphs'>B</text>
+<text x='484.70' y='181.49' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='7.37px' lengthAdjust='spacingAndGlyphs'>B</text>
+<text x='541.45' y='181.49' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='7.37px' lengthAdjust='spacingAndGlyphs'>B</text>
+<text x='598.19' y='181.49' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='7.37px' lengthAdjust='spacingAndGlyphs'>B</text>
+<text x='654.94' y='181.49' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='7.37px' lengthAdjust='spacingAndGlyphs'>B</text>
 <text x='87.48' y='72.40' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='6.14px' lengthAdjust='spacingAndGlyphs'>1</text>
 <text x='144.23' y='72.40' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='6.14px' lengthAdjust='spacingAndGlyphs'>1</text>
 <text x='200.97' y='72.40' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='6.14px' lengthAdjust='spacingAndGlyphs'>1</text>
@@ -74,8 +96,10 @@
 <text x='356.89' y='258.54' style='font-size: 11.00px; font-family: sans;' textLength='14.68px' lengthAdjust='spacingAndGlyphs'>cat</text>
 <rect x='356.89' y='265.16' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #EBEBEB;' />
 <rect x='357.74' y='266.01' width='15.58' height='15.58' style='stroke-width: 1.28; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #F8766D;' />
+<circle cx='365.53' cy='273.80' r='1.95' style='stroke-width: 0.71; stroke: none; fill: #000000;' />
 <rect x='356.89' y='282.44' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #EBEBEB;' />
 <rect x='357.74' y='283.29' width='15.58' height='15.58' style='stroke-width: 1.28; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #00BFC4;' />
+<polygon points='365.53,288.04 368.17,292.60 362.90,292.60 ' style='stroke-width: 0.71; stroke: none; fill: #000000;' />
 <text x='379.65' y='276.83' style='font-size: 8.80px; font-family: sans;' textLength='5.87px' lengthAdjust='spacingAndGlyphs'>A</text>
 <text x='379.65' y='294.11' style='font-size: 8.80px; font-family: sans;' textLength='5.87px' lengthAdjust='spacingAndGlyphs'>B</text>
 <text x='27.90' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='176.16px' lengthAdjust='spacingAndGlyphs'>1_geom_epicurve_basic_date</text>

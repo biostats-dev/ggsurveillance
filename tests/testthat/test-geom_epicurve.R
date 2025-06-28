@@ -9,6 +9,8 @@ test_that("geom_epicurve handles basic date inputs", {
   p <- ggplot(test_dates, aes(x = date, fill = cat)) +
     geom_vline_year() +
     geom_epicurve(date_resolution = "day") +
+    geom_epicurve_point(aes(shape = cat), vjust = 0.3) +
+    geom_epicurve_text(aes(label = cat), vjust = 0.8) +
     stat_bin_date(aes(y = after_stat(count) * 1.05, label = after_stat(count)),
       date_resolution = "day", geom = "text"
     ) +

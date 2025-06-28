@@ -34,15 +34,18 @@
 #' @param vjust Vertical justification of the text or shape. Value between 0 and 1.
 #'        Used by \code{geom_epicurve_text} and \code{geom_epicurve_point} to control
 #'        vertical positioning within the case rectangles. Defaults to 0.5 (center).
-#' @param fontface Font face for text labels. Used by \code{geom_epicurve_text}.
-#'        Options include "plain", "bold", "italic", "bold.italic". Defaults to "plain".
-#'        `fontfamily` is also supported in `...`
 #' @param geom  The geometric object to use to display the data for this layer.
 #'   When using a `stat_*()` function to construct a layer, the `geom` argument
 #'   can be used to override the default coupling between stats and geoms.
 #' @param ... Other arguments passed to \code{\link[ggplot2]{layer}}. For example:
-#'   * \code{colour} Colour of the outlines around cases. Disable with colour = NA. Defaults to "white".
-#'   * \code{linewidth}  Width of the case outlines.
+#'   * **colour**: Colour of the outlines around cases. Disable with colour = NA. Defaults to "white".
+#'   * **linewidth**:  Width of the case outlines.
+#' 
+#' For `geom_epicurve_text()` additional \code{\link[ggplot2]{geom_text}} arguments are supported:
+#'   * **fontface**: Font face for text labels: one of "plain", "bold", "italic", "bold.italic".
+#'   * **family**: The font family.
+#'   * **size**: The font size.
+#' 
 #' @inheritParams ggplot2::geom_bar
 #'
 #' @details
@@ -485,7 +488,7 @@ GeomEpicurve <- ggplot2::ggproto("GeomEpicurve", GeomBar,
 geom_epicurve_text <- function(mapping = NULL, data = NULL,
                                stat = "epicurve",
                                vjust = 0.5,
-                               date_resolution = NULL, fontface = "plain",
+                               date_resolution = NULL,
                                week_start = getOption("lubridate.week.start", 1),
                                ..., na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
   ggplot2::layer(
@@ -499,7 +502,6 @@ geom_epicurve_text <- function(mapping = NULL, data = NULL,
     params = list(
       date_resolution = date_resolution,
       week_start = week_start,
-      fontface = fontface,
       na.rm = na.rm,
       ...
     )

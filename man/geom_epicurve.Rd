@@ -61,7 +61,6 @@ geom_epicurve_text(
   stat = "epicurve",
   vjust = 0.5,
   date_resolution = NULL,
-  fontface = "plain",
   week_start = getOption("lubridate.week.start", 1),
   ...,
   na.rm = FALSE,
@@ -118,8 +117,15 @@ of bars. Defaults to 1}
 
 \item{...}{Other arguments passed to \code{\link[ggplot2]{layer}}. For example:
 \itemize{
-\item \code{colour} Colour of the outlines around cases. Disable with colour = NA. Defaults to "white".
-\item \code{linewidth}  Width of the case outlines.
+\item \strong{colour}: Colour of the outlines around cases. Disable with colour = NA. Defaults to "white".
+\item \strong{linewidth}:  Width of the case outlines.
+}
+
+For \code{geom_epicurve_text()} additional \code{\link[ggplot2]{geom_text}} arguments are supported:
+\itemize{
+\item \strong{fontface}: Font face for text labels: one of "plain", "bold", "italic", "bold.italic".
+\item \strong{family}: The font family.
+\item \strong{size}: The font size.
 }}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with
@@ -145,10 +151,6 @@ can be used to override the default coupling between stats and geoms.}
 \item{vjust}{Vertical justification of the text or shape. Value between 0 and 1.
 Used by \code{geom_epicurve_text} and \code{geom_epicurve_point} to control
 vertical positioning within the case rectangles. Defaults to 0.5 (center).}
-
-\item{fontface}{Font face for text labels. Used by \code{geom_epicurve_text}.
-Options include "plain", "bold", "italic", "bold.italic". Defaults to "plain".
-\code{fontfamily} is also supported in \code{...}.}
 }
 \value{
 A \code{ggplot2} geom layer that can be added to a plot
@@ -162,7 +164,7 @@ date-based aggregation of cases (e.g. per week or month and many more).
 \item \code{stat_bin_date} and its alias \code{stat_date_count} provide date based binning only. After binning the by date, these
 stats behave like \link[ggplot2:geom_bar]{ggplot2::stat_count}.
 \item \code{geom_epicurve_text} adds text labels to cases on epicurve plots.
-\item \code{geom_epicurve_point} adds points/shapes to cases on epicurve plots.
+\item \strong{\code{geom_epicurve_point}} adds points/shapes to cases on epicurve plots.
 }
 }
 \details{

@@ -19,7 +19,7 @@ guide_axis_nested_date(
 hierarchical components. Default is \code{"[^[:alnum:]]+"} which splits on
 non-alphanumeric characters.}
 
-\item{regular_key}{Default is \code{"auto"}, which generates the nested axis based on the date labels and the seperator above.
+\item{regular_key}{Default is \code{"auto"}, which generates the nested axis based on the date labels and the separator above.
 This option can be used to provide you own specification for the nested key. See \code{\link[legendry:key_standard]{legendry::key_standard()}}}
 
 \item{type}{The visual type of nested axis guide to create. Options include:
@@ -31,16 +31,18 @@ This option can be used to provide you own specification for the nested key. See
 
 \item{mode}{Processing mode for the guide. Default is \code{"simple"}.}
 
-\item{pad_date}{Numeric value controlling the padding around date ranges.
+\item{pad_date}{Numeric value controlling the padding around date levels,
+i.e. extending the length of the bracket or box or for correctly positioning the fences.
 If \code{NULL} (default), automatically sets to 0.5 for "fence" type and
 0.25 for other types.}
 
-\item{oob}{How to handle out-of-bounds values. Default is \code{"none"}.}
+\item{oob}{How to handle out-of-bounds values of the scale labels. Default is \code{"none"}.
+Another option is \code{"squish"}, but this can result in overlapping labels.}
 
 \item{...}{Additional arguments passed to \code{\link[legendry:guide_axis_nested]{legendry::guide_axis_nested()}}.}
 }
 \value{
-A nested axis guide object that can be used with \code{\link[ggplot2:guides]{ggplot2::guides()}}.
+A nested axis guide object that can be used with \code{\link[ggplot2:scale_date]{ggplot2::scale_x_date()}} etc. or \code{\link[ggplot2:guides]{ggplot2::guides()}}.
 }
 \description{
 A specialized axis guide for date scales that creates nested axis labels

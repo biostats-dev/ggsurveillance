@@ -43,7 +43,7 @@ the order of magnitude.
 }
 \details{
 The function converts numbers to scientific notation and then formats them
-as mathematical expressions using R's expression syntax:
+as mathematical expressions using the R expression syntax:
 \itemize{
 \item For exponent 0: returns the mantissa as-is (e.g., \eqn{5.5})
 \item For exponent 1: it omits the exponent (e.g., \eqn{1.5\times 10})

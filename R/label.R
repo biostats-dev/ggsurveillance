@@ -21,7 +21,7 @@
 #'
 #' @details
 #' The function converts numbers to scientific notation and then formats them
-#' as mathematical expressions using R's expression syntax:
+#' as mathematical expressions using the R expression syntax:
 #'
 #' - For exponent 0: returns the mantissa as-is (e.g., \eqn{5.5})
 #' - For exponent 1: it omits the exponent (e.g., \eqn{1.5\times 10})

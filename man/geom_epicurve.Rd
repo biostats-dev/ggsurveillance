@@ -97,17 +97,19 @@ For large numbers of cases please use "\code{bin_date}" to reduce the number of 
 \item{position}{Position adjustment. Currently supports "\code{stack}" for \code{geom_epicurve()}.}
 
 \item{date_resolution}{Character string specifying the time unit for date aggregation.
-Set to \code{NULL} or \code{NA} for no date aggregation \cr
-Possible values are: \code{"day"}, \code{"week"}, \code{"month"}, \code{"bimonth"}, \code{"season"}, \code{"quarter"}, \code{"halfyear"}, \code{"year"}.
-To special values enforce ISO or US week standard:
+Possible values include: \code{"hour"}, \code{"day"}, \code{"week"}, \code{"month"}, \code{"bimonth"}, \code{"season"},
+\code{"quarter"}, \code{"halfyear"}, \code{"year"}. Special values:
 \itemize{
-\item \code{isoweek} will force \code{date_resolution = week} and \code{week_start = 1} (ISO and ECDC Standard)
-\item \code{epiweek} will force \code{date_resolution = week} and \code{week_start = 7} (US CDC Standard)
+\item \code{"isoweek"}: ISO week standard (week starts Monday, \code{week_start = 1})
+\item \code{"epiweek"}: US CDC epiweek standard (week starts Sunday, \code{week_start = 7})
+\item \code{"isoyear"}: ISO year (corresponding year of the ISO week, differs from year by 1-3 days)
+\item \code{"epiyear"}: Epidemiological year (corresponding year of the epiweek, differs from year by 1-3 days)
+Defaults to \code{"week"}.
 }}
 
-\item{week_start}{Integer specifying the start of the week (1 = Monday, 7 = Sunday). \cr
-Only used when date_resolution includes weeks. Defaults to 1 (Monday). \cr
-For isoweek use \code{week_start = 1} and for epiweek use \code{week_start = 7}.}
+\item{week_start}{Integer specifying the start of the week (1 = Monday, 7 = Sunday).
+Only used when \code{date_resolution} involves weeks. Defaults to 1 (Monday).
+Overridden by \code{"isoweek"} (1) and \code{"epiweek"} (7) settings.}
 
 \item{width}{Numeric value specifying the width of the bars. If \code{NULL}, calculated
 based on resolution and relative.width}
@@ -146,7 +148,7 @@ the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 When using a \verb{stat_*()} function to construct a layer, the \code{geom} argument
 can be used to override the default coupling between stats and geoms.}
 
-\item{fill_gaps}{Logical; If \code{TRUE}, gaps in the time series will be filled with a count of 0.}
+\item{fill_gaps}{Logical; If \code{TRUE}, gaps in the time series will be filled with a count of 0. Often needed for line charts.}
 
 \item{vjust}{Vertical justification of the text or shape. Value between 0 and 1.
 Used by \code{geom_epicurve_text} and \code{geom_epicurve_point} to control
@@ -158,10 +160,10 @@ A \code{ggplot2} geom layer that can be added to a plot
 \description{
 Creates a epicurve plot for visualizing epidemic case counts in outbreaks (epidemiological curves).
 An epicurve is a bar plot, where every case is outlined. \code{geom_epicurve} additionally provides
-date-based aggregation of cases (e.g. per week or month and many more).
+date-based aggregation of cases (e.g. per week or month and many more) using \link{bin_dates}.
 \itemize{
 \item For week aggregation both isoweek (World + ECDC) and epiweek (US CDC) are supported.
-\item \code{stat_bin_date} and its alias \code{stat_date_count} provide date based binning only. After binning the by date, these
+\item \code{stat_bin_date} and its alias \code{stat_date_count} provide date based binning only. After binning the by date with \link{bin_dates}, these
 stats behave like \link[ggplot2:geom_bar]{ggplot2::stat_count}.
 \item \code{geom_epicurve_text} adds text labels to cases on epicurve plots.
 \item \code{geom_epicurve_point} adds points/shapes to cases on epicurve plots.

@@ -2,9 +2,9 @@
 #'
 #' Creates a epicurve plot for visualizing epidemic case counts in outbreaks (epidemiological curves).
 #' An epicurve is a bar plot, where every case is outlined. \code{geom_epicurve} additionally provides
-#' date-based aggregation of cases (e.g. per week or month and many more).
+#' date-based aggregation of cases (e.g. per week or month and many more) using [bin_dates].
 #' - For week aggregation both isoweek (World + ECDC) and epiweek (US CDC) are supported.
-#' - `stat_bin_date` and its alias `stat_date_count` provide date based binning only. After binning the by date, these
+#' - `stat_bin_date` and its alias `stat_date_count` provide date based binning only. After binning the by date with [bin_dates], these
 #' stats behave like [ggplot2::stat_count].
 #' - `geom_epicurve_text` adds text labels to cases on epicurve plots.
 #' - `geom_epicurve_point` adds points/shapes to cases on epicurve plots.
@@ -17,16 +17,7 @@
 #' @param stat either "`epicurve`" for outlines around cases or "`bin_date`" for outlines around (fill) groups.
 #' For large numbers of cases please use "`bin_date`" to reduce the number of drawn rectangles.
 #' @param position Position adjustment. Currently supports "`stack`" for `geom_epicurve()`.
-#' @param date_resolution Character string specifying the time unit for date aggregation.
-#' Set to \code{NULL} or `NA` for no date aggregation \cr
-#' Possible values are: `"day"`, `"week"`, `"month"`, `"bimonth"`, `"season"`, `"quarter"`, `"halfyear"`, `"year"`.
-#' To special values enforce ISO or US week standard:
-#'  - `isoweek` will force `date_resolution = week` and `week_start = 1` (ISO and ECDC Standard)
-#'  - `epiweek` will force `date_resolution = week` and `week_start = 7` (US CDC Standard)
-#' @param week_start Integer specifying the start of the week (1 = Monday, 7 = Sunday). \cr
-#'        Only used when date_resolution includes weeks. Defaults to 1 (Monday). \cr
-#'        For isoweek use \code{week_start = 1} and for epiweek use \code{week_start = 7}.
-#' @param fill_gaps Logical; If `TRUE`, gaps in the time series will be filled with a count of 0.
+#' @param fill_gaps Logical; If `TRUE`, gaps in the time series will be filled with a count of 0. Often needed for line charts.
 #' @param width Numeric value specifying the width of the bars. If \code{NULL}, calculated
 #'        based on resolution and relative.width
 #' @param relative.width Numeric value between 0 and 1 adjusting the relative width
@@ -47,7 +38,7 @@
 #'   * **size**: The font size.
 #'
 #' @inheritParams ggplot2::geom_bar
-#'
+#' @inheritParams bin_dates
 #' @details
 #' Epi Curves are a public health tool for outbreak investigation. For more details see the references.
 #'
@@ -250,7 +241,7 @@ StatBinDate <- ggplot2::ggproto("StatBinDate", Stat,
     date_resolution <- date_resolution %||% NA
     week_start <- week_start %||% 1
     flipped_aes <- flipped_aes %||% any(data$flipped_aes) %||% FALSE
-
+    
     if (is.na(date_resolution)) {
       cli::cli_warn("It seems you provided no date_resolution. Column used as specified.
                           Please use date_resolution = 'week' to round to week (stat_bin_date/date_count).")

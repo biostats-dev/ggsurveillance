@@ -1,7 +1,98 @@
+#' Bin dates into time periods and calculate incidence
+#'
+#' Aggregates data by specified time periods (e.g., weeks, months) and calculates (weighted)
+#' counts. Incidence rates are also calculated using the provided population numbers.\cr\cr
+#' This function is the core date binning engine
+#' used by [geom_epicurve()] and [stat_bin_date()] for creating epidemiological
+#' time series visualizations.
+#'
+#' @param x Either a data frame with a date column, or a date vector.\cr
+#' Supported date formats are `date` and `datetime` and also commonly used character strings:
+#'   * ISO dates `"2024-03-09"`
+#'   * Month `"2024-03"`
+#'   * Week `"2024-W09"` or `"2024-W09-1"`
+#' @param dates_from Column name containing the dates to align. Used when x is a data.frame.
+#' @param n Numeric column with case counts (or weights). Supports quoted and unquoted column names.
+#' @param population A number or a numeric column with the population size. Used to calculate the incidence.
+#' @param fill_gaps Logical; If `TRUE`, gaps in the time series will be filled with 0 cases. 
+#' Requires the `tsibble` package. Useful for ensuring complete time series without missing periods.
+#' Can be slow for `datetime` values spanning years. Defaults to `FALSE`.
+#' @param date_resolution Character string specifying the time unit for date aggregation.
+#'   Possible values include: `"hour"`, `"day"`, `"week"`, `"month"`, `"bimonth"`, `"season"`,
+#'   `"quarter"`, `"halfyear"`, `"year"`. Special values:
+#'   - `"isoweek"`: ISO week standard (week starts Monday, `week_start = 1`)
+#'   - `"epiweek"`: US CDC epiweek standard (week starts Sunday, `week_start = 7`)
+#'   - `"isoyear"`: ISO year (corresponding year of the ISO week, differs from year by 1-3 days)
+#'   - `"epiyear"`: Epidemiological year (corresponding year of the epiweek, differs from year by 1-3 days)
+#'   Defaults to `"week"`.
+#' @param week_start Integer specifying the start of the week (1 = Monday, 7 = Sunday).
+#'   Only used when `date_resolution` involves weeks. Defaults to 1 (Monday).
+#'   Overridden by `"isoweek"` (1) and `"epiweek"` (7) settings.
+#' @param .groups See [dplyr::summarise()].
+#'
+#' @return A data frame with the following columns:
+#'   - The date column (name from `dates_from`): Date values binned to the specified resolution
+#'   - `n`: Count of observations (sum of weights) for each time period
+#'   - `incidence`: Incidence rate calculated as `n / population` for each time period
+#'   - Any existing grouping variables are preserved
+#'
+#' @details
+#' The function performs several key operations:
+#' 1. **Date coercion**: Converts the date column to proper Date format
+#' 2. **Gap filling** (optional): Uses `tsibble` to fill missing time periods with zeros
+#' 3. **Date binning**: Rounds dates to the specified resolution using [lubridate::floor_date()]
+#' 4. **Weight and population handling**: Processes count weights and population denominators
+#' 5. **Aggregation**: Groups by binned dates and sums weights to get counts and incidence
+#'
+#' **Grouping behaviour**:
+#' The function respects existing grouping in the input data frame.
+#'
+#' @export
+#'
+#' @examples
+#' library(dplyr)
+#'
+#' # Create sample data
+#' outbreak_data <- data.frame(
+#'   onset_date = as.Date("2024-12-10") + sample(0:100, 50, replace = TRUE),
+#'   cases = sample(1:5, 50, replace = TRUE)
+#' )
+#'
+#' # Basic weekly binning
+#' bin_dates(outbreak_data, dates_from = onset_date)
+#'
+#' # Weekly binning with case weights
+#' bin_dates(outbreak_data, onset_date, n = cases)
+#'
+#' # Monthly binning
+#' bin_dates(outbreak_data, onset_date,
+#'           date_resolution = "month")
+#'
+#' # ISO week binning (Monday start)
+#' bin_dates(outbreak_data, onset_date,
+#'           date_resolution = "isoweek") |>
+#' mutate(date_formatted = strftime(onset_date, "%G-W%V")) # Add correct date labels
+#'
+#' # US CDC epiweek binning (Sunday start)
+#' bin_dates(outbreak_data, onset_date,
+#'           date_resolution = "epiweek")
+#'
+#' # With population data for incidence calculation
+#' outbreak_data$population <- 10000
+#' bin_dates(outbreak_data, onset_date,
+#'           n = cases,
+#'           population = population)
 bin_dates <- function(
     x, dates_from, n = 1, population = 1, fill_gaps = FALSE,
     date_resolution = "week", week_start = 1, .groups = "drop") {
   wt <- incidence <- NULL
+
+  # Enframe if vector supplied
+  if (!is.data.frame(x) & rlang::is_vector(x)) {
+    # If vector, setup as data.frame
+    x <- data.frame(date = x)
+    dates_from <- rlang::sym("date")
+  }
 
   # rlang check quo to detect character column names
   if (!rlang::quo_is_symbol(rlang::enquo(dates_from))) dates_from <- rlang::sym(dates_from)
@@ -45,15 +136,16 @@ bin_dates <- function(
 
   # Fill gaps in time series with 0
   if (fill_gaps) {
+    #TODO: Remove tsibble and use the difference of floor and ceiling_date to add 0s.
     rlang::check_installed("tsibble", reason = "to fill the gaps in the time series.")
     # Save existing grouping of the df
     group_list <- dplyr::group_vars(x)
     # Create full time index for all groups
     # This has to be done before binning, to avoid wrong auto detection of resolution
     x |>
-      select({{ dates_from }}) |> # TODO: add warning
-      mutate_if(is.POSIXct, floor_date) |> # select + mutate are fixes for double precission problems in tsibble
-      distinct({{ dates_from }}) |>
+      dplyr::select({{ dates_from }}) |> # TODO: add warning
+      dplyr::mutate_if(is.POSIXct, floor_date) |> # select + mutate are fixes for double precission problems in tsibble
+      dplyr::distinct({{ dates_from }}) |>
       tsibble::as_tsibble(index = {{ dates_from }}, key = all_of(group_list)) |>
       tsibble::fill_gaps(.full = TRUE) |>
       as.data.frame() -> df_full_dates

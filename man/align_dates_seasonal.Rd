@@ -47,7 +47,7 @@ One of:
 \item \code{"day"} - Daily resolution
 }}
 
-\item{start}{Numeric value indicating epidemic season start:
+\item{start}{Numeric value indicating epidemic season start, i.e. the start and end of the new year interval:
 \itemize{
 \item For \code{week/epiweek}: week number (default: 28, approximately July)
 \item For \code{month}: month number (default: 7 for July)
@@ -67,7 +67,9 @@ map to week 52 if the target season has no leap week, resulting in a doubling of
 
 \item{population}{A number or a numeric column with the population size. Used to calculate the incidence.}
 
-\item{fill_gaps}{Logical; If \code{TRUE}, gaps in the time series will be filled with 0 cases.}
+\item{fill_gaps}{Logical; If \code{TRUE}, gaps in the time series will be filled with 0 cases.
+Requires the \code{tsibble} package. Useful for ensuring complete time series without missing periods.
+Can be slow for \code{datetime} values spanning years. Defaults to \code{FALSE}.}
 
 \item{.groups}{See \code{\link[dplyr:summarise]{dplyr::summarise()}}.}
 }

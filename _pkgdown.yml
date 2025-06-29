@@ -23,6 +23,7 @@ reference:
   - scale_y_cases_5er
   - geom_vline_year
   - label_date
+  - guide_axis_nested_date
 
 - title: "Diverging Bar Charts and Diverging Area Charts"
   desc: "Functions for diverging plots for population pyramids, likert scales, etc."
@@ -31,11 +32,13 @@ reference:
   - scale_x_continuous_diverging
   - scale_y_discrete_reverse
 
-- title: "Seasonal Data Alignment"
-  desc: "Functions for aligning and comparing data across seasons"
+- title: "Date Binning and Seasonal Datr Alignment"
+  desc: "Functions for binning cases by date intervalls and aligning and comparing data across seasons"
   contents:
+  - bin_dates
   - align_dates_seasonal
   - align_and_bin_dates_seasonal
+  
 
 - title: "EpiGantt Charts"
   desc: "Functions for EpiGantt Charts"

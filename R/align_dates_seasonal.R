@@ -18,36 +18,27 @@
 #' monthly) with customizable season start points to match different disease
 #' patterns or surveillance protocols.
 #'
-#' @param x Either a data frame with a date column, or a date vector.\cr
-#' Supported date formats are `date` and `datetime` and also commonly used character strings:
-#'   * ISO dates `"2024-03-09"`
-#'   * Month `"2024-03"`
-#'   * Week `"2024-W09"` or `"2024-W09-1"`
-#' @param n Numeric column with case counts (or weights). Supports quoted and unquoted column names.
-#' @param dates_from Column name containing the dates to align. Used when x is a data.frame.
 #' @param date_resolution Character string specifying the temporal resolution.
 #'   One of:
 #'   * `"week"` or `"isoweek"` - Calendar weeks (ISO 8601), reporting weeks as used by the ECDC.
 #'   * `"epiweek"` - Epidemiological weeks (US CDC), i.e. ISO weeks with Sunday as week start.
 #'   * `"month"` - Calendar months
 #'   * `"day"` - Daily resolution
-#' @param start Numeric value indicating epidemic season start:
+#' @param start Numeric value indicating epidemic season start, i.e. the start and end of the new year interval:
 #'   * For `week/epiweek`: week number (default: 28, approximately July)
 #'   * For `month`: month number (default: 7 for July)
 #'   * For `day`: day of year (default: 150, approximately June)
 #' If start is set to "1" the alignment is done for yearly comparison and the shift in dates for seasonality is skipped.
 #' @param target_year Numeric value for the reference year to align dates to. The default target year
 #'  is the start of the most recent season in the data. This way the most recent dates stay unchanged.
-#' @param population A number or a numeric column with the population size. Used to calculate the incidence.
-#' @param fill_gaps Logical; If `TRUE`, gaps in the time series will be filled with 0 cases.
 #'
 #' @param drop_leap_week If `TRUE` and date_resolution is `week`, `isoweek` or `epiweek`, leap weeks (week 53)
 #' are dropped if they are not in the most recent season. Disable if data should be returned.
 #' Dropping week 53 from historical data is the most common approach. Otherwise historical data for week 53 would
 #' map to week 52 if the target season has no leap week, resulting in a doubling of the case counts.
 #'
-#' @param .groups See [dplyr::summarise()].
-#'
+#' @inheritParams bin_dates
+#' 
 #' @return A data frame with standardized date columns:
 #'   * `year`: Calendar year from original date
 #'   * `week/month/day`: Time unit based on chosen resolution

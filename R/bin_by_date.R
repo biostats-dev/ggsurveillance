@@ -14,7 +14,7 @@
 #' @param dates_from Column name containing the dates to align. Used when x is a data.frame.
 #' @param n Numeric column with case counts (or weights). Supports quoted and unquoted column names.
 #' @param population A number or a numeric column with the population size. Used to calculate the incidence.
-#' @param fill_gaps Logical; If `TRUE`, gaps in the time series will be filled with 0 cases. 
+#' @param fill_gaps Logical; If `TRUE`, gaps in the time series will be filled with 0 cases.
 #' Requires the `tsibble` package. Useful for ensuring complete time series without missing periods.
 #' Can be slow for `datetime` values spanning years. Defaults to `FALSE`.
 #' @param date_resolution Character string specifying the time unit for date aggregation.
@@ -66,22 +66,26 @@
 #'
 #' # Monthly binning
 #' bin_by_date(outbreak_data, onset_date,
-#'           date_resolution = "month")
+#'   date_resolution = "month"
+#' )
 #'
 #' # ISO week binning (Monday start)
 #' bin_by_date(outbreak_data, onset_date,
-#'           date_resolution = "isoweek") |>
-#' mutate(date_formatted = strftime(onset_date, "%G-W%V")) # Add correct date labels
+#'   date_resolution = "isoweek"
+#' ) |>
+#'   mutate(date_formatted = strftime(onset_date, "%G-W%V")) # Add correct date labels
 #'
 #' # US CDC epiweek binning (Sunday start)
 #' bin_by_date(outbreak_data, onset_date,
-#'           date_resolution = "epiweek")
+#'   date_resolution = "epiweek"
+#' )
 #'
 #' # With population data for incidence calculation
 #' outbreak_data$population <- 10000
 #' bin_by_date(outbreak_data, onset_date,
-#'           n = cases,
-#'           population = population)
+#'   n = cases,
+#'   population = population
+#' )
 bin_by_date <- function(
     x, dates_from, n = 1, population = 1, fill_gaps = FALSE,
     date_resolution = "week", week_start = 1, .groups = "drop") {
@@ -136,7 +140,7 @@ bin_by_date <- function(
 
   # Fill gaps in time series with 0
   if (fill_gaps) {
-    #TODO: Remove tsibble and use the difference of floor and ceiling_date to add 0s.
+    # TODO: Remove tsibble and use the difference of floor and ceiling_date to add 0s.
     rlang::check_installed("tsibble", reason = "to fill the gaps in the time series.")
     # Save existing grouping of the df
     group_list <- dplyr::group_vars(x)

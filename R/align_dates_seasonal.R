@@ -38,7 +38,7 @@
 #' map to week 52 if the target season has no leap week, resulting in a doubling of the case counts.
 #'
 #' @inheritParams bin_by_date
-#' 
+#'
 #' @return A data frame with standardized date columns:
 #'   * `year`: Calendar year from original date
 #'   * `week/month/day`: Time unit based on chosen resolution

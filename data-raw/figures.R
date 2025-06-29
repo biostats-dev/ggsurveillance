@@ -37,6 +37,7 @@ ggsave("man/figures/ggsurveillance.png", width = 350 / 80, height = 300 / 80, dp
 ## Influenza
 library(ggplot2)
 library(dplyr)
+Sys.setlocale("LC_ALL", "en_GB.UTF-8")
 
 influenza_germany |>
   filter(AgeGroup == "00+") |>
@@ -63,7 +64,10 @@ ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence)) +
     data = . %>% filter(current_season), linewidth = 2
   ) +
   labs(linetype = NULL) +
-  scale_x_date(date_labels = "%b'%y") +
+  scale_x_date(
+    date_breaks = "month", date_labels = "%b'%Y",
+    guide = guide_axis_nested_date()
+  ) +
   theme_bw() +
   theme_mod_legend_position(position.inside = c(0.2, 0.8))
 

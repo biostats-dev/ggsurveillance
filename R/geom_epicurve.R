@@ -188,10 +188,10 @@ StatEpicurve <- ggplot2::ggproto("StatEpicurve", Stat,
         x_ul = ifelse(x_ul == x_ll, x_ul + 1, x_ul)
       )
 
-    # R CMD Check fix
+    # R CMD Check fix: add dummy function signature for dplyr::join_by(between())
     between <- function(x, y_lower, y_upper, ..., bounds) x
     data <- data |>
-      left_join(binned_data, by = join_by(between(x, x_ll, x_ul, bounds = '[)'))) # see dplyr::join_by()
+      left_join(binned_data, by = join_by(between(x, x_ll, x_ul, bounds = "[)"))) # see dplyr::join_by()
 
     # Expand counts to create individual records for each case (for epicurve outlines)
     data$weight <- data$weight %||% rep(1, length(data$x))
@@ -243,7 +243,7 @@ StatBinDate <- ggplot2::ggproto("StatBinDate", Stat,
     date_resolution <- date_resolution %||% NA
     week_start <- week_start %||% 1
     flipped_aes <- flipped_aes %||% any(data$flipped_aes) %||% FALSE
-    
+
     if (is.na(date_resolution)) {
       cli::cli_warn("It seems you provided no date_resolution. Column used as specified.
                           Please use date_resolution = 'week' to round to week (stat_bin_date/date_count).")

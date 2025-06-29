@@ -10,31 +10,36 @@
 
 ## Key Features
 
--   `geom_epicurve()`: A ggplot geom for plotting epicurves
+-   `geom_epicurve()`: A ggplot geom for plotting epicurves.
+    -   `stat_bin_date()`: Date interval (week, month etc.) based binning of case numbers with perfect alignment with e.g. reporting week.
+    -   `geom_epicurve_text()` and `geom_epicurve_point()`: New geoms to easily add text annotations or points to cases in epidemic curves.
+    -   `geom_vline_year()`: Automatically detects the turn of the year(s) from the date or datetime axis and draws a vertical line.
+    -   `scale_y_cases_5er()`: For better (case) count axis breaks and positioning.
 
-    -   including `stat_bin_date()` for date interval (week, month etc.) based binning of case numbers with perfect alignment with e.g. reporting week.
-    -   including `scale_y_cases_5er()` for better (case) count axis breaks and positioning.
-    -   including `geom_vline_year()`, which automatically detects the turn of the year(s) from the date or datetime axis and draws a vertical line.
+-   `bin_by_date()`: A `tidyverse`-compatible function for flexible date-based aggregation (binning). This function was previously internal.
 
 -   `align_dates_seasonal()`: Align surveillance data for seasonal plots (e.g. flu season).
 
--   `create_agegroups()`: Create reproducible age groups with highly customizable labels.
-
 -   `geom_bar_diverging()`: A geom for diverging bar charts, which can be used to plot population pyramids, likert scales (sentiment analyses) and other data with opposing categories, like vaccination status or imported vs autochthonous (local) infections.
-
     -   `stat_diverging()` for easy labeling of these charts with category counts/percentages or total counts/percentages
     -   `scale_x_continuous_diverging()` for symmetric diverging scales
     -   `geom_area_diverging()` for continuous variables (e.g. changes over time)
 
 -   `geom_epigantt()`: A geom for epigantt plots. Helpful to visualize overlapping time intervals for contact tracing (e.g. hospital outbreaks).
-
     -   including `scale_y_discrete_reverse()` which reverses the order of the categorical scale.
+
+-   More `ggplot2` add-ons: 
+    -   `guide_axis_nested_date()`: An axis guide for creating nested date labels for hierarchical time periods (e.g., year > month > day).
+    -   `geom_label_last_value()`: A geom for labeling the last value of a time series (e.g. `geom_line()`). 
+    -   `label_power10()`: A `ggplot2`-compatible labeling function to format numbers in scientific notation with powers of 10 (e.g., $2 \times 10^5$).
 
 -   `theme_mod_` functions for ggplot2 theme modifications:
 
     -   `theme_mod_legend_position()` etc. to adjust the legend positions.
     -   `theme_mod_rotate_x_axis_labels()` etc. for rotating x axis labels.
     -   `theme_mod_remove_minor_grid()` etc. to remove the minor grid lines (x, y or both) or all grind lines.
+
+-   `create_agegroups()`: Create reproducible age groups with highly customizable labels.
 
 -   Additional utilities: `geometric_mean()`, `expand_counts()`, and more
 
@@ -87,7 +92,8 @@ ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence)) +
   geom_line(
     aes(linetype = "2024/25"), data = . %>% filter(current_season), colour = "dodgerblue4", linewidth = 2) +
   labs(linetype = NULL) +
-  scale_x_date(date_labels = "%b'%y") +
+  scale_x_date(date_breaks = "month", date_labels = "%b'%Y", 
+               guide = guide_axis_nested_date()) +
   theme_bw() +
   theme_mod_legend_position(position.inside = c(0.2, 0.8))
 ```

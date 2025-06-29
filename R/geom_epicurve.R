@@ -176,10 +176,11 @@ StatEpicurve <- ggplot2::ggproto("StatEpicurve", Stat,
 
     params
   },
-  compute_layer = function(self, data, params, scales, ...) {
-    date_resolution <- params$date_resolution %||% NA
-    week_start <- params$week_start %||% 1
-    flipped_aes <- params$flipped_aes %||% any(data$flipped_aes) %||% FALSE
+  compute_panel = function(self, data, scales, flipped_aes = FALSE,
+                          date_resolution = NA, week_start = 1, na.rm = FALSE) {
+    date_resolution <- date_resolution %||% NA
+    week_start <- week_start %||% 1
+    flipped_aes <- flipped_aes %||% any(data$flipped_aes) %||% FALSE
 
     if (!is.na(date_resolution) & date_resolution == "isoweek") {
       date_resolution <- "week"
@@ -190,12 +191,12 @@ StatEpicurve <- ggplot2::ggproto("StatEpicurve", Stat,
       week_start <- 7
     } # US
 
-    data <- ggplot2::flip_data(data, params$flipped_aes)
+    data <- ggplot2::flip_data(data, flipped_aes)
     # Check for CoordFlip since it flips some thing and not others
     if (!flipped_aes) {
-      sel_scale <- scales$panel_scales_x[[1]]
+      sel_scale <- scales$x
     } else {
-      sel_scale <- scales$panel_scales_y[[1]]
+      sel_scale <- scales$y
     }
 
     # Check scale class to detect date or datetime
@@ -209,7 +210,7 @@ StatEpicurve <- ggplot2::ggproto("StatEpicurve", Stat,
     # Drop missing x
     complete <- stats::complete.cases(data$x)
     data <- data |> dplyr::filter(complete)
-    if (!all(complete) && !params$na.rm) {
+    if (!all(complete) && !na.rm) {
       cli::cli_warn(paste0(
         "Removed {sum(!complete)} row{?s} containing missing values (geom_epicurve)."
       ))
@@ -240,7 +241,7 @@ StatEpicurve <- ggplot2::ggproto("StatEpicurve", Stat,
 
     weight <- data$weight %||% rep(1, length(data$x))
     data <- data |> expand_counts(weight)
-
+browser()
     bars <- data |>
       dplyr::mutate(
         x = x_ll,
@@ -248,9 +249,9 @@ StatEpicurve <- ggplot2::ggproto("StatEpicurve", Stat,
         width = if (!is.na(date_resolution)) x_ul - x_ll else NULL,
         row_number = dplyr::row_number(data),
         count = 1,
-        flipped_aes = params$flipped_aes
+        flipped_aes = flipped_aes
       )
-    ggplot2::flip_data(bars, params$flipped_aes)
+    ggplot2::flip_data(bars, flipped_aes)
   },
   dropped_aes = "weight"
 )

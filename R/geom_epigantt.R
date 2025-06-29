@@ -14,8 +14,6 @@
 #' exposure types. Additional points or markers can show important events like symptom onset
 #' or test dates.
 #'
-#' `geom_epigantt()` will adjust the linewidth depending on the number of cases.
-#'
 #' @param stat A `ggplot2` stat. Defaults to `"identity"`.
 #' @param position A `ggplot2` position. Defaults to `"identity"`.
 #' @param mapping Set of aesthetic mappings. Must include:
@@ -23,13 +21,9 @@
 #'   * `xmin`: Start date/time of interval
 #'   * `xmax`: End date/time of interval
 #'   * Optional: `colour` or `fill` for different locations/categories
-#' @inheritParams ggplot2::geom_linerange
+#' @inheritParams geom_col_range
 #' @param ... Additional parameters:
-#'   * `linewidth`: Set width of bars directly, disables auto-scaling if set.
-#'   * `lw_scaling_factor`: Scaling factor for auto-width calculation.
-#'    The linewidth is calculated as lw_scaling_factor/number_of_rows (default: 90)
-#'   * `lw_min`: Minimum auto-scaled line width cutoff (default: 1)
-#'   * `lw_max`: Maximum auto-scaled line width cutoff (default: 8)
+#'   * `width`: Set width of bars.
 #' @return A `ggplot2` geom layer that can be added to a plot
 #' @seealso [theme_mod_legend_bottom()]
 #'
@@ -52,7 +46,7 @@
 #'
 #' # Create Epi Gantt chart showing ward stays and test dates
 #' ggplot(df_stays_long) +
-#'   geom_epigantt(aes(y = Patient, xmin = start_of_stay, xmax = end_of_stay, color = name)) +
+#'   geom_epigantt(aes(y = Patient, xmin = start_of_stay, xmax = end_of_stay, fill = name)) +
 #'   geom_point(aes(y = Patient, x = date, shape = "Date of pathogen detection"),
 #'     data = df_detections_long
 #'   ) +
@@ -83,26 +77,20 @@ geom_epigantt <- function(mapping = NULL, data = NULL,
 }
 
 #' @import ggplot2
-GeomEpigantt <- ggplot2::ggproto("GeomEpigantt", GeomLinerange,
+GeomEpigantt <- ggplot2::ggproto("GeomEpigantt", GeomBarRange,
   default_aes = ggplot2:::defaults(
-    # linewidth = from_theme(borderwidth)
     aes(
-      colour = "dodgerblue4",
-      # linewidth = 8, # Will be auto-adjusted based on the number of cases
-      linetype = "solid"
+      fill = "dodgerblue4",
+      colour = NA,
+      alpha = 1
     ),
-    GeomLinerange$default_aes
+    GeomBarRange$default_aes
   ),
-  extra_params = c(GeomLinerange$extra_params, "lw_min", "lw_max", "lw_scaling_factor"),
+  extra_params = c(GeomBarRange$extra_params),
   setup_data = function(data, params) {
-    data$flipped_aes <- params$flipped_aes
-
-    # TODO: warn if to many cases.
-    data$linewidth <- data$linewidth %||% params$linewidth %||% .calc_linewidth(
-      data, params$flipped_aes,
-      min = params$lw_min %||% 1, max = params$lw_max %||% 8,
-      scaling_factor = params$lw_scaling_factor %||% 90
-    )
+    # Call parent setup_data first to handle flipped aesthetics and bar positioning
+    data <- GeomBarRange$setup_data(data, params)
+    
     data
   },
 )

@@ -188,8 +188,10 @@ StatEpicurve <- ggplot2::ggproto("StatEpicurve", Stat,
         x_ul = ifelse(x_ul == x_ll, x_ul + 1, x_ul)
       )
 
+    # R CMD Check fix
+    between <- function(x, y_lower, y_upper, ..., bounds) x
     data <- data |>
-      left_join(binned_data, by = join_by(between(x, x_ll, x_ul, bounds = "[)"))) # see dplyr::join_by()
+      left_join(binned_data, by = join_by(between(x, x_ll, x_ul, bounds = '[)'))) # see dplyr::join_by()
 
     # Expand counts to create individual records for each case (for epicurve outlines)
     data$weight <- data$weight %||% rep(1, length(data$x))

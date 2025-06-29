@@ -177,77 +177,39 @@ StatEpicurve <- ggplot2::ggproto("StatEpicurve", Stat,
     params
   },
   compute_panel = function(self, data, scales, flipped_aes = FALSE,
-                          date_resolution = NA, week_start = 1, na.rm = FALSE) {
-    date_resolution <- date_resolution %||% NA
-    week_start <- week_start %||% 1
-    flipped_aes <- flipped_aes %||% any(data$flipped_aes) %||% FALSE
-
-    if (!is.na(date_resolution) & date_resolution == "isoweek") {
-      date_resolution <- "week"
-      week_start <- 1
-    } # ISO
-    if (!is.na(date_resolution) & date_resolution == "epiweek") {
-      date_resolution <- "week"
-      week_start <- 7
-    } # US
+                           date_resolution = NA, week_start = 1, na.rm = FALSE) {
+    # Use StatBinDate$compute_group to handle date binning and width calc
+    binned_data <- StatBinDate$compute_group(
+      data = data,
+      scales = scales,
+      flipped_aes = flipped_aes,
+      date_resolution = date_resolution,
+      week_start = week_start,
+      fill_gaps = FALSE
+    ) |>
+      dplyr::select(-count, -prop)
 
     data <- ggplot2::flip_data(data, flipped_aes)
-    # Check for CoordFlip since it flips some thing and not others
-    if (!flipped_aes) {
-      sel_scale <- scales$x
-    } else {
-      sel_scale <- scales$y
-    }
+    binned_data <- ggplot2::flip_data(binned_data, flipped_aes) |>
+      dplyr::mutate(
+        x_ll = x,
+        x = NULL,
+        x_ul = ifelse(x_ul == x_ll, x_ul + 1, x_ul)
+      )
 
-    # Check scale class to detect date or datetime
-    if (inherits(sel_scale, c("ScaleContinuousDate", "ScaleContinuousDatetime"))) {
-      trans <- sel_scale$trans # Use Transformation of the scale
-    } else {
-      trans <- scales::transform_date()
-      cli::cli_warn("{sel_scale$aesthetics[1]}-axis is not date or datetime. Assuming date scale.")
-    }
+    data <- data |>
+      left_join(binned_data, by = join_by(between(x, x_ll, x_ul, bounds = "[)"))) # see dplyr::join_by()
 
-    # Drop missing x
-    complete <- stats::complete.cases(data$x)
-    data <- data |> dplyr::filter(complete)
-    if (!all(complete) && !na.rm) {
-      cli::cli_warn(paste0(
-        "Removed {sum(!complete)} row{?s} containing missing values (geom_epicurve)."
-      ))
-    }
+    # Expand counts to create individual records for each case (for epicurve outlines)
+    data$weight <- data$weight %||% rep(1, length(data$x))
+    expanded_data <- data |> expand_counts(weight)
 
-    if (!is.na(date_resolution)) {
-      data$x <- trans$inverse(data$x) # Transform to date or datetime
-
-      data$x_ll <- as.numeric(lubridate::floor_date(data$x,
-        unit = date_resolution,
-        week_start = week_start
-      ))
-      # Use ceiling to be able to infer resolution in days
-      data$x_ul <- as.numeric(lubridate::ceiling_date(data$x,
-        unit = date_resolution,
-        week_start = week_start,
-        change_on_boundary = TRUE
-      ))
-    } else {
-      data$x_ll <- data$x
-      data$x_ul <- data$x
-    }
-
-    if (is.na(date_resolution) & inherits(sel_scale, "ScaleContinuousDatetime")) {
-      cli::cli_warn("It seems you provided a datetime format. Column used as specified.
-                          Please use date_resolution = 'day' to round to day (stat_epicurve).")
-    }
-
-    weight <- data$weight %||% rep(1, length(data$x))
-    data <- data |> expand_counts(weight)
-browser()
-    bars <- data |>
+    # Add row numbers and prepare final data structure
+    bars <- expanded_data |>
       dplyr::mutate(
         x = x_ll,
         x_ul = x_ul,
-        width = if (!is.na(date_resolution)) x_ul - x_ll else NULL,
-        row_number = dplyr::row_number(data),
+        row_number = dplyr::row_number(),
         count = 1,
         flipped_aes = flipped_aes
       )

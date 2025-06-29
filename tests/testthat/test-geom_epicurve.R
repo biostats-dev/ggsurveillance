@@ -9,8 +9,8 @@ test_that("geom_epicurve handles basic date inputs", {
   p <- ggplot(test_dates, aes(x = date, fill = cat)) +
     geom_vline_year() +
     geom_epicurve(date_resolution = "day") +
-    geom_epicurve_point(aes(shape = cat), vjust = 0.3) +
-    geom_epicurve_text(aes(label = cat), vjust = 0.8) +
+    geom_epicurve_point(aes(shape = cat), date_resolution = "day", vjust = 0.3) +
+    geom_epicurve_text(aes(label = cat), date_resolution = "day", vjust = 0.8) +
     stat_bin_date(aes(y = after_stat(count) * 1.05, label = after_stat(count)),
       date_resolution = "day", geom = "text"
     ) +
@@ -23,6 +23,12 @@ test_that("geom_epicurve handles basic date inputs", {
   expect_s3_class(p, "ggplot")
   expect_no_error(p)
   vdiffr::expect_doppelganger("1_geom_epicurve_basic_date", p)
+
+  p1 <- ggplot(test_dates, aes(x = date, fill = cat)) +
+    geom_epicurve()
+
+  expect_no_error(p1)
+  expect_warning(vdiffr::expect_doppelganger("1_geom_epicurve_basic_date_warn", p1))
 })
 
 test_that("geom_epicurve handles date_resolution = NA/NULL", {

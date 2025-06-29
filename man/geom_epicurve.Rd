@@ -160,10 +160,10 @@ A \code{ggplot2} geom layer that can be added to a plot
 \description{
 Creates a epicurve plot for visualizing epidemic case counts in outbreaks (epidemiological curves).
 An epicurve is a bar plot, where every case is outlined. \code{geom_epicurve} additionally provides
-date-based aggregation of cases (e.g. per week or month and many more) using \link{bin_dates}.
+date-based aggregation of cases (e.g. per week or month and many more) using \link{bin_by_date}.
 \itemize{
 \item For week aggregation both isoweek (World + ECDC) and epiweek (US CDC) are supported.
-\item \code{stat_bin_date} and its alias \code{stat_date_count} provide date based binning only. After binning the by date with \link{bin_dates}, these
+\item \code{stat_bin_date} and its alias \code{stat_date_count} provide date based binning only. After binning the by date with \link{bin_by_date}, these
 stats behave like \link[ggplot2:geom_bar]{ggplot2::stat_count}.
 \item \code{geom_epicurve_text} adds text labels to cases on epicurve plots.
 \item \code{geom_epicurve_point} adds points/shapes to cases on epicurve plots.

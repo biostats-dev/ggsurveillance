@@ -37,7 +37,7 @@
 #' Dropping week 53 from historical data is the most common approach. Otherwise historical data for week 53 would
 #' map to week 52 if the target season has no leap week, resulting in a doubling of the case counts.
 #'
-#' @inheritParams bin_dates
+#' @inheritParams bin_by_date
 #' 
 #' @return A data frame with standardized date columns:
 #'   * `year`: Calendar year from original date
@@ -154,7 +154,7 @@ align_and_bin_dates_seasonal <- function(
   date_resolution <- rlang::arg_match(date_resolution)
 
   x |>
-    bin_dates(
+    bin_by_date(
       dates_from = {{ dates_from }}, n = {{ n }}, population = {{ population }},
       date_resolution = date_resolution, fill_gaps = fill_gaps, .groups = .groups
     ) |>

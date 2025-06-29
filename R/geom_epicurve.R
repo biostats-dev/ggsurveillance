@@ -2,9 +2,9 @@
 #'
 #' Creates a epicurve plot for visualizing epidemic case counts in outbreaks (epidemiological curves).
 #' An epicurve is a bar plot, where every case is outlined. \code{geom_epicurve} additionally provides
-#' date-based aggregation of cases (e.g. per week or month and many more) using [bin_dates].
+#' date-based aggregation of cases (e.g. per week or month and many more) using [bin_by_date].
 #' - For week aggregation both isoweek (World + ECDC) and epiweek (US CDC) are supported.
-#' - `stat_bin_date` and its alias `stat_date_count` provide date based binning only. After binning the by date with [bin_dates], these
+#' - `stat_bin_date` and its alias `stat_date_count` provide date based binning only. After binning the by date with [bin_by_date], these
 #' stats behave like [ggplot2::stat_count].
 #' - `geom_epicurve_text` adds text labels to cases on epicurve plots.
 #' - `geom_epicurve_point` adds points/shapes to cases on epicurve plots.
@@ -38,7 +38,7 @@
 #'   * **size**: The font size.
 #'
 #' @inheritParams ggplot2::geom_bar
-#' @inheritParams bin_dates
+#' @inheritParams bin_by_date
 #' @details
 #' Epi Curves are a public health tool for outbreak investigation. For more details see the references.
 #'
@@ -287,7 +287,7 @@ StatBinDate <- ggplot2::ggproto("StatBinDate", Stat,
       org_tz <- lubridate::tz(data$x)
 
       data <- data |>
-        bin_dates(
+        bin_by_date(
           dates_from = x, n = weight, fill_gaps = fill_gaps,
           week_start = week_start, date_resolution = date_resolution
         )

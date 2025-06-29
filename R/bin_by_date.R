@@ -59,30 +59,30 @@
 #' )
 #'
 #' # Basic weekly binning
-#' bin_dates(outbreak_data, dates_from = onset_date)
+#' bin_by_date(outbreak_data, dates_from = onset_date)
 #'
 #' # Weekly binning with case weights
-#' bin_dates(outbreak_data, onset_date, n = cases)
+#' bin_by_date(outbreak_data, onset_date, n = cases)
 #'
 #' # Monthly binning
-#' bin_dates(outbreak_data, onset_date,
+#' bin_by_date(outbreak_data, onset_date,
 #'           date_resolution = "month")
 #'
 #' # ISO week binning (Monday start)
-#' bin_dates(outbreak_data, onset_date,
+#' bin_by_date(outbreak_data, onset_date,
 #'           date_resolution = "isoweek") |>
 #' mutate(date_formatted = strftime(onset_date, "%G-W%V")) # Add correct date labels
 #'
 #' # US CDC epiweek binning (Sunday start)
-#' bin_dates(outbreak_data, onset_date,
+#' bin_by_date(outbreak_data, onset_date,
 #'           date_resolution = "epiweek")
 #'
 #' # With population data for incidence calculation
 #' outbreak_data$population <- 10000
-#' bin_dates(outbreak_data, onset_date,
+#' bin_by_date(outbreak_data, onset_date,
 #'           n = cases,
 #'           population = population)
-bin_dates <- function(
+bin_by_date <- function(
     x, dates_from, n = 1, population = 1, fill_gaps = FALSE,
     date_resolution = "week", week_start = 1, .groups = "drop") {
   wt <- incidence <- NULL

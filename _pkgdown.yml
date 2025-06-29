@@ -35,7 +35,7 @@ reference:
 - title: "Date Binning and Seasonal Datr Alignment"
   desc: "Functions for binning cases by date intervalls and aligning and comparing data across seasons"
   contents:
-  - bin_dates
+  - bin_by_date
   - align_dates_seasonal
   - align_and_bin_dates_seasonal
   

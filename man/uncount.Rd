@@ -32,7 +32,7 @@ A \code{data.frame} with rows duplicated according to weights.
 by ggsurveillance. See \code{\link[tidyr:uncount]{tidyr::uncount()}} for more details.
 
 \code{uncount()} and its alias \code{expand_counts()} are complements of \code{\link[dplyr:count]{dplyr::count()}}: they take
-a data frame with a column of frequencies and duplicate each row according to
+a data.frame with a column of frequencies and duplicate each row according to
 those frequencies.
 }
 \examples{

@@ -73,7 +73,7 @@
 #'   ) +
 #'   scale_y_log10() +
 #'   theme_mod_disable_legend()
-#' @name geom_label_last_value/ stat_last_value
+#' @name geom_label_last_value, stat_last_value
 #' @rdname stat_last_value
 NULL
 
@@ -237,7 +237,7 @@ geom_text_last_value_repel <- function(mapping = NULL, data = NULL,
 #' @usage NULL
 #' @export
 
-# TODO: Custom Label function, Add x0 to docs
+# TODO: Add x0 to docs
 StatLastValue <- ggproto("StatLastValue", Stat,
   required_aes = c("x", "y"),
   extra_params = c("na.rm", "nudge_rel", "nudge_add", "expand_rel", "expand_add", "labeller"),

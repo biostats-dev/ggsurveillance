@@ -7,7 +7,7 @@
 #' the order of magnitude.
 #'
 #' @param decimal.mark Character used as decimal separator. If `NULL` (default),
-#'   The default (NULL) retrieves the setting from [[scales::number_options()]].
+#'   retrieves the setting from [[scales::number_options()]].
 #' @param digits Number of significant digits to show in the mantissa.
 #' @param scale Scaling factor multiplied to the input values. Default is `1`.
 #' @param prefix Character string to prepend to each label. Default is `""`.

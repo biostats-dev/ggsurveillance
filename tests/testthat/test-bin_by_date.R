@@ -244,6 +244,17 @@ test_that("bin_by_date fill_gaps parameter works", {
   zero_rows <- result_fill[result_fill2$n == 0, ]
   expect_identical(nrow(zero_rows), 2L)
   
+  # Check corner cases, isoyear has often 364 days
+  res1 <- data.frame(date = c(as_date("2001-01-01"), as_date("2025-11-05"))) |>
+    bin_by_date(dates_from = date, date_resolution = "isoyear", fill_gaps = TRUE)
+  
+  expect_identical(res1$date, 2001:2025*1.0)
+  
+  # Check corner cases, shorter months should not be skipped (February, April)
+  res2 <- data.frame(date = c(as_date("2023-01-31"), as_date("2023-06-05"))) |>
+    bin_by_date(dates_from = date, date_resolution = "month", fill_gaps = TRUE)
+  
+  expect_identical(month(res2$date), 1:6*1.0)
 })
 
 test_that("bin_by_date fill_gaps works with grouped data", {

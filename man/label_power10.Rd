@@ -16,7 +16,7 @@ label_power10(
 }
 \arguments{
 \item{decimal.mark}{Character used as decimal separator. If \code{NULL} (default),
-The default (NULL) retrieves the setting from [\code{\link[scales:number_options]{scales::number_options()}}].}
+retrieves the setting from [\code{\link[scales:number_options]{scales::number_options()}}].}
 
 \item{digits}{Number of significant digits to show in the mantissa.}
 

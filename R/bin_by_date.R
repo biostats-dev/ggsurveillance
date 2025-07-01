@@ -196,17 +196,19 @@ bin_by_date <- function(
   
   # Convert lubridate units to seq() compatible units - simple mapping
   seq_by <- dplyr::case_when(
-    grepl("sec", date_resolution) & inherits(date_vector, c("POSIXct", "POSIXt")) ~ "sec",
-    grepl("min", date_resolution) & inherits(date_vector, c("POSIXct", "POSIXt")) ~ "min",
-    grepl("hour", date_resolution) & inherits(date_vector, c("POSIXct", "POSIXt")) ~ "hour",
+    grepl("sec", date_resolution) & inherits(date_vector, c("POSIXt")) ~ "sec",
+    grepl("min", date_resolution) & inherits(date_vector, c("POSIXt")) ~ "min",
+    grepl("hour", date_resolution) & inherits(date_vector, c("POSIXt")) ~ "hour",
     grepl("day", date_resolution) ~ "day",
     grepl("week", date_resolution) ~ "week",
-    grepl("month", date_resolution) ~ "month",
+    # Use week since month can skip February (irregular intervals)
+    grepl("month", date_resolution) ~ "week",
     date_resolution == "bimonth" ~ "month",    # Map to base unit
     date_resolution == "quarter" ~ "month",    # Map to base unit
     date_resolution == "season" ~ "month",     # Map to base unit
     date_resolution == "halfyear" ~ "month",   # Map to base unit
-    grepl("year", date_resolution) ~ "year",
+    # Use month since epi/isoyear often has only 364 days (52*7)
+    grepl("year", date_resolution) ~ "month", 
     TRUE ~ "day"  # default
   )
   
@@ -218,7 +220,7 @@ bin_by_date <- function(
   # TODO: Is this needed?
   if (inherits(date_vector, "Date")) {
     full_sequence <- seq.Date(from = min_date, to = max_date, by = seq_by)
-  } else if (inherits(date_vector, c("POSIXct", "POSIXt"))) {
+  } else if (inherits(date_vector, c("POSIXt"))) {
     full_sequence <- seq.POSIXt(from = min_date, to = max_date, by = seq_by)
   } else {
     cli::cli_abort("Unsupported date type for gap filling.")

@@ -5,7 +5,7 @@
 #' by ggsurveillance. See [tidyr::uncount()] for more details.
 #'
 #' `uncount()` and its alias `expand_counts()` are complements of [dplyr::count()]: they take
-#' a data frame with a column of frequencies and duplicate each row according to
+#' a data.frame with a column of frequencies and duplicate each row according to
 #' those frequencies.
 #'
 #' @inheritParams tidyr::uncount

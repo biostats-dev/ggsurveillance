@@ -24,7 +24,8 @@
 #'   * `xmax`: End date/time of interval
 #'   * Optional: `colour` or `fill` for different locations/categories
 #' @inheritParams ggplot2::geom_linerange
-#' @param ... Additional parameters:
+#' @param ... Other arguments passed to [ggplot2::layer()].\cr
+#' The following parameters are specific to \code{geom_epigantt}:
 #'   * `linewidth`: Set width of bars directly, disables auto-scaling if set.
 #'   * `lw_scaling_factor`: Scaling factor for auto-width calculation.
 #'    The linewidth is calculated as lw_scaling_factor/number_of_rows (default: 90)

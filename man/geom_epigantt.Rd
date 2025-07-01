@@ -43,7 +43,8 @@ from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 
 \item{position}{A \code{ggplot2} position. Defaults to \code{"identity"}.}
 
-\item{...}{Additional parameters:
+\item{...}{Other arguments passed to \code{\link[ggplot2:layer]{ggplot2::layer()}}.\cr
+The following parameters are specific to \code{geom_epigantt}:
 \itemize{
 \item \code{linewidth}: Set width of bars directly, disables auto-scaling if set.
 \item \code{lw_scaling_factor}: Scaling factor for auto-width calculation.

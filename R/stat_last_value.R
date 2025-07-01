@@ -45,7 +45,7 @@
 #' The following calculated stats can be used further in aes:
 #' * `after_stat(x0)`: the highest x value
 #' * `after_stat(y)`: the y value of the observation with the highest x value.
-#' * `after_stat(label_formatted)`: the formatted y value using the `labbeller`.
+#' * `after_stat(label_formatted)`: the formatted y value using the `labeller`.
 #'
 #' @inheritParams ggplot2::geom_label
 #' @inheritParams ggrepel::geom_label_repel

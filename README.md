@@ -10,16 +10,19 @@
 
 ## Key Features
 
+### 📊 Epidemic Curves
 -   `geom_epicurve()`: A ggplot geom for plotting epicurves.
     -   `stat_bin_date()`: Date interval (week, month etc.) based binning of case numbers with perfect alignment with e.g. reporting week.
     -   `geom_epicurve_text()` and `geom_epicurve_point()`: New geoms to easily add text annotations or points to cases in epidemic curves.
     -   `geom_vline_year()`: Automatically detects the turn of the year(s) from the date or datetime axis and draws a vertical line.
     -   `scale_y_cases_5er()`: For better (case) count axis breaks and positioning.
 
+### 📅 Date & Time Transformations
 -   `bin_by_date()`: A `tidyverse`-compatible function for flexible date-based aggregation (binning). This function was previously internal.
 
 -   `align_dates_seasonal()`: Align surveillance data for seasonal plots (e.g. flu season).
 
+### 📈 Specialized Epi Visualizations
 -   `geom_bar_diverging()`: A geom for diverging bar charts, which can be used to plot population pyramids, likert scales (sentiment analyses) and other data with opposing categories, like vaccination status or imported vs autochthonous (local) infections.
     -   `stat_diverging()` for easy labeling of these charts with category counts/percentages or total counts/percentages
     -   `scale_x_continuous_diverging()` for symmetric diverging scales
@@ -28,6 +31,7 @@
 -   `geom_epigantt()`: A geom for epigantt plots. Helpful to visualize overlapping time intervals for contact tracing (e.g. hospital outbreaks).
     -   including `scale_y_discrete_reverse()` which reverses the order of the categorical scale.
 
+### 🎨 ggplot2 Extensions & Theme Modifications
 -   More `ggplot2` add-ons: 
     -   `guide_axis_nested_date()`: An axis guide for creating nested date labels for hierarchical time periods (e.g., year > month > day).
     -   `geom_label_last_value()`: A geom for labeling the last value of a time series (e.g. `geom_line()`). 
@@ -37,8 +41,9 @@
 
     -   `theme_mod_legend_position()` etc. to adjust the legend positions.
     -   `theme_mod_rotate_x_axis_labels()` etc. for rotating x axis labels.
-    -   `theme_mod_remove_minor_grid()` etc. to remove the minor grid lines (x, y or both) or all grind lines.
+    -   `theme_mod_remove_minor_grid()` etc. to remove the minor grid lines (x, y or both) or all grid lines.
 
+### 🔧 Other Utilities
 -   `create_agegroups()`: Create reproducible age groups with highly customizable labels.
 
 -   Additional utilities: `geometric_mean()`, `expand_counts()`, and more

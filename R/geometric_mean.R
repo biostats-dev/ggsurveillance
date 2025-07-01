@@ -6,12 +6,13 @@
 #' or values below a user-specified threshold) before computation.
 #'
 #' @param x A numeric or complex vector of values.
-#' @param na.rm Logical. If \code{FALSE} (default), the presence of zero or
-#'   negative values triggers a warning and returns \code{NA}. If \code{TRUE},
-#'   such values (and any \code{NA}) are removed before computing the geometric mean.
-#' @param replace_value Numeric or \code{NULL}. The value used for replacement,
-#'   depending on \code{replace} (e.g., a detection limit (LOD) or quantification limit (LOQ)).
-#'   If \code{NULL}, no replacement is performed. For recommendations how to use, see details.
+#' @param na.rm Logical. If `FALSE` (default), the presence of zero or
+#'   negative values triggers a warning and returns `NA`. If `TRUE`,
+#'   such values (and any `NA`) are removed before computing the geometric mean.
+#' @param replace_value Numeric or `NULL`. The value used for replacement,
+#'   depending on `replace` (e.g., a detection limit (LOD) or quantification limit (LOQ)).
+#'   If `NULL`, no replacement is performed. For \code{replace = "all"}, this value is also used as the threshold.
+#'   For recommendations how to use, see details.
 #' @param replace Character string indicating which values to replace:
 #'   \describe{
 #'     \item{\code{"all"}}{Replaces all values less than \code{replace_value}

@@ -1,4 +1,4 @@
-#' Bin dates into time periods and calculate incidence
+#' Aggregate data by time periods
 #'
 #' Aggregates data by specified time periods (e.g., weeks, months) and calculates (weighted)
 #' counts. Incidence rates are also calculated using the provided population numbers.\cr\cr
@@ -11,7 +11,7 @@
 #'   * ISO dates `"2024-03-09"`
 #'   * Month `"2024-03"`
 #'   * Week `"2024-W09"` or `"2024-W09-1"`
-#' @param dates_from Column name containing the dates to align. Used when x is a data.frame.
+#' @param dates_from Column name containing the dates to bin. Used when x is a data.frame.
 #' @param n Numeric column with case counts (or weights). Supports quoted and unquoted column names.
 #' @param population A number or a numeric column with the population size. Used to calculate the incidence.
 #' @param fill_gaps Logical; If `TRUE`, gaps in the time series will be filled with 0 cases.
@@ -31,7 +31,7 @@
 #' @param .groups See [dplyr::summarise()].
 #'
 #' @return A data frame with the following columns:
-#'   - The date column (name from `dates_from`): Date values binned to the specified resolution
+#'   - A date column with the same name as `dates_from`, where values are binned to the start of the specified time period.
 #'   - `n`: Count of observations (sum of weights) for each time period
 #'   - `incidence`: Incidence rate calculated as `n / population` for each time period
 #'   - Any existing grouping variables are preserved

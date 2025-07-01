@@ -36,13 +36,13 @@ Supported date formats are \code{date} and \code{datetime} and also commonly use
 \item Week \code{"2024-W09"} or \code{"2024-W09-1"}
 }}
 
-\item{dates_from}{Column name containing the dates to align. Used when x is a data.frame.}
+\item{dates_from}{Column name containing the dates to align and bin. Used when x is a data.frame.}
 
 \item{date_resolution}{Character string specifying the temporal resolution.
 One of:
 \itemize{
-\item \code{"week"} or \code{"isoweek"} - Calendar weeks (ISO 8601), reporting weeks as used by the ECDC.
-\item \code{"epiweek"} - Epidemiological weeks (US CDC), i.e. ISO weeks with Sunday as week start.
+\item \code{"week"} or \code{"isoweek"} - Calendar weeks (ISO 8601), epidemiological reporting weeks as used by the ECDC.
+\item \code{"epiweek"} - Epidemiological weeks as defined by the US CDC (weeks start on Sunday).
 \item \code{"month"} - Calendar months
 \item \code{"day"} - Daily resolution
 }}
@@ -59,7 +59,7 @@ If start is set to "1" the alignment is done for yearly comparison and the shift
 is the start of the most recent season in the data. This way the most recent dates stay unchanged.}
 
 \item{drop_leap_week}{If \code{TRUE} and date_resolution is \code{week}, \code{isoweek} or \code{epiweek}, leap weeks (week 53)
-are dropped if they are not in the most recent season. Disable if data should be returned.
+are dropped if they are not in the most recent season. Set to \code{FALSE} to retain leap weeks from all seasons.
 Dropping week 53 from historical data is the most common approach. Otherwise historical data for week 53 would
 map to week 52 if the target season has no leap week, resulting in a doubling of the case counts.}
 
@@ -90,10 +90,11 @@ Binning also creates the columns:
 }
 }
 \description{
-Standardizes dates from multiple years to enable comparison of epidemic curves
+\code{align_dates_seasonal()} standardizes dates from multiple years to enable comparison of epidemic curves
 and visualization of seasonal patterns in infectious disease surveillance data.
 Commonly used for creating periodicity plots of respiratory diseases like
-influenza, RSV, or COVID-19.
+influenza, RSV, or COVID-19.\cr\cr
+\code{align_and_bin_dates_seasonal()} is a convenience wrapper that first aligns the dates and then bins the data to calculate counts and incidence.
 }
 \details{
 This function helps create standardized epidemic curves by aligning surveillance
@@ -110,7 +111,7 @@ monthly) with customizable season start points to match different disease
 patterns or surveillance protocols.
 }
 \examples{
-# Sesonal Visualization of Germany Influenza Surveillance Data
+# Seasonal Visualization of Germany Influenza Surveillance Data
 library(ggplot2)
 
 influenza_germany |>

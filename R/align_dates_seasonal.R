@@ -1,10 +1,11 @@
 #' Align dates for seasonal comparison
 #'
 #' @description
-#' Standardizes dates from multiple years to enable comparison of epidemic curves
+#' `align_dates_seasonal()` standardizes dates from multiple years to enable comparison of epidemic curves
 #' and visualization of seasonal patterns in infectious disease surveillance data.
 #' Commonly used for creating periodicity plots of respiratory diseases like
-#' influenza, RSV, or COVID-19.
+#' influenza, RSV, or COVID-19.\cr\cr
+#' `align_and_bin_dates_seasonal()` is a convenience wrapper that first aligns the dates and then bins the data to calculate counts and incidence.
 #'
 #' @details
 #' This function helps create standardized epidemic curves by aligning surveillance
@@ -20,10 +21,11 @@
 #'
 #' @param date_resolution Character string specifying the temporal resolution.
 #'   One of:
-#'   * `"week"` or `"isoweek"` - Calendar weeks (ISO 8601), reporting weeks as used by the ECDC.
-#'   * `"epiweek"` - Epidemiological weeks (US CDC), i.e. ISO weeks with Sunday as week start.
+#'   * `"week"` or `"isoweek"` - Calendar weeks (ISO 8601), epidemiological reporting weeks as used by the ECDC.
+#'   * `"epiweek"` - Epidemiological weeks as defined by the US CDC (weeks start on Sunday).
 #'   * `"month"` - Calendar months
 #'   * `"day"` - Daily resolution
+#' @param dates_from Column name containing the dates to align and bin. Used when x is a data.frame.
 #' @param start Numeric value indicating epidemic season start, i.e. the start and end of the new year interval:
 #'   * For `week/epiweek`: week number (default: 28, approximately July)
 #'   * For `month`: month number (default: 7 for July)
@@ -33,7 +35,7 @@
 #'  is the start of the most recent season in the data. This way the most recent dates stay unchanged.
 #'
 #' @param drop_leap_week If `TRUE` and date_resolution is `week`, `isoweek` or `epiweek`, leap weeks (week 53)
-#' are dropped if they are not in the most recent season. Disable if data should be returned.
+#' are dropped if they are not in the most recent season. Set to `FALSE` to retain leap weeks from all seasons.
 #' Dropping week 53 from historical data is the most common approach. Otherwise historical data for week 53 would
 #' map to week 52 if the target season has no leap week, resulting in a doubling of the case counts.
 #'
@@ -51,7 +53,7 @@
 #'   * `incidence`: Incidence calculated using n/population
 #'
 #' @examples
-#' # Sesonal Visualization of Germany Influenza Surveillance Data
+#' # Seasonal Visualization of Germany Influenza Surveillance Data
 #' library(ggplot2)
 #'
 #' influenza_germany |>

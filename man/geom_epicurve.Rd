@@ -85,26 +85,26 @@ geom_epicurve_point(
 \item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2]{aes}}. Commonly used mappings:
 \itemize{
 \item \strong{x or y}: date or datetime. Numeric is technically supported.
-\item \strong{fill}: for colouring groups
-\item \strong{weight}: if data is already aggregated (e.g. case counts)
+\item \strong{fill}: for colouring groups.
+\item \strong{weight}: if data is already aggregated (e.g., case counts).
 }}
 
 \item{data}{The data frame containing the variables for the plot}
 
-\item{stat}{either "\code{epicurve}" for outlines around cases or "\code{bin_date}" for outlines around (fill) groups.
-For large numbers of cases please use "\code{bin_date}" to reduce the number of drawn rectangles.}
+\item{stat}{For the geoms, use "\code{epicurve}" (default) to outline individual cases, or "\code{bin_date}" to aggregate data by group.
+For large datasets, "\code{bin_date}" is recommended for better performance by drawing less rectangles.}
 
 \item{position}{Position adjustment. Currently supports "\code{stack}" for \code{geom_epicurve()}.}
 
-\item{date_resolution}{Character string specifying the time unit for date aggregation.
-Possible values include: \code{"hour"}, \code{"day"}, \code{"week"}, \code{"month"}, \code{"bimonth"}, \code{"season"},
+\item{date_resolution}{Character string specifying the time unit for date aggregation. If \code{NULL} (default),
+no date binning is performed. Possible values include: \code{"hour"}, \code{"day"}, \code{"week"}, \code{"month"}, \code{"bimonth"}, \code{"season"},
 \code{"quarter"}, \code{"halfyear"}, \code{"year"}. Special values:
 \itemize{
 \item \code{"isoweek"}: ISO week standard (week starts Monday, \code{week_start = 1})
 \item \code{"epiweek"}: US CDC epiweek standard (week starts Sunday, \code{week_start = 7})
 \item \code{"isoyear"}: ISO year (corresponding year of the ISO week, differs from year by 1-3 days)
 \item \code{"epiyear"}: Epidemiological year (corresponding year of the epiweek, differs from year by 1-3 days)
-Defaults to \code{"week"}.
+Defaults to \code{NULL}, i.e. no binning.
 }}
 
 \item{week_start}{Integer specifying the start of the week (1 = Monday, 7 = Sunday).
@@ -112,14 +112,14 @@ Only used when \code{date_resolution} involves weeks. Defaults to 1 (Monday).
 Overridden by \code{"isoweek"} (1) and \code{"epiweek"} (7) settings.}
 
 \item{width}{Numeric value specifying the width of the bars. If \code{NULL}, calculated
-based on resolution and relative.width}
+based on \code{date_resolution} and \code{relative.width}.}
 
 \item{relative.width}{Numeric value between 0 and 1 adjusting the relative width
 of bars. Defaults to 1}
 
 \item{...}{Other arguments passed to \code{\link[ggplot2]{layer}}. For example:
 \itemize{
-\item \strong{colour}: Colour of the outlines around cases. Disable with colour = NA. Defaults to "white".
+\item \strong{colour}: Colour of the outlines around cases. Disable with \code{colour = NA}. Defaults to \code{"white"}.
 \item \strong{linewidth}:  Width of the case outlines.
 }
 
@@ -186,7 +186,7 @@ ggplot(plot_data_epicurve_imp, aes(x = date, weight = 2)) +
   geom_epicurve(date_resolution = "week") +
   labs(title = "Epicurve Example") +
   scale_y_cases_5er() +
-  scale_x_date(date_breaks = "4 weeks", date_labels = "W\%V'\%g") + # Correct ISOWeek labels week'year
+  scale_x_date(date_breaks = "4 weeks", date_labels = "W\%V'\%g") + # Correct ISOWeek labels for week-year
   coord_equal(ratio = 7) + # Use coord_equal for square boxes. 'ratio' are the days per week.
   theme_bw()
 

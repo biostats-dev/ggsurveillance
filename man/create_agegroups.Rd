@@ -24,24 +24,28 @@ create_agegroups(
 \item{age_breaks}{Numeric vector of break points for age groups. \cr
 Default: \code{c(5, 10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 90)}}
 
-\item{breaks_as_lower_bound}{Logical; if \code{TRUE} (default), breaks are treated as lower bounds of the intervals.
-If \code{FALSE}, as upper bounds.}
+\item{breaks_as_lower_bound}{Logical; if \code{TRUE} (default), breaks define the the lower bounds of the intervals (e.g., a break at 5 starts the '5-9' group).
+If \code{FALSE}, breaks define the upper bound (e.g., a break at 5 ends the '0-5' group).}
 
-\item{first_group_format}{Character string template for the first age group. Uses glue syntax. \cr
-Default: \code{"0-{x}"}, Other common styles: \code{"<={x}", "<{x+1}"}}
+\item{first_group_format}{Character string template for the first age group. Uses \link[glue:glue]{glue::glue} syntax. \cr
+The variable \code{x} represents the upper bound of the first interval.\cr
+Default: \code{"0-{x}"}. Other common styles: \code{"<={x}", "<{x+1}"}}
 
-\item{interval_format}{Character string template for intermediate age groups. Uses glue syntax.\cr
-Default: \code{"{x}-{y}"}, Other common styles: \code{"{x} to {y}"}}
+\item{interval_format}{Character string template for intermediate age groups. Uses \link[glue:glue]{glue::glue} syntax.\cr
+The variables \code{x} and \code{y} represent the lower and upper bounds of the interval, respectively.\cr
+Default: \code{"{x}-{y}"}. Other common styles: \code{"{x} to {y}"}}
 
-\item{last_group_format}{Character string template for the last age group. Uses glue syntax. \cr
-Default: \code{"{x}+"}, Other common styles: \code{">={x}",">{x-1}"}}
+\item{last_group_format}{Character string template for the last age group. Uses \link[glue:glue]{glue::glue} syntax. \cr
+The variable \code{x} represents the lower bound of the last interval.\cr
+Default: \code{"{x}+"}. Other common styles: \code{">={x}",">{x-1}"}}
 
 \item{pad_numbers}{Logical or numeric; if numeric, pad numbers up to the specified length (Tip: use \code{2}).
 Not compatible with calculations within glue formats. Default: \code{FALSE}}
 
 \item{pad_with}{Character to use for padding numbers. Default: \code{"0"}}
 
-\item{collapse_single_year_groups}{Logical; if \code{TRUE}, groups spanning single years are collapsed. Default: \code{FALSE}}
+\item{collapse_single_year_groups}{Logical; if \code{TRUE}, groups spanning a single year (e.g., from \code{age_breaks = c(1, 2)})
+are formatted as a single number (e.g., "1") instead of a range (e.g., "1-1"). Default: \code{FALSE}}
 
 \item{na_label}{Label for \code{NA} values. If \code{NA}, keeps default \code{NA} handling. Default: \code{NA}}
 

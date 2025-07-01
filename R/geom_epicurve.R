@@ -11,15 +11,23 @@
 #'
 #' @param mapping Set of aesthetic mappings created by \code{\link[ggplot2]{aes}}. Commonly used mappings:
 #'   * **x or y**: date or datetime. Numeric is technically supported.
-#'   * **fill**: for colouring groups
-#'   * **weight**: if data is already aggregated (e.g. case counts)
+#'   * **fill**: for colouring groups.
+#'   * **weight**: if data is already aggregated (e.g., case counts).
 #' @param data The data frame containing the variables for the plot
-#' @param stat either "`epicurve`" for outlines around cases or "`bin_date`" for outlines around (fill) groups.
-#' For large numbers of cases please use "`bin_date`" to reduce the number of drawn rectangles.
+#' @param stat For the geoms, use "`epicurve`" (default) to outline individual cases, or "`bin_date`" to aggregate data by group.
+#' For large datasets, "`bin_date`" is recommended for better performance by drawing less rectangles.
+#' @param date_resolution Character string specifying the time unit for date aggregation. If \code{NULL} (default),
+#' no date binning is performed. Possible values include: `"hour"`, `"day"`, `"week"`, `"month"`, `"bimonth"`, `"season"`,
+#'   `"quarter"`, `"halfyear"`, `"year"`. Special values:
+#'   - `"isoweek"`: ISO week standard (week starts Monday, `week_start = 1`)
+#'   - `"epiweek"`: US CDC epiweek standard (week starts Sunday, `week_start = 7`)
+#'   - `"isoyear"`: ISO year (corresponding year of the ISO week, differs from year by 1-3 days)
+#'   - `"epiyear"`: Epidemiological year (corresponding year of the epiweek, differs from year by 1-3 days)
+#'   Defaults to `NULL`, i.e. no binning.
 #' @param position Position adjustment. Currently supports "`stack`" for `geom_epicurve()`.
 #' @param fill_gaps Logical; If `TRUE`, gaps in the time series will be filled with a count of 0. Often needed for line charts.
 #' @param width Numeric value specifying the width of the bars. If \code{NULL}, calculated
-#'        based on resolution and relative.width
+#'        based on `date_resolution` and `relative.width`.
 #' @param relative.width Numeric value between 0 and 1 adjusting the relative width
 #'        of bars. Defaults to 1
 #' @param vjust Vertical justification of the text or shape. Value between 0 and 1.
@@ -29,7 +37,7 @@
 #'   When using a `stat_*()` function to construct a layer, the `geom` argument
 #'   can be used to override the default coupling between stats and geoms.
 #' @param ... Other arguments passed to \code{\link[ggplot2]{layer}}. For example:
-#'   * **colour**: Colour of the outlines around cases. Disable with colour = NA. Defaults to "white".
+#'   * **colour**: Colour of the outlines around cases. Disable with `colour = NA`. Defaults to `"white"`.
 #'   * **linewidth**:  Width of the case outlines.
 #'
 #' For `geom_epicurve_text()` additional \code{\link[ggplot2]{geom_text}} arguments are supported:
@@ -67,7 +75,7 @@
 #'   geom_epicurve(date_resolution = "week") +
 #'   labs(title = "Epicurve Example") +
 #'   scale_y_cases_5er() +
-#'   scale_x_date(date_breaks = "4 weeks", date_labels = "W%V'%g") + # Correct ISOWeek labels week'year
+#'   scale_x_date(date_breaks = "4 weeks", date_labels = "W%V'%g") + # Correct ISOWeek labels for week-year
 #'   coord_equal(ratio = 7) + # Use coord_equal for square boxes. 'ratio' are the days per week.
 #'   theme_bw()
 #'

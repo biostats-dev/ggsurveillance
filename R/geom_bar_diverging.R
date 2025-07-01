@@ -23,11 +23,11 @@
 #'
 #' @param mapping Set of aesthetic mappings created by [ggplot2::aes()]. See the section Aesthetics below for more details.
 #' @param data The data to be displayed in this layer.
-#' @param proportion Logical. If `TRUE`, each stacked bar are normalized to 100%.
+#' @param proportion Logical. If `TRUE`, each stacked bar is normalized to 100%.
 #' Useful to plot or calculate the percentages of each category within each bar.
 #' @param neutral_cat How to handle the middle category for a odd number of factor levels.
 #'  * `"odd"`: If the number of factor levels is odd, the middle category is treated as neutral.
-#'  * `"never"`: For odd factor levels, the middle categories is treated as positive.
+#'  * `"never"`: For odd factor levels, the middle category is treated as positive.
 #'  * `"NA"`: observations with `NA` as category will be shown as the neutral category.
 #'  By default the NA category will be in the middle (even number of levels) or
 #'  the first category after the middle (odd number of levels).
@@ -35,20 +35,20 @@
 #'  By default this will be middle (odd number of levels) or
 #'  the first category after the middle (even number of levels).
 #' @param break_pos Only used for `neutral_cat = c("never", "NA", "force")`.
-#' Either a integer position or the name of a factor level. Depending on `neutral_cat`:
-#' * `"never"`: The factor level at break_pos will be the first category in the positive direction.
-#'  * `"NA"`: `break_pos` controls where the neutral NA category will be inserted.
-#'  `NA` will always be inserted before the before the specified factor level (therefore taking its position),
-#'  i.e. 3 means `NA` will be the 3rd category.
-#'  * `"force"`: `break_pos` forces the specified factor level to be neutral.
+#' Can either be a integer position or the name of a factor level. Depending on `neutral_cat`:
+#'  * `"never"`: The break_pos factor level will be the first category in the positive direction.
+#'  * `"NA"`: The neutral NA category will be inserted at the position specified by `break_pos`.
+#'  For example, if `break_pos = 3`, the `NA` category will become the 3rd level, and the original 3rd
+#'  level will be shifted to the 4th.
+#'  * `"force"`: `break_pos` determines the neutral category.
 #' @param geom `stat_diverging()`: The geometric object to use to display the data, e.g. `"text"` or `"label"`.
-#' @param stacked Logical. If `TRUE`, categories are stacked.
+#' @param stacked Logical. If `TRUE`, categories are stacked. Used instead of `position = "stack"` for specialized stacking logic.
 #' @param totals_by_direction Logical. If `TRUE`, totals are calculated by direction.
 #' I.e. the total for the positive, negative and, if existent, neutral category.
 #' @param nudge_label_outward Numeric. Relative value to nudge labels outward from `0`. Try `0.05`.
 #' Negative values nudge inward.
 #' @param ... Other arguments passed on to \code{\link[ggplot2]{layer}}.
-#' @param position Position adjustment.
+#' @param position Position adjustment. For the geoms, categories will be stacked by default. Don't use `position = "stack"`.
 #' @inheritParams ggplot2::geom_bar
 #'
 #' @return A `ggplot2` geom layer that can be added to a plot.

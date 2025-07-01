@@ -20,7 +20,7 @@ hierarchical components. Default is \code{"[^[:alnum:]]+"} which splits on
 non-alphanumeric characters.}
 
 \item{regular_key}{Default is \code{"auto"}, which generates the nested axis based on the date labels and the separator above.
-This option can be used to provide you own specification for the nested key. See \code{\link[legendry:key_standard]{legendry::key_standard()}}}
+This option can be used to provide your own specification for the nested key. See \code{\link[legendry:key_standard]{legendry::key_standard()}}}
 
 \item{type}{The visual type of nested axis guide to create. Options include:
 \itemize{
@@ -29,7 +29,7 @@ This option can be used to provide you own specification for the nested key. See
 \item \code{"box"}: Creates box-style nested labels
 }}
 
-\item{mode}{Processing mode for the guide. Default is \code{"simple"}.}
+\item{mode}{Processing mode for the guide. Default is \code{"simple"}. Currently, this is the only supported mode.}
 
 \item{pad_date}{Numeric value controlling the padding around date levels,
 i.e. extending the length of the bracket or box or for correctly positioning the fences.

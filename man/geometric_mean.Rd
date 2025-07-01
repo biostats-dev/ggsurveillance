@@ -21,7 +21,8 @@ such values (and any \code{NA}) are removed before computing the geometric mean.
 
 \item{replace_value}{Numeric or \code{NULL}. The value used for replacement,
 depending on \code{replace} (e.g., a detection limit (LOD) or quantification limit (LOQ)).
-If \code{NULL}, no replacement is performed. For recommendations how to use, see details.}
+If \code{NULL}, no replacement is performed. For \code{replace = "all"}, this value is also used as the threshold.
+For recommendations how to use, see details.}
 
 \item{replace}{Character string indicating which values to replace:
 \describe{

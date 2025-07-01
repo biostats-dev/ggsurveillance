@@ -2,7 +2,7 @@
 % Please edit documentation in R/bin_by_date.R
 \name{bin_by_date}
 \alias{bin_by_date}
-\title{Bin dates into time periods and calculate incidence}
+\title{Aggregate data by time periods}
 \usage{
 bin_by_date(
   x,
@@ -24,7 +24,7 @@ Supported date formats are \code{date} and \code{datetime} and also commonly use
 \item Week \code{"2024-W09"} or \code{"2024-W09-1"}
 }}
 
-\item{dates_from}{Column name containing the dates to align. Used when x is a data.frame.}
+\item{dates_from}{Column name containing the dates to bin. Used when x is a data.frame.}
 
 \item{n}{Numeric column with case counts (or weights). Supports quoted and unquoted column names.}
 
@@ -54,7 +54,7 @@ Overridden by \code{"isoweek"} (1) and \code{"epiweek"} (7) settings.}
 \value{
 A data frame with the following columns:
 \itemize{
-\item The date column (name from \code{dates_from}): Date values binned to the specified resolution
+\item A date column with the same name as \code{dates_from}, where values are binned to the start of the specified time period.
 \item \code{n}: Count of observations (sum of weights) for each time period
 \item \code{incidence}: Incidence rate calculated as \code{n / population} for each time period
 \item Any existing grouping variables are preserved
@@ -97,20 +97,24 @@ bin_by_date(outbreak_data, onset_date, n = cases)
 
 # Monthly binning
 bin_by_date(outbreak_data, onset_date,
-          date_resolution = "month")
+  date_resolution = "month"
+)
 
 # ISO week binning (Monday start)
 bin_by_date(outbreak_data, onset_date,
-          date_resolution = "isoweek") |>
-mutate(date_formatted = strftime(onset_date, "\%G-W\%V")) # Add correct date labels
+  date_resolution = "isoweek"
+) |>
+  mutate(date_formatted = strftime(onset_date, "\%G-W\%V")) # Add correct date labels
 
 # US CDC epiweek binning (Sunday start)
 bin_by_date(outbreak_data, onset_date,
-          date_resolution = "epiweek")
+  date_resolution = "epiweek"
+)
 
 # With population data for incidence calculation
 outbreak_data$population <- 10000
 bin_by_date(outbreak_data, onset_date,
-          n = cases,
-          population = population)
+  n = cases,
+  population = population
+)
 }

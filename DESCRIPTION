@@ -4,8 +4,8 @@ Version: 0.4.0.9000
 Authors@R: 
     person("Alexander", "Bartel", , "alexander.bartel@fu-berlin.de", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-1280-6138"))
-Description: Create epicurves, epigantt or diverging bar charts in
-    'ggplot2'. Prepare data for visualisation or other reporting for
+Description: Create epicurves, epigantt charts, and diverging bar charts
+    using 'ggplot2'. Prepare data for visualisation or other reporting for
     infectious disease surveillance and outbreak investigation (time
     series data).  Includes tidy functions to solve date based
     transformations for common reporting tasks, like (A) seasonal date

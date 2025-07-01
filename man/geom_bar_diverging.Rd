@@ -54,15 +54,15 @@ stat_diverging(
 
 \item{data}{The data to be displayed in this layer.}
 
-\item{position}{Position adjustment.}
+\item{position}{Position adjustment. For the geoms, categories will be stacked by default. Don't use \code{position = "stack"}.}
 
-\item{proportion}{Logical. If \code{TRUE}, each stacked bar are normalized to 100\%.
+\item{proportion}{Logical. If \code{TRUE}, each stacked bar is normalized to 100\%.
 Useful to plot or calculate the percentages of each category within each bar.}
 
 \item{neutral_cat}{How to handle the middle category for a odd number of factor levels.
 \itemize{
 \item \code{"odd"}: If the number of factor levels is odd, the middle category is treated as neutral.
-\item \code{"never"}: For odd factor levels, the middle categories is treated as positive.
+\item \code{"never"}: For odd factor levels, the middle category is treated as positive.
 \item \code{"NA"}: observations with \code{NA} as category will be shown as the neutral category.
 By default the NA category will be in the middle (even number of levels) or
 the first category after the middle (odd number of levels).
@@ -72,13 +72,13 @@ the first category after the middle (even number of levels).
 }}
 
 \item{break_pos}{Only used for \code{neutral_cat = c("never", "NA", "force")}.
-Either a integer position or the name of a factor level. Depending on \code{neutral_cat}:
+Can either be a integer position or the name of a factor level. Depending on \code{neutral_cat}:
 \itemize{
-\item \code{"never"}: The factor level at break_pos will be the first category in the positive direction.
-\item \code{"NA"}: \code{break_pos} controls where the neutral NA category will be inserted.
-\code{NA} will always be inserted before the before the specified factor level (therefore taking its position),
-i.e. 3 means \code{NA} will be the 3rd category.
-\item \code{"force"}: \code{break_pos} forces the specified factor level to be neutral.
+\item \code{"never"}: The break_pos factor level will be the first category in the positive direction.
+\item \code{"NA"}: The neutral NA category will be inserted at the position specified by \code{break_pos}.
+For example, if \code{break_pos = 3}, the \code{NA} category will become the 3rd level, and the original 3rd
+level will be shifted to the 4th.
+\item \code{"force"}: \code{break_pos} determines the neutral category.
 }}
 
 \item{...}{Other arguments passed on to \code{\link[ggplot2]{layer}}.}
@@ -99,7 +99,7 @@ the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 
 \item{geom}{\code{stat_diverging()}: The geometric object to use to display the data, e.g. \code{"text"} or \code{"label"}.}
 
-\item{stacked}{Logical. If \code{TRUE}, categories are stacked.}
+\item{stacked}{Logical. If \code{TRUE}, categories are stacked. Used instead of \code{position = "stack"} for specialized stacking logic.}
 
 \item{totals_by_direction}{Logical. If \code{TRUE}, totals are calculated by direction.
 I.e. the total for the positive, negative and, if existent, neutral category.}

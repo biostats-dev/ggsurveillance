@@ -31,8 +31,7 @@ Supported date formats are \code{date} and \code{datetime} and also commonly use
 \item{population}{A number or a numeric column with the population size. Used to calculate the incidence.}
 
 \item{fill_gaps}{Logical; If \code{TRUE}, gaps in the time series will be filled with 0 cases.
-Requires the \code{tsibble} package. Useful for ensuring complete time series without missing periods.
-Can be slow for \code{datetime} values spanning years. Defaults to \code{FALSE}.}
+Useful for ensuring complete time series without missing periods. Defaults to \code{FALSE}.}
 
 \item{date_resolution}{Character string specifying the time unit for date aggregation.
 Possible values include: \code{"hour"}, \code{"day"}, \code{"week"}, \code{"month"}, \code{"bimonth"}, \code{"season"},
@@ -71,7 +70,7 @@ time series visualizations.
 The function performs several key operations:
 \enumerate{
 \item \strong{Date coercion}: Converts the date column to proper Date format
-\item \strong{Gap filling} (optional): Uses \code{tsibble} to fill missing time periods with zeros
+\item \strong{Gap filling} (optional): Generates complete temporal sequences to fill missing time periods with zeros
 \item \strong{Date binning}: Rounds dates to the specified resolution using \code{\link[lubridate:round_date]{lubridate::floor_date()}}
 \item \strong{Weight and population handling}: Processes count weights and population denominators
 \item \strong{Aggregation}: Groups by binned dates and sums weights to get counts and incidence

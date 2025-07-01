@@ -15,8 +15,7 @@
 #' @param n Numeric column with case counts (or weights). Supports quoted and unquoted column names.
 #' @param population A number or a numeric column with the population size. Used to calculate the incidence.
 #' @param fill_gaps Logical; If `TRUE`, gaps in the time series will be filled with 0 cases.
-#' Requires the `tsibble` package. Useful for ensuring complete time series without missing periods.
-#' Can be slow for `datetime` values spanning years. Defaults to `FALSE`.
+#' Useful for ensuring complete time series without missing periods. Defaults to `FALSE`.
 #' @param date_resolution Character string specifying the time unit for date aggregation.
 #'   Possible values include: `"hour"`, `"day"`, `"week"`, `"month"`, `"bimonth"`, `"season"`,
 #'   `"quarter"`, `"halfyear"`, `"year"`. Special values:
@@ -39,7 +38,7 @@
 #' @details
 #' The function performs several key operations:
 #' 1. **Date coercion**: Converts the date column to proper Date format
-#' 2. **Gap filling** (optional): Uses `tsibble` to fill missing time periods with zeros
+#' 2. **Gap filling** (optional): Generates complete temporal sequences to fill missing time periods with zeros
 #' 3. **Date binning**: Rounds dates to the specified resolution using [lubridate::floor_date()]
 #' 4. **Weight and population handling**: Processes count weights and population denominators
 #' 5. **Aggregation**: Groups by binned dates and sums weights to get counts and incidence
@@ -140,21 +139,12 @@ bin_by_date <- function(
 
   # Fill gaps in time series with 0
   if (fill_gaps) {
-    # TODO: Remove tsibble and use the difference of floor and ceiling_date to add 0s.
-    rlang::check_installed("tsibble", reason = "to fill the gaps in the time series.")
-    # Save existing grouping of the df
-    group_list <- dplyr::group_vars(x)
-    # Create full time index for all groups
-    # This has to be done before binning, to avoid wrong auto detection of resolution
-    x |>
-      dplyr::select({{ dates_from }}) |> # TODO: add warning
-      dplyr::mutate_if(is.POSIXct, floor_date) |> # select + mutate are fixes for double precission problems in tsibble
-      dplyr::distinct({{ dates_from }}) |>
-      tsibble::as_tsibble(index = {{ dates_from }}, key = all_of(group_list)) |>
-      tsibble::fill_gaps(.full = TRUE) |>
-      as.data.frame() -> df_full_dates
+    # Generate complete date sequence
+    df_full_dates <- x |>
+      dplyr::select({{ dates_from }}) |>
+      .fill_date_gaps(date_resolution = date_resolution)
+    
     # Join with data and create observations with weight 0
-    # Suppress joining by message
     suppressMessages(x <- x |>
       dplyr::full_join(df_full_dates) |>
       tidyr::replace_na(list(wt = 0, incidence = 0)))
@@ -185,4 +175,57 @@ bin_by_date <- function(
       incidence = sum(incidence, na.rm = TRUE),
       .groups = .groups
     )
+}
+
+
+# Internal utility function for filling date gaps
+.fill_date_gaps <- function(dates, date_resolution = "week") {
+
+  suppressMessages(group_cols <- dplyr::group_keys(dates))
+ 
+  # Filter out rows with NA dates
+  clean_dates <- dates |>
+    dplyr::ungroup() |>
+    dplyr::select(-colnames(group_cols)) |>
+    tidyr::drop_na()
+
+  if (nrow(clean_dates) == 0) return(dates)
+  
+  date_col_name <- colnames(clean_dates)[1]
+  date_vector <- clean_dates[[1]]
+  
+  # Convert lubridate units to seq() compatible units - simple mapping
+  seq_by <- dplyr::case_when(
+    grepl("sec", date_resolution) & inherits(date_vector, c("POSIXct", "POSIXt")) ~ "sec",
+    grepl("min", date_resolution) & inherits(date_vector, c("POSIXct", "POSIXt")) ~ "min",
+    grepl("hour", date_resolution) & inherits(date_vector, c("POSIXct", "POSIXt")) ~ "hour",
+    grepl("day", date_resolution) ~ "day",
+    grepl("week", date_resolution) ~ "week",
+    grepl("month", date_resolution) ~ "month",
+    date_resolution == "bimonth" ~ "month",    # Map to base unit
+    date_resolution == "quarter" ~ "month",    # Map to base unit
+    date_resolution == "season" ~ "month",     # Map to base unit
+    date_resolution == "halfyear" ~ "month",   # Map to base unit
+    grepl("year", date_resolution) ~ "year",
+    TRUE ~ "day"  # default
+  )
+  
+  # Get date range
+  min_date <- min(date_vector, na.rm = TRUE)
+  max_date <- max(date_vector, na.rm = TRUE)
+  
+  # Generate complete sequence based on date type
+  # TODO: Is this needed?
+  if (inherits(date_vector, "Date")) {
+    full_sequence <- seq.Date(from = min_date, to = max_date, by = seq_by)
+  } else if (inherits(date_vector, c("POSIXct", "POSIXt"))) {
+    full_sequence <- seq.POSIXt(from = min_date, to = max_date, by = seq_by)
+  } else {
+    cli::cli_abort("Unsupported date type for gap filling.")
+  }
+
+  # Create result data frame
+  result <- group_cols |> dplyr::group_by_all() |> dplyr::reframe(!!date_col_name := full_sequence)
+  
+  return(result)
 }

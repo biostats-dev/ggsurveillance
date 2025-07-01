@@ -3,7 +3,7 @@
 ## New Features
 
 -   `bin_by_date()`: New `tidyverse`-compatible function for flexible date-based aggregation (binning). This function was previously internal to `geom_epicurve()` and `stat_bin_date()`.
-    -   It includes an improved `fill_gaps` argument to automatically fill time series gaps with 0s.
+    -   It includes a simpler and faster `fill_gaps` argument to automatically fill gaps in a time series with 0s. 
 -   `guide_axis_nested_date()`: New axis guide for creating nested date labels for hierarchical time periods (e.g., year > month > day). This feature is powered by the `{legendry}` package.
 -   `label_power10()`: New `ggplot2`-compatible labeling function to format numbers in scientific notation with powers of 10 (e.g., $2 \times 10^5$).
 -   `geom_epicurve_text()` and `geom_epicurve_point()`: New geoms to easily add text annotations or points to cases in epidemic curves created with `geom_epicurve()`.
@@ -15,7 +15,7 @@
 
 ## Breaking Changes
 
--   `scale_y_cases_5er()` now defaults to starting at 0, providing more intuitive and accurate case count visualizations. The previous behavior can be restored by setting `scale_y_cases_5er(limits = NULL)`.
+-   `scale_y_cases_5er()` now defaults to starting at 0, providing more intuitive and accurate case count visualizations. The previous behaviour can be restored by setting `scale_y_cases_5er(limits = NULL)`.
 
 # ggsurveillance 0.4.0
 

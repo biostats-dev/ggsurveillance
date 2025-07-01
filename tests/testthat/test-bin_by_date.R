@@ -210,7 +210,6 @@ test_that("bin_by_date fill_gaps parameter works", {
   # Create data with gaps
   df <- data.frame(
     date = as.Date(c("2024-01-01", "2024-01-08", "2024-01-29")), # 2-week gaps
-    # date = as.Date(c("2024-01-01", "2024-01-15", "2024-01-29")), # TODO: FIX
     cases = c(1, 2, 3)
   )
 
@@ -218,8 +217,7 @@ test_that("bin_by_date fill_gaps parameter works", {
   result_no_fill <- bin_by_date(df, dates_from = date, n = cases, date_resolution = "week")
   expect_identical(nrow(result_no_fill), 3L)
 
-  # With fill_gaps (only test if tsibble is available)
-  skip_if_not_installed("tsibble")
+  # With fill_gaps
   result_fill <- bin_by_date(df,
     dates_from = date, n = cases,
     date_resolution = "week", fill_gaps = TRUE
@@ -229,4 +227,21 @@ test_that("bin_by_date fill_gaps parameter works", {
   # Check that gaps are filled with zeros
   zero_rows <- result_fill[result_fill$n == 0, ]
   expect_identical(nrow(zero_rows), 2L)
+  
+  df2 <- data.frame(
+    date = as.Date(c("2024-01-01", "2024-01-15", "2024-01-29")), 
+    cases = c(1, 2, 3)
+  )
+  
+  result_fill2 <- bin_by_date(df,
+                             dates_from = date, n = cases,
+                             date_resolution = "week", fill_gaps = TRUE
+  )
+  
+  expect_identical(nrow(result_fill2), 5L)
+  
+  # Check that gaps are filled with zeros
+  zero_rows <- result_fill[result_fill2$n == 0, ]
+  expect_identical(nrow(zero_rows), 2L)
+  
 })

@@ -45,7 +45,6 @@ Suggests:
     rmarkdown,
     spelling,
     testthat (>= 3.0.0),
-    tsibble,
     vdiffr (>= 1.0.8)
 VignetteBuilder: 
     knitr

@@ -18,7 +18,7 @@
     -   `scale_y_cases_5er()`: For better (case) count axis breaks and positioning.
 
 ### 📅 Date & Time Transformations
--   `bin_by_date()`: A `tidyverse`-compatible function for flexible date-based aggregation (binning). This function was previously internal.
+-   `bin_by_date()`: A `tidyverse`-compatible function for flexible date-based aggregation (binning).
 
 -   `align_dates_seasonal()`: Align surveillance data for seasonal plots (e.g. flu season).
 

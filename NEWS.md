@@ -8,11 +8,6 @@
 -   `label_power10()`: New `ggplot2`-compatible labeling function to format numbers in scientific notation with powers of 10 (e.g., $2 \times 10^5$).
 -   `geom_epicurve_text()` and `geom_epicurve_point()`: New geoms to easily add text annotations or points to cases in epidemic curves created with `geom_epicurve()`.
 
-## Improvements
-
--   Extensive code refactoring for improved maintainability and performance
--   Multiple bug fixes and stability improvements across the package
-
 ## Breaking Changes
 
 -   `scale_y_cases_5er()` now defaults to starting at 0, providing more intuitive and accurate case count visualizations. The previous behaviour can be restored by setting `scale_y_cases_5er(limits = NULL)`.

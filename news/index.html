@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggsurveillance</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,6 +43,27 @@
       <small>Source: <a href="https://github.com/biostats-dev/ggsurveillance/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.5.0" id="ggsurveillance-050">ggsurveillance 0.5.0<a class="anchor" aria-label="anchor" href="#ggsurveillance-050"></a></h2>
+<div class="section level3">
+<h3 id="new-features-0-5-0">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-5-0"></a></h3>
+<ul><li>
+<code><a href="../reference/bin_by_date.html">bin_by_date()</a></code>: New <code>tidyverse</code>-compatible function for flexible date-based aggregation (binning). This function was previously internal to <code><a href="../reference/geom_epicurve.html">geom_epicurve()</a></code> and <code><a href="../reference/geom_epicurve.html">stat_bin_date()</a></code>.
+<ul><li>It includes a simpler and faster <code>fill_gaps</code> argument to automatically fill gaps in a time series with 0s.</li>
+</ul></li>
+<li>
+<code><a href="../reference/guide_axis_nested_date.html">guide_axis_nested_date()</a></code>: New axis guide for creating nested date labels for hierarchical time periods (e.g., year &gt; month &gt; day). This feature is powered by the <a href="https://teunbrand.github.io/legendry/" class="external-link">legendry</a> package.</li>
+<li>
+<code><a href="../reference/label_power10.html">label_power10()</a></code>: New <code>ggplot2</code>-compatible labeling function to format numbers in scientific notation with powers of 10 (e.g., <span class="math inline">\(2 \times 10^5\)</span>).</li>
+<li>
+<code><a href="../reference/geom_epicurve.html">geom_epicurve_text()</a></code> and <code><a href="../reference/geom_epicurve.html">geom_epicurve_point()</a></code>: New geoms to easily add text annotations or points to cases in epidemic curves created with <code><a href="../reference/geom_epicurve.html">geom_epicurve()</a></code>.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="breaking-changes-0-5-0">Breaking Changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-5-0"></a></h3>
+<ul><li>
+<code><a href="../reference/scale_y_cases_5er.html">scale_y_cases_5er()</a></code> now defaults to starting at 0, providing more intuitive and accurate case count visualizations. The previous behaviour can be restored by setting <code>scale_y_cases_5er(limits = NULL)</code>.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.0" id="ggsurveillance-040">ggsurveillance 0.4.0<a class="anchor" aria-label="anchor" href="#ggsurveillance-040"></a></h2><p class="text-muted">CRAN release: 2025-05-09</p>
 <ul><li>

@@ -5,13 +5,15 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Align dates for seasonal comparison — align_dates_seasonal"><meta name="description" content="Standardizes dates from multiple years to enable comparison of epidemic curves
+</script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Align dates for seasonal comparison — align_dates_seasonal"><meta name="description" content="align_dates_seasonal() standardizes dates from multiple years to enable comparison of epidemic curves
 and visualization of seasonal patterns in infectious disease surveillance data.
 Commonly used for creating periodicity plots of respiratory diseases like
-influenza, RSV, or COVID-19."><meta property="og:description" content="Standardizes dates from multiple years to enable comparison of epidemic curves
+influenza, RSV, or COVID-19.
+align_and_bin_dates_seasonal() is a convenience wrapper that first aligns the dates and then bins the data to calculate counts and incidence."><meta property="og:description" content="align_dates_seasonal() standardizes dates from multiple years to enable comparison of epidemic curves
 and visualization of seasonal patterns in infectious disease surveillance data.
 Commonly used for creating periodicity plots of respiratory diseases like
-influenza, RSV, or COVID-19."><meta property="og:image" content="https://ggsurveillance.biostats.dev/logo.svg"></head><body>
+influenza, RSV, or COVID-19.
+align_and_bin_dates_seasonal() is a convenience wrapper that first aligns the dates and then bins the data to calculate counts and incidence."><meta property="og:image" content="https://ggsurveillance.biostats.dev/logo.svg"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -19,7 +21,7 @@ influenza, RSV, or COVID-19."><meta property="og:image" content="https://ggsurve
 
     <a class="navbar-brand me-2" href="../index.html">ggsurveillance</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,10 +53,10 @@ influenza, RSV, or COVID-19."><meta property="og:image" content="https://ggsurve
     </div>
 
     <div class="ref-description section level2">
-    <p>Standardizes dates from multiple years to enable comparison of epidemic curves
+    <p><code>align_dates_seasonal()</code> standardizes dates from multiple years to enable comparison of epidemic curves
 and visualization of seasonal patterns in infectious disease surveillance data.
 Commonly used for creating periodicity plots of respiratory diseases like
-influenza, RSV, or COVID-19.</p>
+influenza, RSV, or COVID-19.<br><br><code>align_and_bin_dates_seasonal()</code> is a convenience wrapper that first aligns the dates and then bins the data to calculate counts and incidence.</p>
     </div>
 
     <div class="section level2">
@@ -70,14 +72,15 @@ influenza, RSV, or COVID-19.</p>
 <span></span>
 <span><span class="fu">align_and_bin_dates_seasonal</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
-<span>  n <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  <span class="va">dates_from</span>,</span>
+<span>  n <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  population <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  fill_gaps <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  date_resolution <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"week"</span>, <span class="st">"isoweek"</span>, <span class="st">"epiweek"</span>, <span class="st">"day"</span>, <span class="st">"month"</span><span class="op">)</span>,</span>
 <span>  start <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  target_year <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  drop_leap_week <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  drop_leap_week <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  .groups <span class="op">=</span> <span class="st">"drop"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -94,20 +97,20 @@ Supported date formats are <code>date</code> and <code>datetime</code> and also 
 
 
 <dt id="arg-dates-from">dates_from<a class="anchor" aria-label="anchor" href="#arg-dates-from"></a></dt>
-<dd><p>Column name containing the dates to align. Used when x is a data.frame.</p></dd>
+<dd><p>Column name containing the dates to align and bin. Used when x is a data.frame.</p></dd>
 
 
 <dt id="arg-date-resolution">date_resolution<a class="anchor" aria-label="anchor" href="#arg-date-resolution"></a></dt>
 <dd><p>Character string specifying the temporal resolution.
-One of:</p><ul><li><p><code>"week"</code> or <code>"isoweek"</code> - Calendar weeks (ISO 8601), reporting weeks as used by the ECDC.</p></li>
-<li><p><code>"epiweek"</code> - Epidemiological weeks (US CDC), i.e. ISO weeks with Sunday as week start.</p></li>
+One of:</p><ul><li><p><code>"week"</code> or <code>"isoweek"</code> - Calendar weeks (ISO 8601), epidemiological reporting weeks as used by the ECDC.</p></li>
+<li><p><code>"epiweek"</code> - Epidemiological weeks as defined by the US CDC (weeks start on Sunday).</p></li>
 <li><p><code>"month"</code> - Calendar months</p></li>
 <li><p><code>"day"</code> - Daily resolution</p></li>
 </ul></dd>
 
 
 <dt id="arg-start">start<a class="anchor" aria-label="anchor" href="#arg-start"></a></dt>
-<dd><p>Numeric value indicating epidemic season start:</p><ul><li><p>For <code>week/epiweek</code>: week number (default: 28, approximately July)</p></li>
+<dd><p>Numeric value indicating epidemic season start, i.e. the start and end of the new year interval:</p><ul><li><p>For <code>week/epiweek</code>: week number (default: 28, approximately July)</p></li>
 <li><p>For <code>month</code>: month number (default: 7 for July)</p></li>
 <li><p>For <code>day</code>: day of year (default: 150, approximately June)
 If start is set to "1" the alignment is done for yearly comparison and the shift in dates for seasonality is skipped.</p></li>
@@ -121,7 +124,7 @@ is the start of the most recent season in the data. This way the most recent dat
 
 <dt id="arg-drop-leap-week">drop_leap_week<a class="anchor" aria-label="anchor" href="#arg-drop-leap-week"></a></dt>
 <dd><p>If <code>TRUE</code> and date_resolution is <code>week</code>, <code>isoweek</code> or <code>epiweek</code>, leap weeks (week 53)
-are dropped if they are not in the most recent season. Disable if data should be returned.
+are dropped if they are not in the most recent season. Set to <code>FALSE</code> to retain leap weeks from all seasons.
 Dropping week 53 from historical data is the most common approach. Otherwise historical data for week 53 would
 map to week 52 if the target season has no leap week, resulting in a doubling of the case counts.</p></dd>
 
@@ -135,7 +138,12 @@ map to week 52 if the target season has no leap week, resulting in a doubling of
 
 
 <dt id="arg-fill-gaps">fill_gaps<a class="anchor" aria-label="anchor" href="#arg-fill-gaps"></a></dt>
-<dd><p>Logical; If <code>TRUE</code>, gaps in the time series will be filled with 0 cases.</p></dd>
+<dd><p>Logical; If <code>TRUE</code>, gaps in the time series will be filled with 0 cases.
+Useful for ensuring complete time series without missing periods. Defaults to <code>FALSE</code>.</p></dd>
+
+
+<dt id="arg--groups">.groups<a class="anchor" aria-label="anchor" href="#arg--groups"></a></dt>
+<dd><p>See <code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">dplyr::summarise()</a></code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -162,7 +170,7 @@ patterns or surveillance protocols.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Sesonal Visualization of Germany Influenza Surveillance Data</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Seasonal Visualization of Germany Influenza Surveillance Data</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">influenza_germany</span> <span class="op">|&gt;</span></span></span>

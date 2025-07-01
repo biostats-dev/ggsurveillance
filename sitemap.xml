@@ -9,6 +9,7 @@
 <url><loc>https://ggsurveillance.biostats.dev/index.html</loc></url>
 <url><loc>https://ggsurveillance.biostats.dev/news/index.html</loc></url>
 <url><loc>https://ggsurveillance.biostats.dev/reference/align_dates_seasonal.html</loc></url>
+<url><loc>https://ggsurveillance.biostats.dev/reference/bin_by_date.html</loc></url>
 <url><loc>https://ggsurveillance.biostats.dev/reference/create_agegroups.html</loc></url>
 <url><loc>https://ggsurveillance.biostats.dev/reference/geom_bar_diverging.html</loc></url>
 <url><loc>https://ggsurveillance.biostats.dev/reference/geom_col_range.html</loc></url>
@@ -16,9 +17,11 @@
 <url><loc>https://ggsurveillance.biostats.dev/reference/geom_epigantt.html</loc></url>
 <url><loc>https://ggsurveillance.biostats.dev/reference/geom_vline_year.html</loc></url>
 <url><loc>https://ggsurveillance.biostats.dev/reference/geometric_mean.html</loc></url>
+<url><loc>https://ggsurveillance.biostats.dev/reference/guide_axis_nested_date.html</loc></url>
 <url><loc>https://ggsurveillance.biostats.dev/reference/index.html</loc></url>
 <url><loc>https://ggsurveillance.biostats.dev/reference/influenza_germany.html</loc></url>
 <url><loc>https://ggsurveillance.biostats.dev/reference/label_date.html</loc></url>
+<url><loc>https://ggsurveillance.biostats.dev/reference/label_power10.html</loc></url>
 <url><loc>https://ggsurveillance.biostats.dev/reference/label_skip.html</loc></url>
 <url><loc>https://ggsurveillance.biostats.dev/reference/linelist_hospital_outbreak.html</loc></url>
 <url><loc>https://ggsurveillance.biostats.dev/reference/population_german_states.html</loc></url>

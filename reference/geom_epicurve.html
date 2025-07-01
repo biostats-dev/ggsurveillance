@@ -7,17 +7,21 @@
   };
 </script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Create an epidemic curve plot or bin/count observations by date periods — geom_epicurve"><meta name="description" content="Creates a epicurve plot for visualizing epidemic case counts in outbreaks (epidemiological curves).
 An epicurve is a bar plot, where every case is outlined. geom_epicurve additionally provides
-date-based aggregation of cases (e.g. per week or month and many more).
+date-based aggregation of cases (e.g. per week or month and many more) using bin_by_date.
 For week aggregation both isoweek (World + ECDC) and epiweek (US CDC) are supported.
-stat_bin_date and its alias stat_date_count provide date based binning only. After binning the by date, these
+stat_bin_date and its alias stat_date_count provide date based binning only. After binning the by date with bin_by_date, these
 stats behave like ggplot2::stat_count.
+geom_epicurve_text adds text labels to cases on epicurve plots.
+geom_epicurve_point adds points/shapes to cases on epicurve plots.
 
 "><meta property="og:description" content="Creates a epicurve plot for visualizing epidemic case counts in outbreaks (epidemiological curves).
 An epicurve is a bar plot, where every case is outlined. geom_epicurve additionally provides
-date-based aggregation of cases (e.g. per week or month and many more).
+date-based aggregation of cases (e.g. per week or month and many more) using bin_by_date.
 For week aggregation both isoweek (World + ECDC) and epiweek (US CDC) are supported.
-stat_bin_date and its alias stat_date_count provide date based binning only. After binning the by date, these
+stat_bin_date and its alias stat_date_count provide date based binning only. After binning the by date with bin_by_date, these
 stats behave like ggplot2::stat_count.
+geom_epicurve_text adds text labels to cases on epicurve plots.
+geom_epicurve_point adds points/shapes to cases on epicurve plots.
 
 "><meta property="og:image" content="https://ggsurveillance.biostats.dev/logo.svg"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -27,7 +31,7 @@ stats behave like ggplot2::stat_count.
 
     <a class="navbar-brand me-2" href="../index.html">ggsurveillance</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,9 +65,11 @@ stats behave like ggplot2::stat_count.
     <div class="ref-description section level2">
     <p>Creates a epicurve plot for visualizing epidemic case counts in outbreaks (epidemiological curves).
 An epicurve is a bar plot, where every case is outlined. <code>geom_epicurve</code> additionally provides
-date-based aggregation of cases (e.g. per week or month and many more).</p><ul><li><p>For week aggregation both isoweek (World + ECDC) and epiweek (US CDC) are supported.</p></li>
-<li><p><code>stat_bin_date</code> and its alias <code>stat_date_count</code> provide date based binning only. After binning the by date, these
+date-based aggregation of cases (e.g. per week or month and many more) using <a href="bin_by_date.html">bin_by_date</a>.</p><ul><li><p>For week aggregation both isoweek (World + ECDC) and epiweek (US CDC) are supported.</p></li>
+<li><p><code>stat_bin_date</code> and its alias <code>stat_date_count</code> provide date based binning only. After binning the by date with <a href="bin_by_date.html">bin_by_date</a>, these
 stats behave like <a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">ggplot2::stat_count</a>.</p></li>
+<li><p><code>geom_epicurve_text</code> adds text labels to cases on epicurve plots.</p></li>
+<li><p><code>geom_epicurve_point</code> adds points/shapes to cases on epicurve plots.</p></li>
 </ul></div>
 
     <div class="section level2">
@@ -90,6 +96,7 @@ stats behave like <a href="https://ggplot2.tidyverse.org/reference/geom_bar.html
 <span>  position <span class="op">=</span> <span class="st">"identity"</span>,</span>
 <span>  date_resolution <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  week_start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"lubridate.week.start"</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  fill_gaps <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  na.rm <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  show.legend <span class="op">=</span> <span class="cn">NA</span>,</span>
@@ -101,6 +108,33 @@ stats behave like <a href="https://ggplot2.tidyverse.org/reference/geom_bar.html
 <span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  geom <span class="op">=</span> <span class="st">"line"</span>,</span>
 <span>  position <span class="op">=</span> <span class="st">"identity"</span>,</span>
+<span>  date_resolution <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  week_start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"lubridate.week.start"</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  fill_gaps <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  na.rm <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  show.legend <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  inherit.aes <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">geom_epicurve_text</span><span class="op">(</span></span>
+<span>  mapping <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  stat <span class="op">=</span> <span class="st">"epicurve"</span>,</span>
+<span>  vjust <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  date_resolution <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  week_start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"lubridate.week.start"</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  na.rm <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  show.legend <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  inherit.aes <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">geom_epicurve_point</span><span class="op">(</span></span>
+<span>  mapping <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  stat <span class="op">=</span> <span class="st">"epicurve"</span>,</span>
+<span>  vjust <span class="op">=</span> <span class="fl">0.5</span>,</span>
 <span>  date_resolution <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  week_start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"lubridate.week.start"</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span>,</span>
@@ -116,8 +150,8 @@ stats behave like <a href="https://ggplot2.tidyverse.org/reference/geom_bar.html
 
 <dl><dt id="arg-mapping">mapping<a class="anchor" aria-label="anchor" href="#arg-mapping"></a></dt>
 <dd><p>Set of aesthetic mappings created by <code><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></code>. Commonly used mappings:</p><ul><li><p><strong>x or y</strong>: date or datetime. Numeric is technically supported.</p></li>
-<li><p><strong>fill</strong>: for colouring groups</p></li>
-<li><p><strong>weight</strong>: if data is already aggregated (e.g. case counts)</p></li>
+<li><p><strong>fill</strong>: for colouring groups.</p></li>
+<li><p><strong>weight</strong>: if data is already aggregated (e.g., case counts).</p></li>
 </ul></dd>
 
 
@@ -126,8 +160,8 @@ stats behave like <a href="https://ggplot2.tidyverse.org/reference/geom_bar.html
 
 
 <dt id="arg-stat">stat<a class="anchor" aria-label="anchor" href="#arg-stat"></a></dt>
-<dd><p>either "<code>epicurve</code>" for outlines around cases or "<code>bin_date</code>" for outlines around (fill) groups.
-For large numbers of cases please use "<code>bin_date</code>" to reduce the number of drawn rectangles.</p></dd>
+<dd><p>For the geoms, use "<code>epicurve</code>" (default) to outline individual cases, or "<code>bin_date</code>" to aggregate data by group.
+For large datasets, "<code>bin_date</code>" is recommended for better performance by drawing less rectangles.</p></dd>
 
 
 <dt id="arg-position">position<a class="anchor" aria-label="anchor" href="#arg-position"></a></dt>
@@ -135,23 +169,25 @@ For large numbers of cases please use "<code>bin_date</code>" to reduce the numb
 
 
 <dt id="arg-date-resolution">date_resolution<a class="anchor" aria-label="anchor" href="#arg-date-resolution"></a></dt>
-<dd><p>Character string specifying the time unit for date aggregation.
-Set to <code>NULL</code> or <code>NA</code> for no date aggregation <br>
-Possible values are: <code>"day"</code>, <code>"week"</code>, <code>"month"</code>, <code>"bimonth"</code>, <code>"season"</code>, <code>"quarter"</code>, <code>"halfyear"</code>, <code>"year"</code>.
-To special values enforce ISO or US week standard:</p><ul><li><p><code>isoweek</code> will force <code>date_resolution = week</code> and <code>week_start = 1</code> (ISO and ECDC Standard)</p></li>
-<li><p><code>epiweek</code> will force <code>date_resolution = week</code> and <code>week_start = 7</code> (US CDC Standard)</p></li>
+<dd><p>Character string specifying the time unit for date aggregation. If <code>NULL</code> (default),
+no date binning is performed. Possible values include: <code>"hour"</code>, <code>"day"</code>, <code>"week"</code>, <code>"month"</code>, <code>"bimonth"</code>, <code>"season"</code>,
+<code>"quarter"</code>, <code>"halfyear"</code>, <code>"year"</code>. Special values:</p><ul><li><p><code>"isoweek"</code>: ISO week standard (week starts Monday, <code>week_start = 1</code>)</p></li>
+<li><p><code>"epiweek"</code>: US CDC epiweek standard (week starts Sunday, <code>week_start = 7</code>)</p></li>
+<li><p><code>"isoyear"</code>: ISO year (corresponding year of the ISO week, differs from year by 1-3 days)</p></li>
+<li><p><code>"epiyear"</code>: Epidemiological year (corresponding year of the epiweek, differs from year by 1-3 days)
+Defaults to <code>NULL</code>, i.e. no binning.</p></li>
 </ul></dd>
 
 
 <dt id="arg-week-start">week_start<a class="anchor" aria-label="anchor" href="#arg-week-start"></a></dt>
-<dd><p>Integer specifying the start of the week (1 = Monday, 7 = Sunday). <br>
-Only used when date_resolution includes weeks. Defaults to 1 (Monday). <br>
-For isoweek use <code>week_start = 1</code> and for epiweek use <code>week_start = 7</code>.</p></dd>
+<dd><p>Integer specifying the start of the week (1 = Monday, 7 = Sunday).
+Only used when <code>date_resolution</code> involves weeks. Defaults to 1 (Monday).
+Overridden by <code>"isoweek"</code> (1) and <code>"epiweek"</code> (7) settings.</p></dd>
 
 
 <dt id="arg-width">width<a class="anchor" aria-label="anchor" href="#arg-width"></a></dt>
 <dd><p>Numeric value specifying the width of the bars. If <code>NULL</code>, calculated
-based on resolution and relative.width</p></dd>
+based on <code>date_resolution</code> and <code>relative.width</code>.</p></dd>
 
 
 <dt id="arg-relative-width">relative.width<a class="anchor" aria-label="anchor" href="#arg-relative-width"></a></dt>
@@ -160,8 +196,11 @@ of bars. Defaults to 1</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Other arguments passed to <code><a href="https://ggplot2.tidyverse.org/reference/layer.html" class="external-link">layer</a></code>. For example:</p><ul><li><p><code>colour</code> Colour of the outlines around cases. Disable with colour = NA. Defaults to "white".</p></li>
-<li><p><code>linewidth</code>  Width of the case outlines.</p></li>
+<dd><p>Other arguments passed to <code><a href="https://ggplot2.tidyverse.org/reference/layer.html" class="external-link">layer</a></code>. For example:</p><ul><li><p><strong>colour</strong>: Colour of the outlines around cases. Disable with <code>colour = NA</code>. Defaults to <code>"white"</code>.</p></li>
+<li><p><strong>linewidth</strong>:  Width of the case outlines.</p></li>
+</ul><p>For <code>geom_epicurve_text()</code> additional <code><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text</a></code> arguments are supported:</p><ul><li><p><strong>fontface</strong>: Font face for text labels: one of "plain", "bold", "italic", "bold.italic".</p></li>
+<li><p><strong>family</strong>: The font family.</p></li>
+<li><p><strong>size</strong>: The font size.</p></li>
 </ul></dd>
 
 
@@ -189,6 +228,16 @@ the default plot specification, e.g. <code><a href="https://ggplot2.tidyverse.or
 <dd><p>The geometric object to use to display the data for this layer.
 When using a <code>stat_*()</code> function to construct a layer, the <code>geom</code> argument
 can be used to override the default coupling between stats and geoms.</p></dd>
+
+
+<dt id="arg-fill-gaps">fill_gaps<a class="anchor" aria-label="anchor" href="#arg-fill-gaps"></a></dt>
+<dd><p>Logical; If <code>TRUE</code>, gaps in the time series will be filled with a count of 0. Often needed for line charts.</p></dd>
+
+
+<dt id="arg-vjust">vjust<a class="anchor" aria-label="anchor" href="#arg-vjust"></a></dt>
+<dd><p>Vertical justification of the text or shape. Value between 0 and 1.
+Used by <code>geom_epicurve_text</code> and <code>geom_epicurve_point</code> to control
+vertical positioning within the case rectangles. Defaults to 0.5 (center).</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -228,7 +277,8 @@ Principles of Epidemiology in Public Health Practice; an Introduction to Applied
 <span class="r-in"><span>  <span class="fu">geom_epicurve</span><span class="op">(</span>date_resolution <span class="op">=</span> <span class="st">"week"</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Epicurve Example"</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="scale_y_cases_5er.html">scale_y_cases_5er</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_date.html" class="external-link">scale_x_date</a></span><span class="op">(</span>date_breaks <span class="op">=</span> <span class="st">"4 weeks"</span>, date_labels <span class="op">=</span> <span class="st">"W%V'%g"</span><span class="op">)</span> <span class="op">+</span> <span class="co"># Correct ISOWeek labels week'year</span></span></span>
+<span class="r-in"><span>  <span class="co"># Correct ISOWeek labels for week-year</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_date.html" class="external-link">scale_x_date</a></span><span class="op">(</span>date_breaks <span class="op">=</span> <span class="st">"4 weeks"</span>, date_labels <span class="op">=</span> <span class="st">"W%V'%g"</span><span class="op">)</span> <span class="op">+</span> </span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_equal</a></span><span class="op">(</span>ratio <span class="op">=</span> <span class="fl">7</span><span class="op">)</span> <span class="op">+</span> <span class="co"># Use coord_equal for square boxes. 'ratio' are the days per week.</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="geom_epicurve-1.png" alt="" width="700" height="433"></span>

@@ -21,7 +21,7 @@ This allows for reproducible age groups, which can be used for joining data
 
     <a class="navbar-brand me-2" href="../index.html">ggsurveillance</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -91,23 +91,26 @@ Default: <code>c(5, 10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 90)</code></p></dd>
 
 
 <dt id="arg-breaks-as-lower-bound">breaks_as_lower_bound<a class="anchor" aria-label="anchor" href="#arg-breaks-as-lower-bound"></a></dt>
-<dd><p>Logical; if <code>TRUE</code> (default), breaks are treated as lower bounds of the intervals.
-If <code>FALSE</code>, as upper bounds.</p></dd>
+<dd><p>Logical; if <code>TRUE</code> (default), breaks define the the lower bounds of the intervals (e.g., a break at 5 starts the '5-9' group).
+If <code>FALSE</code>, breaks define the upper bound (e.g., a break at 5 ends the '0-5' group).</p></dd>
 
 
 <dt id="arg-first-group-format">first_group_format<a class="anchor" aria-label="anchor" href="#arg-first-group-format"></a></dt>
-<dd><p>Character string template for the first age group. Uses glue syntax. <br>
-Default: <code>"0-{x}"</code>, Other common styles: <code>"&lt;={x}", "&lt;{x+1}"</code></p></dd>
+<dd><p>Character string template for the first age group. Uses <a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue::glue</a> syntax. <br>
+The variable <code>x</code> represents the upper bound of the first interval.<br>
+Default: <code>"0-{x}"</code>. Other common styles: <code>"&lt;={x}", "&lt;{x+1}"</code></p></dd>
 
 
 <dt id="arg-interval-format">interval_format<a class="anchor" aria-label="anchor" href="#arg-interval-format"></a></dt>
-<dd><p>Character string template for intermediate age groups. Uses glue syntax.<br>
-Default: <code>"{x}-{y}"</code>, Other common styles: <code>"{x} to {y}"</code></p></dd>
+<dd><p>Character string template for intermediate age groups. Uses <a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue::glue</a> syntax.<br>
+The variables <code>x</code> and <code>y</code> represent the lower and upper bounds of the interval, respectively.<br>
+Default: <code>"{x}-{y}"</code>. Other common styles: <code>"{x} to {y}"</code></p></dd>
 
 
 <dt id="arg-last-group-format">last_group_format<a class="anchor" aria-label="anchor" href="#arg-last-group-format"></a></dt>
-<dd><p>Character string template for the last age group. Uses glue syntax. <br>
-Default: <code>"{x}+"</code>, Other common styles: <code>"&gt;={x}","&gt;{x-1}"</code></p></dd>
+<dd><p>Character string template for the last age group. Uses <a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue::glue</a> syntax. <br>
+The variable <code>x</code> represents the lower bound of the last interval.<br>
+Default: <code>"{x}+"</code>. Other common styles: <code>"&gt;={x}","&gt;{x-1}"</code></p></dd>
 
 
 <dt id="arg-pad-numbers">pad_numbers<a class="anchor" aria-label="anchor" href="#arg-pad-numbers"></a></dt>
@@ -120,7 +123,8 @@ Not compatible with calculations within glue formats. Default: <code>FALSE</code
 
 
 <dt id="arg-collapse-single-year-groups">collapse_single_year_groups<a class="anchor" aria-label="anchor" href="#arg-collapse-single-year-groups"></a></dt>
-<dd><p>Logical; if <code>TRUE</code>, groups spanning single years are collapsed. Default: <code>FALSE</code></p></dd>
+<dd><p>Logical; if <code>TRUE</code>, groups spanning a single year (e.g., from <code>age_breaks = c(1, 2)</code>)
+are formatted as a single number (e.g., "1") instead of a range (e.g., "1-1"). Default: <code>FALSE</code></p></dd>
 
 
 <dt id="arg-na-label">na_label<a class="anchor" aria-label="anchor" href="#arg-na-label"></a></dt>

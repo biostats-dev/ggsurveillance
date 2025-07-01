@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggsurveillance</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,7 +55,7 @@
 
       <dl><dt>
 
-          <code><a href="geom_epicurve.html">geom_epicurve()</a></code> <code><a href="geom_epicurve.html">stat_bin_date()</a></code> <code><a href="geom_epicurve.html">stat_date_count()</a></code>
+          <code><a href="geom_epicurve.html">geom_epicurve()</a></code> <code><a href="geom_epicurve.html">stat_bin_date()</a></code> <code><a href="geom_epicurve.html">stat_date_count()</a></code> <code><a href="geom_epicurve.html">geom_epicurve_text()</a></code> <code><a href="geom_epicurve.html">geom_epicurve_point()</a></code>
 
         </dt>
         <dd>Create an epidemic curve plot or bin/count observations by date periods</dd>
@@ -77,6 +77,12 @@
 
         </dt>
         <dd>Date labeller</dd>
+      </dl><dl><dt>
+
+          <code><a href="guide_axis_nested_date.html">guide_axis_nested_date()</a></code>
+
+        </dt>
+        <dd>Nested axis guide for date scales</dd>
       </dl></div><div class="section level2">
       <h2 id="diverging-bar-charts-and-diverging-area-charts">Diverging Bar Charts and Diverging Area Charts<a class="anchor" aria-label="anchor" href="#diverging-bar-charts-and-diverging-area-charts"></a></h2>
 
@@ -107,9 +113,9 @@
         </dt>
         <dd>Reversed discrete scale for 'ggplot2'</dd>
       </dl></div><div class="section level2">
-      <h2 id="seasonal-data-alignment">Seasonal Data Alignment<a class="anchor" aria-label="anchor" href="#seasonal-data-alignment"></a></h2>
+      <h2 id="date-binning-and-seasonal-datr-alignment">Date Binning and Seasonal Datr Alignment<a class="anchor" aria-label="anchor" href="#date-binning-and-seasonal-datr-alignment"></a></h2>
 
-      <div class="section-desc"><p>Functions for aligning and comparing data across seasons</p></div>
+      <div class="section-desc"><p>Functions for binning cases by date intervalls and aligning and comparing data across seasons</p></div>
 
 
     </div><div class="section level2">
@@ -118,6 +124,12 @@
 
 
       <dl><dt>
+
+          <code><a href="bin_by_date.html">bin_by_date()</a></code>
+
+        </dt>
+        <dd>Aggregate data by time periods</dd>
+      </dl><dl><dt>
 
           <code><a href="align_dates_seasonal.html">align_dates_seasonal()</a></code> <code><a href="align_dates_seasonal.html">align_and_bin_dates_seasonal()</a></code>
 
@@ -235,7 +247,7 @@
         <dd>Create a ranged bar chart</dd>
       </dl><dl><dt>
 
-          <code><a href="geom_epicurve.html">geom_epicurve()</a></code> <code><a href="geom_epicurve.html">stat_bin_date()</a></code> <code><a href="geom_epicurve.html">stat_date_count()</a></code>
+          <code><a href="geom_epicurve.html">geom_epicurve()</a></code> <code><a href="geom_epicurve.html">stat_bin_date()</a></code> <code><a href="geom_epicurve.html">stat_date_count()</a></code> <code><a href="geom_epicurve.html">geom_epicurve_text()</a></code> <code><a href="geom_epicurve.html">geom_epicurve_point()</a></code>
 
         </dt>
         <dd>Create an epidemic curve plot or bin/count observations by date periods</dd>
@@ -259,8 +271,8 @@
         <dd>Add labels or points to the last value of a line chart</dd>
       </dl></div><div class="section level2">
 
-      <h3 id="scales-utilities">Scales Utilities<a class="anchor" aria-label="anchor" href="#scales-utilities"></a></h3>
-      <div class="section-desc"><p>ggplot2 scales in this package</p></div>
+      <h3 id="scales-and-guides">Scales and Guides<a class="anchor" aria-label="anchor" href="#scales-and-guides"></a></h3>
+      <div class="section-desc"><p>ggplot2 scales and guides in this package</p></div>
 
 
     </div><div class="section level2">
@@ -286,6 +298,12 @@
 
         </dt>
         <dd>Reversed discrete scale for 'ggplot2'</dd>
+      </dl><dl><dt>
+
+          <code><a href="guide_axis_nested_date.html">guide_axis_nested_date()</a></code>
+
+        </dt>
+        <dd>Nested axis guide for date scales</dd>
       </dl></div><div class="section level2">
 
       <h3 id="labeling-and-formatting">Labeling and Formatting<a class="anchor" aria-label="anchor" href="#labeling-and-formatting"></a></h3>
@@ -309,6 +327,12 @@
 
         </dt>
         <dd>Skip labels on an axis</dd>
+      </dl><dl><dt>
+
+          <code><a href="label_power10.html">label_power10()</a></code>
+
+        </dt>
+        <dd>Format numbers as power-of-10 R expressions</dd>
       </dl></div><div class="section level2">
 
       <h3 id="theming-and-styling">Theming and Styling<a class="anchor" aria-label="anchor" href="#theming-and-styling"></a></h3>

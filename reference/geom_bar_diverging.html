@@ -37,7 +37,7 @@ See scale_x_continuous_diverging(), scale_y_continuous_diverging() for the corre
 
     <a class="navbar-brand me-2" href="../index.html">ggsurveillance</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -140,17 +140,17 @@ x (or y) has to be continuous for this geom.</p>
 
 
 <dt id="arg-position">position<a class="anchor" aria-label="anchor" href="#arg-position"></a></dt>
-<dd><p>Position adjustment.</p></dd>
+<dd><p>Position adjustment. For the geoms, categories will be stacked by default. Don't use <code>position = "stack"</code>.</p></dd>
 
 
 <dt id="arg-proportion">proportion<a class="anchor" aria-label="anchor" href="#arg-proportion"></a></dt>
-<dd><p>Logical. If <code>TRUE</code>, each stacked bar are normalized to 100%.
+<dd><p>Logical. If <code>TRUE</code>, each stacked bar is normalized to 100%.
 Useful to plot or calculate the percentages of each category within each bar.</p></dd>
 
 
 <dt id="arg-neutral-cat">neutral_cat<a class="anchor" aria-label="anchor" href="#arg-neutral-cat"></a></dt>
 <dd><p>How to handle the middle category for a odd number of factor levels.</p><ul><li><p><code>"odd"</code>: If the number of factor levels is odd, the middle category is treated as neutral.</p></li>
-<li><p><code>"never"</code>: For odd factor levels, the middle categories is treated as positive.</p></li>
+<li><p><code>"never"</code>: For odd factor levels, the middle category is treated as positive.</p></li>
 <li><p><code>"NA"</code>: observations with <code>NA</code> as category will be shown as the neutral category.
 By default the NA category will be in the middle (even number of levels) or
 the first category after the middle (odd number of levels).</p></li>
@@ -162,11 +162,11 @@ the first category after the middle (even number of levels).</p></li>
 
 <dt id="arg-break-pos">break_pos<a class="anchor" aria-label="anchor" href="#arg-break-pos"></a></dt>
 <dd><p>Only used for <code>neutral_cat = c("never", "NA", "force")</code>.
-Either a integer position or the name of a factor level. Depending on <code>neutral_cat</code>:</p><ul><li><p><code>"never"</code>: The factor level at break_pos will be the first category in the positive direction.</p></li>
-<li><p><code>"NA"</code>: <code>break_pos</code> controls where the neutral NA category will be inserted.
-<code>NA</code> will always be inserted before the before the specified factor level (therefore taking its position),
-i.e. 3 means <code>NA</code> will be the 3rd category.</p></li>
-<li><p><code>"force"</code>: <code>break_pos</code> forces the specified factor level to be neutral.</p></li>
+Can either be a integer position or the name of a factor level. Depending on <code>neutral_cat</code>:</p><ul><li><p><code>"never"</code>: The break_pos factor level will be the first category in the positive direction.</p></li>
+<li><p><code>"NA"</code>: The neutral NA category will be inserted at the position specified by <code>break_pos</code>.
+For example, if <code>break_pos = 3</code>, the <code>NA</code> category will become the 3rd level, and the original 3rd
+level will be shifted to the 4th.</p></li>
+<li><p><code>"force"</code>: <code>break_pos</code> determines the neutral category.</p></li>
 </ul></dd>
 
 
@@ -199,7 +199,7 @@ the default plot specification, e.g. <code><a href="https://ggplot2.tidyverse.or
 
 
 <dt id="arg-stacked">stacked<a class="anchor" aria-label="anchor" href="#arg-stacked"></a></dt>
-<dd><p>Logical. If <code>TRUE</code>, categories are stacked.</p></dd>
+<dd><p>Logical. If <code>TRUE</code>, categories are stacked. Used instead of <code>position = "stack"</code> for specialized stacking logic.</p></dd>
 
 
 <dt id="arg-totals-by-direction">totals_by_direction<a class="anchor" aria-label="anchor" href="#arg-totals-by-direction"></a></dt>
@@ -252,14 +252,6 @@ Behaviour of the diverging bar charts can therefore be controlled by creating em
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Basic example with geom_bar_diverging</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘dplyr’</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:stats’:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     filter, lag</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:base’:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     intersect, setdiff, setequal, union</span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span></span>

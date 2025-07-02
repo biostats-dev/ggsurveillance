@@ -76,7 +76,7 @@
 #'   labs(title = "Epicurve Example") +
 #'   scale_y_cases_5er() +
 #'   # Correct ISOWeek labels for week-year
-#'   scale_x_date(date_breaks = "4 weeks", date_labels = "W%V'%g") + 
+#'   scale_x_date(date_breaks = "4 weeks", date_labels = "W%V'%g") +
 #'   coord_equal(ratio = 7) + # Use coord_equal for square boxes. 'ratio' are the days per week.
 #'   theme_bw()
 #'

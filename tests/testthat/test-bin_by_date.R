@@ -227,64 +227,68 @@ test_that("bin_by_date fill_gaps parameter works", {
   # Check that gaps are filled with zeros
   zero_rows <- result_fill[result_fill$n == 0, ]
   expect_identical(nrow(zero_rows), 2L)
-  
+
   df2 <- data.frame(
-    date = as.Date(c("2024-01-01", "2024-01-15", "2024-01-29")), 
+    date = as.Date(c("2024-01-01", "2024-01-15", "2024-01-29")),
     cases = c(1, 2, 3)
   )
-  
+
   result_fill2 <- bin_by_date(df,
-                             dates_from = date, n = cases,
-                             date_resolution = "week", fill_gaps = TRUE
+    dates_from = date, n = cases,
+    date_resolution = "week", fill_gaps = TRUE
   )
-  
+
   expect_identical(nrow(result_fill2), 5L)
-  
+
   # Check that gaps are filled with zeros
   zero_rows <- result_fill[result_fill2$n == 0, ]
   expect_identical(nrow(zero_rows), 2L)
-  
+
   # Check corner cases, isoyear has often 364 days
   res1 <- data.frame(date = c(as_date("2001-01-01"), as_date("2025-11-05"))) |>
     bin_by_date(dates_from = date, date_resolution = "isoyear", fill_gaps = TRUE)
-  
-  expect_identical(res1$date, 2001:2025*1.0)
-  
+
+  expect_identical(res1$date, 2001:2025 * 1.0)
+
   # Check corner cases, shorter months should not be skipped (February, April)
   res2 <- data.frame(date = c(as_date("2023-01-31"), as_date("2023-06-05"))) |>
     bin_by_date(dates_from = date, date_resolution = "month", fill_gaps = TRUE)
-  
-  expect_identical(month(res2$date), 1:6*1.0)
+
+  expect_identical(month(res2$date), 1:6 * 1.0)
 })
 
 test_that("bin_by_date fill_gaps works with grouped data", {
   # Create data with gaps within groups
   df <- data.frame(
-    date = as.Date(c("2024-01-01", "2024-01-15", "2024-01-29", # Group A with gaps
-                     "2024-01-08", "2024-01-22")),               # Group B with gaps
+    date = as.Date(c(
+      "2024-01-01", "2024-01-15", "2024-01-29", # Group A with gaps
+      "2024-01-08", "2024-01-22"
+    )), # Group B with gaps
     group = c("A", "A", "A", "B", "B"),
     cases = c(1, 2, 3, 4, 5)
   )
-  
+
   # Test with grouping and fill_gaps = TRUE
   result_grouped_fill <- df |>
     dplyr::group_by(group) |>
-    bin_by_date(dates_from = date, n = cases,
-                date_resolution = "week", fill_gaps = TRUE, .groups = "drop_last")
-  
+    bin_by_date(
+      dates_from = date, n = cases,
+      date_resolution = "week", fill_gaps = TRUE, .groups = "drop_last"
+    )
+
   # Should preserve grouping
   expect_true(dplyr::is_grouped_df(result_grouped_fill))
   expect_identical(dplyr::group_vars(result_grouped_fill), "group")
-  expect_identical(nrow(result_grouped_fill), 2L*5L) # Both have same length
-  
+  expect_identical(nrow(result_grouped_fill), 2L * 5L) # Both have same length
+
   # Check that gaps are filled with zeros within groups
   zero_rows <- result_grouped_fill[result_grouped_fill$n == 0, ]
   expect_identical(nrow(zero_rows), 5L) # 2 gaps in A + 3 gaps in B
-  
+
   # Test without fill_gaps for comparison
   result_grouped_no_fill <- df |>
     dplyr::group_by(group) |>
     bin_by_date(dates_from = date, n = cases, date_resolution = "week")
-    
+
   expect_identical(nrow(result_grouped_no_fill), 5L) # Original data only
 })

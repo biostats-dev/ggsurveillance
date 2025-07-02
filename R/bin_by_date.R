@@ -143,7 +143,7 @@ bin_by_date <- function(
     df_full_dates <- x |>
       dplyr::select({{ dates_from }}) |>
       .fill_date_gaps(date_resolution = date_resolution)
-    
+
     # Join with data and create observations with weight 0
     suppressMessages(x <- x |>
       dplyr::full_join(df_full_dates) |>
@@ -180,20 +180,21 @@ bin_by_date <- function(
 
 # Internal utility function for filling date gaps
 .fill_date_gaps <- function(dates, date_resolution = "week") {
-
   suppressMessages(group_cols <- dplyr::group_keys(dates))
- 
+
   # Filter out rows with NA dates
   clean_dates <- dates |>
     dplyr::ungroup() |>
     dplyr::select(-colnames(group_cols)) |>
     tidyr::drop_na()
 
-  if (nrow(clean_dates) == 0) return(dates)
-  
+  if (nrow(clean_dates) == 0) {
+    return(dates)
+  }
+
   date_col_name <- colnames(clean_dates)[1]
   date_vector <- clean_dates[[1]]
-  
+
   # Convert lubridate units to seq() compatible units - simple mapping
   seq_by <- dplyr::case_when(
     grepl("sec", date_resolution) & inherits(date_vector, c("POSIXt")) ~ "sec",
@@ -203,19 +204,19 @@ bin_by_date <- function(
     grepl("week", date_resolution) ~ "week",
     # Use week since month can skip February (irregular intervals)
     grepl("month", date_resolution) ~ "week",
-    date_resolution == "bimonth" ~ "month",    # Map to base unit
-    date_resolution == "quarter" ~ "month",    # Map to base unit
-    date_resolution == "season" ~ "month",     # Map to base unit
-    date_resolution == "halfyear" ~ "month",   # Map to base unit
+    date_resolution == "bimonth" ~ "month", # Map to base unit
+    date_resolution == "quarter" ~ "month", # Map to base unit
+    date_resolution == "season" ~ "month", # Map to base unit
+    date_resolution == "halfyear" ~ "month", # Map to base unit
     # Use month since epi/isoyear often has only 364 days (52*7)
-    grepl("year", date_resolution) ~ "month", 
-    TRUE ~ "day"  # default
+    grepl("year", date_resolution) ~ "month",
+    TRUE ~ "day" # default
   )
-  
+
   # Get date range
   min_date <- min(date_vector, na.rm = TRUE)
   max_date <- max(date_vector, na.rm = TRUE)
-  
+
   # Generate complete sequence based on date type
   # TODO: Is this needed?
   if (inherits(date_vector, "Date")) {
@@ -227,7 +228,9 @@ bin_by_date <- function(
   }
 
   # Create result data frame
-  result <- group_cols |> dplyr::group_by_all() |> dplyr::reframe(!!date_col_name := full_sequence)
-  
+  result <- group_cols |>
+    dplyr::group_by_all() |>
+    dplyr::reframe(!!date_col_name := full_sequence)
+
   return(result)
 }

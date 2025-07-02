@@ -1,6 +1,6 @@
 # ggsurveillance 0.5.1
 
-- Bug fix for corner cases for the `fill_gaps` option in `bin_by_date()`
+-   Bug fix: Fix corner cases for the `fill_gaps` option in `bin_by_date()`
 
 # ggsurveillance 0.5.0
 

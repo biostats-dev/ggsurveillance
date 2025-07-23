@@ -143,3 +143,18 @@ key_range_date <- function(sep = "[^[:alnum:]]+", reverse = FALSE, mode = "simpl
   class(fun) <- union("key_range_auto_function", class(fun))
   fun
 }
+
+# https://forum.posit.co/t/scale-x-date-date-breaks-1st-and-15th-of-the-month/906/3
+# Function to create date breaks for scale_x_date or datetime
+# TODO: export
+bimonthly <- function(x) {
+  x_range <- range(x, na.rm = TRUE)
+
+  date_range <- c(
+    floor_date(x_range[1], "month"),
+    ceiling_date(x_range[2], "month")
+  )
+  monthly <- seq(date_range[1], date_range[2], by = "1 month")
+
+  sort(c(monthly, monthly + days(14)))
+}

@@ -363,7 +363,8 @@ GeomEpicurve <- ggplot2::ggproto("GeomEpicurve", GeomBar,
     aes(colour = "white", linewidth = 0.6, linetype = "solid"),
     GeomBar$default_aes
   ),
-  extra_params = c(GeomBar$extra_params, "date_resolution", "relative.width"),
+  # TODO: add and respect width
+  extra_params = c(GeomBar$extra_params, "date_resolution", "relative.width", "width", "render", "linewidth.unit"),
   setup_params = function(data, params) {
     params <- GeomBar$setup_params(data, params)
     # Disable date binning if not specified
@@ -444,6 +445,40 @@ GeomEpicurve <- ggplot2::ggproto("GeomEpicurve", GeomBar,
       width = NULL, just = NULL
     )
     flip_data(data, params$flipped_aes)
+  },
+  draw_panel = function(self, data, panel_params, coord, render = "new",
+                        linewidth.unit = "points", lineend = "butt", linejoin = "mitre") {
+    data <- fix_linewidth(data, snake_class(self))
+
+    coords <- coord$transform(data, panel_params)
+
+    if (render == "new") {
+      ggname("geom_rect", borderedRectGrob(
+        xmin = coords$xmin, xmax = coords$xmax,
+        ymin = coords$ymin, ymax = coords$ymax,
+        default.units = "native",
+        linewidth = coords$linewidth,
+        linewidth.unit = linewidth.unit,
+        fill = fill_alpha(coords$fill, coords$alpha),
+        colour = coords$colour
+      ))
+    } else {
+      ggname("geom_rect", rectGrob(
+        coords$xmin, coords$ymax,
+        width = coords$xmax - coords$xmin,
+        height = coords$ymax - coords$ymin,
+        default.units = "native",
+        just = c("left", "top"),
+        gp = gpar(
+          col = coords$colour,
+          fill = fill_alpha(coords$fill, coords$alpha),
+          lwd = coords$linewidth,
+          lty = coords$linetype,
+          linejoin = linejoin,
+          lineend = lineend
+        )
+      ))
+    }
   },
   rename_size = TRUE
 )

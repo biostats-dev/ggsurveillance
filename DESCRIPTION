@@ -28,6 +28,7 @@ Imports:
     forcats,
     ggplot2 (>= 3.5.0),
     glue,
+    grid,
     ISOweek,
     legendry,
     lubridate,

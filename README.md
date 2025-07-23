@@ -95,7 +95,8 @@ ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence)) +
     aes(linetype = "Historical Median (Min-Max)"), data = . %>% filter(!current_season), 
     fun = median, geom = "line") +
   geom_line(
-    aes(linetype = "2024/25"), data = . %>% filter(current_season), colour = "dodgerblue4", linewidth = 2) +
+    aes(linetype = "2024/25"), data = . %>% filter(current_season), 
+        colour = "dodgerblue4", linewidth = 2) +
   labs(linetype = NULL) +
   scale_x_date(date_breaks = "month", date_labels = "%b'%Y", 
                guide = guide_axis_nested_date()) +
@@ -128,7 +129,8 @@ linelist_hospital_outbreak |>
 # Plot
 ggplot(df_stays_long) +
   geom_epigantt(aes(y = Patient, xmin = start_of_stay, xmax = end_of_stay, color = name)) +
-  geom_point(aes(y = Patient, x = date, shape = "Date of pathogen detection"), data = df_detections_long) +
+  geom_point(aes(y = Patient, x = date, shape = "Date of pathogen detection"), 
+    data = df_detections_long) +
   scale_y_discrete_reverse() +
   theme_bw() +
   theme_mod_legend_bottom()

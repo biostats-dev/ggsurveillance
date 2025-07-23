@@ -17,7 +17,7 @@ theme_classic_light <- function(base_size = 11, base_family = "", base_line_size
 }
 
 theme_x_ticks_only <- function(base_size = 11, base_family = "", base_line_size = base_size / 22,
-                             base_rect_size = base_size / 22) {
+                               base_rect_size = base_size / 22) {
   theme_classic_light(
     base_size = base_size, base_family = base_family,
     base_line_size = base_line_size, base_rect_size = base_rect_size

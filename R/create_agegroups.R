@@ -70,8 +70,14 @@ create_agegroups <- function(
   }
 
   values <- as.numeric(values)
-  age_breaks <- sort(floor(age_breaks))
+  age_breaks <- sort(unique(floor(age_breaks)))
+  age_breaks <- age_breaks[age_breaks != 0]
   breaks <- c(-Inf, age_breaks, Inf)
+
+  if(any(values < 0, na.rm = TRUE)) {
+    cli::cli_warn("Negative ages detected. These will be treated as NA.")
+    values[values < 0] <- NA
+  }
 
   write_labels <- function(lb, x, y = NA, pn = pad_numbers, pad = pad_with) {
     if (pn) {
@@ -92,7 +98,10 @@ create_agegroups <- function(
 
   labels <- c(
     # First Group
-    write_labels(first_group_format, age_breaks[1] + corr_up),
+    case_when(
+      collapse_single_year_groups & (age_breaks[1] + corr_up == 0) ~ "0",
+      TRUE ~ write_labels(first_group_format, age_breaks[1] + corr_up),
+    ),    
     # Mid group when more than 1 breaks was supplied
     if (length(age_breaks) > 1) {
       dplyr::case_when(

@@ -45,6 +45,14 @@ test_that("geom_text_last_value adds text at the last value", {
   expect_s3_class(p3, "ggplot")
   expect_no_error(p3)
   vdiffr::expect_doppelganger("2_geom_text_last_value_percent", p3)
+
+  p4 <- ggplot(economics, aes(x = date, y = unemploy / pop, label = psavert / 100)) +
+    geom_line() +
+    geom_text_last_value(labeller = scales::label_percent(accuracy = 0.1))
+
+  expect_s3_class(p4, "ggplot")
+  expect_no_error(p4)
+  vdiffr::expect_doppelganger("2_geom_text_last_value_label", p4)
 })
 
 test_that("geom_label_last_value adds labels at the last value", {

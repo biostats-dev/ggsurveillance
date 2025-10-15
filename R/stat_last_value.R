@@ -264,15 +264,22 @@ StatLastValue <- ggproto("StatLastValue", Stat,
 
     # data$label <- data$label %||% data$y
     # last y, last x? label as default after_stat?
-    data |>
-      dplyr::filter(x == max(x)) |> # warning? return only 1?
+    data <- data |>
+      dplyr::slice_max(order_by = x, n = 1, with_ties = FALSE) |> # warning? return only 1?
       dplyr::mutate(
         x0 = x,
         x = x + nudge_rel * scale_width + nudge_add, # recalc x depending on length of x-axis (scale)
         xmax = x + expand_rel * scale_width + expand_add,
         label_formatted = labeller(y)
-      ) |>
-      ggplot2::flip_data(flipped_aes)
+      )
+
+    # Apply labeller to label column if it exists and is numeric
+    if ("label" %in% names(data) && is.numeric(datalabel)) {
+      data <- data |>
+        dplyr::mutate(label = labeller(label))
+    }
+
+    ggplot2::flip_data(data, flipped_aes)
   },
   dropped_aes = "weight"
 )
@@ -299,15 +306,22 @@ StatLastValueRepel <- ggproto("StatLastValueRepel", StatLastValue,
 
     scale_width <- diff(sel_scale$range$range)
 
-    data |>
-      dplyr::filter(x == max(x)) |> # warning? return only 1?
+    data <- data |>
+      dplyr::slice_max(order_by = x, n = 1, with_ties = FALSE) |> # warning? return only 1?
       dplyr::mutate(
         x0 = x, # x0 is a by ggplot recognized x value (for flipping etc.)
         x = x,
         nudge_x = x + nudge_rel * scale_width + nudge_add, # Nudging for ggrepel (new x coordinate)
         xmax = nudge_x + expand_rel * scale_width + expand_add, # Force extension of the x-axis scale limits
         label_formatted = labeller(y)
-      ) |>
-      ggplot2::flip_data(flipped_aes)
+      )
+
+    # Apply labeller to label column if it exists and is numeric
+    if ("label" %in% names(data) && is.numeric(datalabel)) {
+      data <- data |>
+        dplyr::mutate(label = labeller(label))
+    }
+
+    ggplot2::flip_data(data, flipped_aes)
   }
 )

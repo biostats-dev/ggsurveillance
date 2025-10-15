@@ -263,3 +263,48 @@ test_that("label_power10 magnitude_only handles edge cases correctly", {
   expect_identical(text_results[3], "10^-3") # 0.001 = 1.0 x 10^-3
   expect_identical(text_results[4], "10^-2") # 0.01 = 1.0 x 10^-2
 })
+test_that("label_power10 handles NA values correctly", {
+  labeller <- label_power10()
+
+  # Test with NA values in the vector
+  values <- c(NA, 1000, NA)
+  result <- labeller(values)
+
+  expect_true(is.expression(result))
+  expect_identical(length(result), 3L)
+
+  # First and third elements should be NA (check by identical to NA)
+  expect_identical(result[[1]], NA)
+  expect_identical(result[[3]], NA)
+
+  # Middle value should be formatted normally
+  expect_false(identical(result[[2]], NA))
+  text_result <- deparse(result[[2]])
+  expect_identical(text_result, "1 %*% 10^3")
+
+  # Test with magnitude_only = TRUE
+  labeller_magnitude <- label_power10(magnitude_only = TRUE)
+  result_magnitude <- labeller_magnitude(values)
+
+  expect_true(is.expression(result_magnitude))
+  expect_identical(result_magnitude[[1]], NA)
+  expect_identical(result_magnitude[[3]], NA)
+  expect_false(identical(result_magnitude[[2]], NA))
+  expect_identical(deparse(result_magnitude[[2]]), "10^3")
+
+  # Test with all NA values
+  all_na <- c(NA, NA, NA)
+  result_all_na <- labeller(all_na)
+
+  expect_true(all(sapply(seq_along(result_all_na), function(i) identical(result_all_na[[i]], NA))))
+
+  # Test that non-NA values in mixed vector still work correctly
+  mixed <- c(100, NA, 1000, NA, 10000)
+  result_mixed <- labeller(mixed)
+
+  expect_identical(result_mixed[[2]], NA)
+  expect_identical(result_mixed[[4]], NA)
+  expect_false(identical(result_mixed[[1]], NA))
+  expect_false(identical(result_mixed[[3]], NA))
+  expect_false(identical(result_mixed[[5]], NA))
+})

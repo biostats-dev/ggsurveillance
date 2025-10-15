@@ -102,6 +102,7 @@ label_power10 <- function(decimal.mark = NULL, digits = 3, scale = 1, prefix = "
 
     # Formatting depending on exponent
     dplyr::case_when(
+      is.na(x) ~ NA_character_,
       magnitude_only & expn == 0 ~ paste0(sign, "1"),
       expn == 0 ~ mant,
       magnitude_only & expn == 1 ~ paste0(sign, "10"),

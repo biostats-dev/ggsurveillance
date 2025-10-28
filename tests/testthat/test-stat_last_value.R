@@ -77,7 +77,7 @@ test_that("geom_label_last_value adds labels at the last value", {
 
 test_that("geom_text_last_value_repel works with ggrepel", {
   skip_if_not_installed("ggrepel")
-
+  set.seed(123)
   # Basic repel text
   p1 <- ggplot(economics_long, aes(x = date, y = value, color = variable)) +
     geom_line() +
@@ -87,6 +87,7 @@ test_that("geom_text_last_value_repel works with ggrepel", {
   expect_no_error(p1)
   vdiffr::expect_doppelganger("4_geom_text_last_value_repel_basic", p1)
 
+  set.seed(123)
   # Test with min.segment.length parameter
   p2 <- ggplot(economics_long, aes(x = date, y = value, color = variable)) +
     geom_line() +
@@ -95,12 +96,26 @@ test_that("geom_text_last_value_repel works with ggrepel", {
   expect_s3_class(p2, "ggplot")
   expect_no_error(p2)
   vdiffr::expect_doppelganger("4_geom_text_last_value_repel_min_segment", p2)
+
+  set.seed(123)
+  # Value labeller with repel
+  p3 <- ggplot(economics_long, aes(x = date, y = value, color = variable)) +
+    geom_line() +
+    geom_text_last_value_repel(
+      aes(label = value01),
+      labeller = scales::label_percent(accuracy = 0.1)
+    )
+
+  expect_s3_class(p1, "ggplot")
+  expect_no_error(p1)
+  vdiffr::expect_doppelganger("4_geom_text_last_value_repel_labeller", p3)
 })
 
 test_that("geom_label_last_value_repel works with ggrepel", {
   skip_if_not_installed("ggrepel")
 
   # Basic repel label
+  set.seed(123)
   p1 <- ggplot(economics_long, aes(x = date, y = value, color = variable)) +
     geom_line() +
     geom_label_last_value_repel(aes(label = variable))
@@ -110,6 +125,7 @@ test_that("geom_label_last_value_repel works with ggrepel", {
   vdiffr::expect_doppelganger("5_geom_label_last_value_repel_basic", p1)
 
   # Test with custom expand and nudge
+  set.seed(123)
   p2 <- ggplot(economics_long, aes(x = date, y = value, color = variable)) +
     geom_line() +
     geom_label_last_value_repel(aes(label = variable), expand_rel = 0.1, nudge_rel = 0.2)
@@ -121,6 +137,7 @@ test_that("geom_label_last_value_repel works with ggrepel", {
 
 test_that("stat_last_value works with absolute nudging", {
   # Test with datetime values and absolute nudging
+  set.seed(123)
   df <- influenza_germany |>
     dplyr::mutate(date = as.POSIXct(.coerce_to_date(ReportingWeek)))
 
@@ -137,6 +154,7 @@ test_that("stat_last_value works with absolute nudging", {
   vdiffr::expect_doppelganger("6_stat_last_value_abs_nudge_datetime", p1)
 
   # Test with date values and absolute nudging
+  set.seed(123)
   df <- influenza_germany |>
     dplyr::mutate(date = .coerce_to_date(ReportingWeek))
   p2 <- ggplot(df, aes(x = date, y = Incidence, color = AgeGroup)) +

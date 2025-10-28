@@ -274,7 +274,7 @@ StatLastValue <- ggproto("StatLastValue", Stat,
       )
 
     # Apply labeller to label column if it exists and is numeric
-    if ("label" %in% names(data) && is.numeric(datalabel)) {
+    if ("label" %in% names(data) && is.numeric(data$label)) {
       data <- data |>
         dplyr::mutate(label = labeller(label))
     }
@@ -317,7 +317,7 @@ StatLastValueRepel <- ggproto("StatLastValueRepel", StatLastValue,
       )
 
     # Apply labeller to label column if it exists and is numeric
-    if ("label" %in% names(data) && is.numeric(datalabel)) {
+    if ("label" %in% names(data) && is.numeric(data$label)) {
       data <- data |>
         dplyr::mutate(label = labeller(label))
     }

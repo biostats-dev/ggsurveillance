@@ -74,7 +74,7 @@ create_agegroups <- function(
   age_breaks <- age_breaks[age_breaks != 0]
   breaks <- c(-Inf, age_breaks, Inf)
 
-  if(any(values < 0, na.rm = TRUE)) {
+  if (any(values < 0, na.rm = TRUE)) {
     cli::cli_warn("Negative ages detected. These will be treated as NA.")
     values[values < 0] <- NA
   }
@@ -101,7 +101,7 @@ create_agegroups <- function(
     case_when(
       collapse_single_year_groups & (age_breaks[1] + corr_up == 0) ~ "0",
       TRUE ~ write_labels(first_group_format, age_breaks[1] + corr_up),
-    ),    
+    ),
     # Mid group when more than 1 breaks was supplied
     if (length(age_breaks) > 1) {
       dplyr::case_when(

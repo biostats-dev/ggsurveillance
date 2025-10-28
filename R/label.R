@@ -15,8 +15,8 @@
 #' @param magnitude_only Logical. If `TRUE`, shows only the power-of-10 part
 #'   (e.g., \eqn{10^5} instead of \eqn{1\times 10^5}). Default is `FALSE`.
 #' @param mult_sign Character string specifying the multiplication sign to use.
-#'   Either `"times"` (default, displays as \eqn{1.5 \times 10^3}) or `"cdot"` 
-#'   (displays as \eqn{1.5 \cdot 10^3}). Caution: One some operation systems, 
+#'   Either `"times"` (default, displays as \eqn{1.5 \times 10^3}) or `"cdot"`
+#'   (displays as \eqn{1.5 \cdot 10^3}). Caution: One some operation systems,
 #'   the `"times"` symbol is rendered as `"cdot"`.
 #' @param ... Additional arguments passed to [`scales::scientific()`].
 #'
@@ -73,7 +73,7 @@
 label_power10 <- function(decimal.mark = NULL, digits = 3, scale = 1, prefix = "", suffix = "",
                           magnitude_only = FALSE, mult_sign = c("times", "cdot"), ...) {
   force_all(decimal.mark, digits, scale, prefix, suffix, magnitude_only, mult_sign, ...)
-  
+
   # Check for ggplot2 4.0.0 bug with expressions in scale labels
   # https://github.com/tidyverse/ggplot2/issues/6617
   ggplot2_version <- utils::packageVersion("ggplot2")

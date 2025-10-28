@@ -313,37 +313,37 @@ test_that("label_power10 mult_sign parameter works correctly", {
   # Test with default "times" multiplication sign
   labeller_times <- label_power10(mult_sign = "times")
   labeller_cdot <- label_power10(mult_sign = "cdot")
-  
+
   values <- c(1000, 10000)
   result_times <- labeller_times(values)
   result_cdot <- labeller_cdot(values)
-  
+
   expect_true(is.expression(result_times))
   expect_true(is.expression(result_cdot))
-  
+
   # Convert to text for comparison
   text_times <- sapply(result_times, deparse)
   text_cdot <- sapply(result_cdot, deparse)
-  
+
   # Times should use %*% operator
   expect_identical(text_times[1], "1 %*% 10^3")
   expect_identical(text_times[2], "1 %*% 10^4")
-  
+
   # Cdot should use %.% operator
   expect_identical(text_cdot[1], "1 %.% 10^3")
   expect_identical(text_cdot[2], "1 %.% 10^4")
-  
+
   # Test with non-integer mantissa
   values2 <- c(2500, 3500)
   result_times2 <- labeller_times(values2)
   result_cdot2 <- labeller_cdot(values2)
-  
+
   text_times2 <- sapply(result_times2, deparse)
   text_cdot2 <- sapply(result_cdot2, deparse)
-  
+
   expect_identical(text_times2[1], "2.5 %*% 10^3")
   expect_identical(text_cdot2[1], "2.5 %.% 10^3")
-  
+
   # Test that invalid mult_sign throws an error
   expect_error(
     label_power10(mult_sign = "invalid"),

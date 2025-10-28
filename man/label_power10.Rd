@@ -11,6 +11,7 @@ label_power10(
   prefix = "",
   suffix = "",
   magnitude_only = FALSE,
+  mult_sign = c("times", "cdot"),
   ...
 )
 }
@@ -28,6 +29,11 @@ retrieves the setting from [\code{\link[scales:number_options]{scales::number_op
 
 \item{magnitude_only}{Logical. If \code{TRUE}, shows only the power-of-10 part
 (e.g., \eqn{10^5} instead of \eqn{1\times 10^5}). Default is \code{FALSE}.}
+
+\item{mult_sign}{Character string specifying the multiplication sign to use.
+Either \code{"times"} (default, displays as \eqn{1.5 \times 10^3}) or \code{"cdot"}
+(displays as \eqn{1.5 \cdot 10^3}). Caution: One some operation systems,
+the \code{"times"} symbol is rendered as \code{"cdot"}.}
 
 \item{...}{Additional arguments passed to \code{\link[scales:scientific_format]{scales::scientific()}}.}
 }

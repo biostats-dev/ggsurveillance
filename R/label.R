@@ -76,8 +76,11 @@ label_power10 <- function(decimal.mark = NULL, digits = 3, scale = 1, prefix = "
 
   # Check for ggplot2 4.0.0 bug with expressions in scale labels
   # https://github.com/tidyverse/ggplot2/issues/6617
+  # Skip warning during tests to avoid cluttering test output
   ggplot2_version <- utils::packageVersion("ggplot2")
-  if (ggplot2_version == "4.0.0") {
+  is_testing <- identical(Sys.getenv("TESTTHAT"), "true")
+  
+  if (ggplot2_version == "4.0.0" && !is_testing) {
     cli::cli_warn(
       c(
         "!" = "ggplot2 version 4.0.0 has a bug when using expressions in scale labels.",

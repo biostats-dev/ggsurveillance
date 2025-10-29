@@ -85,13 +85,14 @@
 #'   )
 #'
 guide_axis_nested_date <- function(
-    sep = "[^[:alnum:]]+", # ?
-    regular_key = "auto",
-    type = "bracket",
-    mode = "simple",
-    pad_date = NULL,
-    oob = "none",
-    ...) {
+  sep = "[^[:alnum:]]+", # ?
+  regular_key = "auto",
+  type = "bracket",
+  mode = "simple",
+  pad_date = NULL,
+  oob = "none",
+  ...
+) {
   pad_date <- pad_date %||% switch(type,
     fence = 0.5,
     0.25

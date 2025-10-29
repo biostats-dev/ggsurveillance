@@ -79,7 +79,7 @@ label_power10 <- function(decimal.mark = NULL, digits = 3, scale = 1, prefix = "
   # Skip warning during tests to avoid test failure
   ggplot2_version <- utils::packageVersion("ggplot2")
   is_testing <- identical(Sys.getenv("TESTTHAT"), "true")
-  
+
   if (ggplot2_version == "4.0.0" && !is_testing) {
     cli::cli_warn(
       c(

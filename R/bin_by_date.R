@@ -86,8 +86,9 @@
 #'   population = population
 #' )
 bin_by_date <- function(
-    x, dates_from, n = 1, population = 1, fill_gaps = FALSE,
-    date_resolution = "week", week_start = 1, .groups = "drop") {
+  x, dates_from, n = 1, population = 1, fill_gaps = FALSE,
+  date_resolution = "week", week_start = 1, .groups = "drop"
+) {
   wt <- incidence <- NULL
 
   # Enframe if vector supplied

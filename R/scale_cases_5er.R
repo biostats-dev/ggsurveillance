@@ -33,13 +33,14 @@
 #' @export
 
 scale_y_cases_5er <- function(
-    name = waiver(),
-    n = 8, min.n = 5, u5.bias = 4,
-    expand = NULL, limits = c(0, NA),
-    labels = waiver(),
-    oob = scales::censor, na.value = NA_real_,
-    transform = "identity", position = "left",
-    sec.axis = waiver(), guide = waiver(), ...) {
+  name = waiver(),
+  n = 8, min.n = 5, u5.bias = 4,
+  expand = NULL, limits = c(0, NA),
+  labels = waiver(),
+  oob = scales::censor, na.value = NA_real_,
+  transform = "identity", position = "left",
+  sec.axis = waiver(), guide = waiver(), ...
+) {
   # Scale Continuous
   scale_y_continuous(
     name = name,
@@ -63,13 +64,14 @@ scale_y_cases_5er <- function(
 #' @export
 
 scale_x_cases_5er <- function(
-    name = waiver(),
-    n = 8, min.n = 5, u5.bias = 4,
-    expand = NULL, limits = c(0, NA),
-    labels = waiver(),
-    oob = scales::censor, na.value = NA_real_,
-    transform = "identity", position = "bottom",
-    sec.axis = waiver(), guide = waiver(), ...) {
+  name = waiver(),
+  n = 8, min.n = 5, u5.bias = 4,
+  expand = NULL, limits = c(0, NA),
+  labels = waiver(),
+  oob = scales::censor, na.value = NA_real_,
+  transform = "identity", position = "bottom",
+  sec.axis = waiver(), guide = waiver(), ...
+) {
   # Scale Continuous
   scale_x_continuous(
     name = name,

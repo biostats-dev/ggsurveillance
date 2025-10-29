@@ -6,13 +6,13 @@ test_that("geom_epicurve handles basic date inputs", {
   )
 
   # Create plot
-  p <- ggplot(test_dates, aes(x = date, fill = cat)) +
+  p <- ggplot(test_dates, aes(x = date)) +
     geom_vline_year() +
-    geom_epicurve(date_resolution = "day") +
+    geom_epicurve(aes(fill = cat), date_resolution = "day") +
     # ggplot 4.0.0 Bug, already fixed in dev version
-    #geom_epicurve_point(aes(shape = cat), date_resolution = "day", vjust = 0.3) +
-    #geom_epicurve_text(aes(label = cat), date_resolution = "day", vjust = 0.8) +
-    stat_bin_date(aes(y = after_stat(count) * 1.05, label = after_stat(count)),
+    # geom_epicurve_point(aes(shape = cat), date_resolution = "day", vjust = 0.3) +
+    # geom_epicurve_text(aes(label = cat), date_resolution = "day", vjust = 0.8) +
+    stat_bin_date(aes(y = after_stat(count) * 1.05, label = after_stat(count), group = 1),
       date_resolution = "day", geom = "text"
     ) +
     scale_y_cases_5er() +
@@ -25,9 +25,9 @@ test_that("geom_epicurve handles basic date inputs", {
   expect_no_error(p)
   vdiffr::expect_doppelganger("1_geom_epicurve_basic_date", p)
 
-p0 <- ggplot(test_dates, aes(x = date, fill = cat)) +
+  p0 <- ggplot(test_dates, aes(x = date, group = cat)) +
     geom_vline_year() +
-    geom_epicurve(date_resolution = "week") +
+    geom_epicurve(aes(fill = cat), date_resolution = "week") +
     geom_epicurve_point(aes(shape = cat), date_resolution = "week", vjust = 0.3) +
     geom_epicurve_text(aes(label = cat), date_resolution = "week", vjust = 0.8) +
     stat_bin_date(aes(y = after_stat(count) * 1.05, label = after_stat(count), group = 1),

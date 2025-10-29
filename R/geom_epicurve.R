@@ -362,7 +362,7 @@ GeomEpicurve <- ggplot2::ggproto("GeomEpicurve", GeomBar,
     aes(colour = "white", linewidth = 0.6, linetype = "solid"),
     GeomBar$default_aes
   ),
-  extra_params = c(GeomBar$extra_params, "date_resolution", "relative.width"),
+  extra_params = c(GeomBar$extra_params, "date_resolution", "relative.width", "width"),
   setup_params = function(data, params) {
     params <- GeomBar$setup_params(data, params)
     # Disable date binning if not specified

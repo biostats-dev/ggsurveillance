@@ -95,7 +95,7 @@ geom_epicurve <- function(mapping = NULL, data = NULL,
                           stat = "epicurve", position = "stack",
                           date_resolution = NULL,
                           week_start = getOption("lubridate.week.start", 1),
-                          width = NULL, relative.width = 1,
+                          relative.width = 1,
                           ..., na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
   ggplot2::layer(
     geom = GeomEpicurve,
@@ -106,7 +106,6 @@ geom_epicurve <- function(mapping = NULL, data = NULL,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(
-      width = width,
       relative.width = relative.width,
       date_resolution = date_resolution,
       week_start = week_start,

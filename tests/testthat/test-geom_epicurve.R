@@ -9,9 +9,9 @@ test_that("geom_epicurve handles basic date inputs", {
   p <- ggplot(test_dates, aes(x = date)) +
     geom_vline_year() +
     geom_epicurve(aes(fill = cat), date_resolution = "day") +
-    # ggplot 4.0.0 Bug, already fixed in dev version
-    # geom_epicurve_point(aes(shape = cat), date_resolution = "day", vjust = 0.3) +
-    # geom_epicurve_text(aes(label = cat), date_resolution = "day", vjust = 0.8) +
+    # Cave: ggplot 4.0.0 Bug, already fixed in 4.0.1
+    geom_epicurve_point(aes(shape = cat), date_resolution = "day", vjust = 0.3) +
+    geom_epicurve_text(aes(label = cat), date_resolution = "day", vjust = 0.8) +
     stat_bin_date(aes(y = after_stat(count) * 1.05, label = after_stat(count), group = 1),
       date_resolution = "day", geom = "text"
     ) +
@@ -225,7 +225,7 @@ test_that("stat_bin_date: test fill_gaps", {
   p1_1 <- ggplot(plot_data_epicurve_imp, aes(x = date, weight = 2)) +
     stat_bin_date(date_resolution = "week") +
     scale_y_cases_5er(limits = NULL)
-  expect_no_error(p1)
+  expect_no_error(p1_1)
   vdiffr::expect_doppelganger("8_stat_bin_date_base", p1_1)
 
   p2 <- ggplot(plot_data_epicurve_imp, aes(x = date, weight = 2)) +

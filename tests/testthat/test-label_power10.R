@@ -350,3 +350,42 @@ test_that("label_power10 mult_sign parameter works correctly", {
     regexp = "must be one of"
   )
 })
+
+
+test_that("label_power10 ggplot2 compat test", {
+  p1 <- ggplot(
+    data.frame(x = 1:5, y = c(1, 50000, 75000, 100000, 200000)),
+    aes(x, y)
+  ) +
+    geom_point() +
+    scale_y_continuous(labels = label_power10())
+  expect_no_error(p1)
+  vdiffr::expect_doppelganger("1_power_10_ggplot2_base", p1)
+
+  p2 <- ggplot(
+    data.frame(x = 1:5, y = c(1, 50000, 75000, 100000, 200000)),
+    aes(x, y)
+  ) +
+    geom_point() +
+    scale_y_continuous(labels = label_power10(decimal.mark = ",", digits = 2, suffix = " CFU"))
+  expect_no_error(p2)
+  vdiffr::expect_doppelganger("1_power_10_ggplot2_extra", p2)
+
+  p3 <- ggplot(
+    data.frame(x = 1:5, y = c(1000, 10000, 100000, 1000000, 10000000)),
+    aes(x, y)
+  ) +
+    geom_point() +
+    scale_y_log10(labels = label_power10(magnitude_only = TRUE))
+  expect_no_error(p3)
+  vdiffr::expect_doppelganger("1_power_10_ggplot2_magnitude_only", p3)
+
+  p4 <- ggplot(
+    data.frame(x = 1:5, y = c(1, 50000, 75000, 100000, 200000)),
+    aes(x, y)
+  ) +
+    geom_point() +
+    scale_y_continuous(labels = label_power10(mult_sign = "cdot"))
+  expect_no_error(p4)
+  vdiffr::expect_doppelganger("1_power_10_ggplot2_cdot", p4)
+})

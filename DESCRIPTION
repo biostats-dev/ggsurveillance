@@ -26,7 +26,7 @@ Imports:
     cli,
     dplyr,
     forcats,
-    ggplot2 (>= 3.5.0),
+    ggplot2 (>= 4.0.1),
     glue,
     ISOweek,
     legendry,

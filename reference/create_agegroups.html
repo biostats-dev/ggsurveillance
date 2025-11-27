@@ -21,7 +21,7 @@ This allows for reproducible age groups, which can be used for joining data
 
     <a class="navbar-brand me-2" href="../index.html">ggsurveillance</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -97,7 +97,8 @@ If <code>FALSE</code>, breaks define the upper bound (e.g., a break at 5 ends th
 
 <dt id="arg-first-group-format">first_group_format<a class="anchor" aria-label="anchor" href="#arg-first-group-format"></a></dt>
 <dd><p>Character string template for the first age group. Uses <a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue::glue</a> syntax. <br>
-The variable <code>x</code> represents the upper bound of the first interval.<br>
+The variable <code>x</code> represents the upper bound of the first interval.
+Ignored if the first group is collapsed using <code>collapse_single_year_groups</code>. <br>
 Default: <code>"0-{x}"</code>. Other common styles: <code>"&lt;={x}", "&lt;{x+1}"</code></p></dd>
 
 
@@ -114,7 +115,8 @@ Default: <code>"{x}+"</code>. Other common styles: <code>"&gt;={x}","&gt;{x-1}"<
 
 
 <dt id="arg-pad-numbers">pad_numbers<a class="anchor" aria-label="anchor" href="#arg-pad-numbers"></a></dt>
-<dd><p>Logical or numeric; if numeric, pad numbers up to the specified length (Tip: use <code>2</code>).
+<dd><p>Logical or numeric; if numeric, pad numbers up to the specified length
+(Tip: use <code>2</code>, <code>TRUE</code> will be treated as <code>2</code>).
 Not compatible with calculations within glue formats. Default: <code>FALSE</code></p></dd>
 
 
@@ -128,16 +130,21 @@ are formatted as a single number (e.g., "1") instead of a range (e.g., "1-1"). D
 
 
 <dt id="arg-na-label">na_label<a class="anchor" aria-label="anchor" href="#arg-na-label"></a></dt>
-<dd><p>Label for <code>NA</code> values. If <code>NA</code>, keeps default <code>NA</code> handling. Default: <code>NA</code></p></dd>
+<dd><p>Label for <code>NA</code> values (including negative ages). If <code>NA</code>, keeps default <code>NA</code> handling. Default: <code>NA</code></p></dd>
 
 
 <dt id="arg-return-factor">return_factor<a class="anchor" aria-label="anchor" href="#arg-return-factor"></a></dt>
-<dd><p>Logical; if <code>TRUE</code>, returns a factor, if <code>FALSE</code> returns character vector. Default: <code>FALSE</code></p></dd>
+<dd><p>Logical; if <code>TRUE</code>, returns a factor, if <code>FALSE</code> returns character vector.
+Can be used to keep the ordering and all possible levels of the age groups. Default: <code>FALSE</code></p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>Vector of age group labels (character or factor depending on return_factor)</p>
+    </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>Values below 0 are treated as <code>NA</code>.</p>
     </div>
 
     <div class="section level2">
@@ -199,7 +206,7 @@ are formatted as a single number (e.g., "1") instead of a range (e.g., "1-1"). D
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

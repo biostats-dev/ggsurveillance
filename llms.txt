@@ -1,0 +1,401 @@
+# ggsurveillance
+
+**ggsurveillance** is an R package with helpful tools and ggplot
+extensions for epidemiology, especially infectious disease surveillance
+and outbreak investigation. All functions provide tidy functional
+interfaces for easy integration with the tidyverse. For documentation
+and vignettes see:
+[ggsurveillance.biostats.dev](https://ggsurveillance.biostats.dev)
+
+## Key Features
+
+### 📊 Epidemic Curves
+
+- [`geom_epicurve()`](https://ggsurveillance.biostats.dev/reference/geom_epicurve.md):
+  A ggplot geom for plotting epicurves.
+  - [`stat_bin_date()`](https://ggsurveillance.biostats.dev/reference/geom_epicurve.md):
+    Date interval (week, month etc.) based binning of case numbers with
+    perfect alignment with e.g. reporting week.
+  - [`geom_epicurve_text()`](https://ggsurveillance.biostats.dev/reference/geom_epicurve.md)
+    and
+    [`geom_epicurve_point()`](https://ggsurveillance.biostats.dev/reference/geom_epicurve.md):
+    New geoms to easily add text annotations or points to cases in
+    epidemic curves.
+  - [`geom_vline_year()`](https://ggsurveillance.biostats.dev/reference/geom_vline_year.md):
+    Automatically detects the turn of the year(s) from the date or
+    datetime axis and draws a vertical line.
+  - [`scale_y_cases_5er()`](https://ggsurveillance.biostats.dev/reference/scale_y_cases_5er.md):
+    For better (case) count axis breaks and positioning.
+
+### 📅 Date & Time Transformations
+
+- [`bin_by_date()`](https://ggsurveillance.biostats.dev/reference/bin_by_date.md):
+  A `tidyverse`-compatible function for flexible date-based aggregation
+  (binning).
+
+- [`align_dates_seasonal()`](https://ggsurveillance.biostats.dev/reference/align_dates_seasonal.md):
+  Align surveillance data for seasonal plots (e.g. flu season).
+
+### 📈 Specialized Epi Visualizations
+
+- [`geom_bar_diverging()`](https://ggsurveillance.biostats.dev/reference/geom_bar_diverging.md):
+  A geom for diverging bar charts, which can be used to plot population
+  pyramids, likert scales (sentiment analyses) and other data with
+  opposing categories, like vaccination status or imported vs
+  autochthonous (local) infections.
+  - [`stat_diverging()`](https://ggsurveillance.biostats.dev/reference/geom_bar_diverging.md)
+    for easy labeling of these charts with category counts/percentages
+    or total counts/percentages
+  - [`scale_x_continuous_diverging()`](https://ggsurveillance.biostats.dev/reference/scale_continuous_diverging.md)
+    for symmetric diverging scales
+  - [`geom_area_diverging()`](https://ggsurveillance.biostats.dev/reference/geom_bar_diverging.md)
+    for continuous variables (e.g. changes over time)
+- [`geom_epigantt()`](https://ggsurveillance.biostats.dev/reference/geom_epigantt.md):
+  A geom for epigantt plots. Helpful to visualize overlapping time
+  intervals for contact tracing (e.g. hospital outbreaks).
+  - including
+    [`scale_y_discrete_reverse()`](https://ggsurveillance.biostats.dev/reference/scale_y_discrete_reverse.md)
+    which reverses the order of the categorical scale.
+
+### 🎨 ggplot2 Extensions & Theme Modifications
+
+- More `ggplot2` add-ons:
+
+  - [`guide_axis_nested_date()`](https://ggsurveillance.biostats.dev/reference/guide_axis_nested_date.md):
+    An axis guide for creating nested date labels for hierarchical time
+    periods (e.g., year \> month \> day).
+  - [`geom_label_last_value()`](https://ggsurveillance.biostats.dev/reference/stat_last_value.md):
+    A geom for labeling the last value of a time series
+    (e.g. [`geom_line()`](https://ggplot2.tidyverse.org/reference/geom_path.html)).
+  - [`label_power10()`](https://ggsurveillance.biostats.dev/reference/label_power10.md):
+    A `ggplot2`-compatible labeling function to format numbers in
+    scientific notation with powers of 10 (e.g., \\2 \times 10^5\\).
+
+- `theme_mod_` functions for ggplot2 theme modifications:
+
+  - [`theme_mod_legend_position()`](https://ggsurveillance.biostats.dev/reference/theme_mod_disable_legend.md)
+    etc. to adjust the legend positions.
+  - [`theme_mod_rotate_x_axis_labels()`](https://ggsurveillance.biostats.dev/reference/theme_mod_rotate_axis_labels.md)
+    etc. for rotating x axis labels.
+  - [`theme_mod_remove_minor_grid()`](https://ggsurveillance.biostats.dev/reference/theme_mod_remove_minor_grid.md)
+    etc. to remove the minor grid lines (x, y or both) or all grid
+    lines.
+
+### 🔧 Other Utilities
+
+- [`create_agegroups()`](https://ggsurveillance.biostats.dev/reference/create_agegroups.md):
+  Create reproducible age groups with highly customizable labels.
+
+- Additional utilities:
+  [`geometric_mean()`](https://ggsurveillance.biostats.dev/reference/geometric_mean.md),
+  [`expand_counts()`](https://ggsurveillance.biostats.dev/reference/uncount.md),
+  and more
+
+## Examples
+
+### Creating Epicurves
+
+``` r
+library(ggplot2)
+library(tidyr)
+library(outbreaks)
+library(ggsurveillance)
+
+sars_canada_2003 |> #SARS dataset from outbreaks
+  pivot_longer(starts_with("cases"), 
+               names_prefix = "cases_", 
+               names_to = "origin") |>
+  ggplot(aes(x = date, weight = value, fill = origin)) +
+  geom_epicurve(date_resolution = "week") +
+  geom_epicurve_text(aes(label = ifelse(origin == "travel", "🛪", "")), 
+                     date_resolution = "week", size = 1.5, color = "white") + 
+  scale_x_date(date_labels = "W%V'%g", date_breaks = "2 weeks") +
+  scale_y_cases_5er() +
+  scale_fill_brewer(type = "qual", palette = 6) +
+  theme_classic()
+```
+
+![Epicurve of the 2003 SARS outbreak in
+Canada](reference/figures/epicurve_readme.png)
+
+Epicurve of the 2003 SARS outbreak in Canada
+
+### Align surveillance data for seasonal comparison
+
+``` r
+library(ggplot2)
+library(dplyr)
+library(ggsurveillance)
+
+influenza_germany |>
+  filter(AgeGroup == "00+") |>
+  align_dates_seasonal(dates_from = ReportingWeek,
+                       date_resolution = "isoweek",
+                       start = 28) -> df_flu_aligned
+
+ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence)) +
+  stat_summary(
+    aes(linetype = "Historical Median (Min-Max)"), data = . %>% filter(!current_season), 
+    fun.data = median_hilow, geom = "ribbon", alpha = 0.3) +
+  stat_summary(
+    aes(linetype = "Historical Median (Min-Max)"), data = . %>% filter(!current_season), 
+    fun = median, geom = "line") +
+  geom_line(
+    aes(linetype = "2024/25"), data = . %>% filter(current_season), 
+        colour = "dodgerblue4", linewidth = 2) +
+  labs(linetype = NULL) +
+  scale_x_date(date_breaks = "month", date_labels = "%b'%Y", 
+               guide = guide_axis_nested_date()) +
+  theme_bw() +
+  theme_mod_legend_position(position.inside = c(0.2, 0.8))
+```
+
+![Seasonal influenza data from Germany by age
+group](reference/figures/seasonal_plot_readme.png)
+
+Seasonal influenza data from Germany by age group
+
+### Create Epigantt plots to visualize exposure intervals in outbreaks
+
+``` r
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(ggsurveillance)
+
+# Transform to long format
+linelist_hospital_outbreak |>
+  pivot_longer(
+    cols = starts_with("ward"),
+    names_to = c(".value", "num"),
+    names_pattern = "ward_(name|start_of_stay|end_of_stay)_([0-9]+)",
+    values_drop_na = TRUE
+  ) -> df_stays_long
+
+linelist_hospital_outbreak |>
+  pivot_longer(cols = starts_with("pathogen"), values_to = "date") -> df_detections_long
+
+# Plot
+ggplot(df_stays_long) +
+  geom_epigantt(aes(y = Patient, xmin = start_of_stay, xmax = end_of_stay, color = name)) +
+  geom_point(aes(y = Patient, x = date, shape = "Date of pathogen detection"), 
+    data = df_detections_long) +
+  scale_y_discrete_reverse() +
+  theme_bw() +
+  theme_mod_legend_bottom()
+```
+
+![Epigantt chart of a fictional hospital
+outbreak](reference/figures/epigantt_plot_readme.png)
+
+Epigantt chart of a fictional hospital outbreak
+
+### Create Diverging Bar Charts
+
+Useful for population pyramids, vaccination status, likert scales
+(sentiment) etc.
+
+``` r
+library(dplyr)
+library(ggplot2)
+library(ggsurveillance)
+
+population_german_states |>
+  filter(state %in% c("Berlin", "Mecklenburg-Vorpommern"), age < 90) |>
+  ggplot(aes(y = age, fill = sex, weight = n)) +
+  geom_bar_diverging(width = 1) +
+  geom_vline(xintercept = 0) +
+  scale_x_continuous_diverging(n.breaks = 7) +
+  facet_wrap(~state, scales = "free_x") +
+  theme_bw() +
+  theme_mod_legend_top()
+```
+
+![Population pyramids of Berlin and
+Mecklenburg-Vorpommern](reference/figures/diverging_bar_chart_age_pyramid_readme.png)
+
+Population pyramids of Berlin and Mecklenburg-Vorpommern
+
+# Package index
+
+## Epidemic Curves
+
+Functions for creating and styling epidemic curves
+
+- [`geom_epicurve()`](https://ggsurveillance.biostats.dev/reference/geom_epicurve.md)
+  [`stat_bin_date()`](https://ggsurveillance.biostats.dev/reference/geom_epicurve.md)
+  [`stat_date_count()`](https://ggsurveillance.biostats.dev/reference/geom_epicurve.md)
+  [`geom_epicurve_text()`](https://ggsurveillance.biostats.dev/reference/geom_epicurve.md)
+  [`geom_epicurve_point()`](https://ggsurveillance.biostats.dev/reference/geom_epicurve.md)
+  : Create an epidemic curve plot or bin/count observations by date
+  periods
+- [`scale_y_cases_5er()`](https://ggsurveillance.biostats.dev/reference/scale_y_cases_5er.md)
+  [`scale_x_cases_5er()`](https://ggsurveillance.biostats.dev/reference/scale_y_cases_5er.md)
+  : Continuous x-axis and y-axis scale for (case) counts
+- [`geom_vline_year()`](https://ggsurveillance.biostats.dev/reference/geom_vline_year.md)
+  [`geom_hline_year()`](https://ggsurveillance.biostats.dev/reference/geom_vline_year.md)
+  : Automatically create lines at the turn of every year
+- [`label_date()`](https://ggsurveillance.biostats.dev/reference/label_date.md)
+  [`label_date_short()`](https://ggsurveillance.biostats.dev/reference/label_date.md)
+  : Date labeller
+- [`guide_axis_nested_date()`](https://ggsurveillance.biostats.dev/reference/guide_axis_nested_date.md)
+  : Nested axis guide for date scales
+
+## Diverging Bar Charts and Diverging Area Charts
+
+Functions for diverging plots for population pyramids, likert scales,
+etc.
+
+- [`geom_bar_diverging()`](https://ggsurveillance.biostats.dev/reference/geom_bar_diverging.md)
+  [`geom_area_diverging()`](https://ggsurveillance.biostats.dev/reference/geom_bar_diverging.md)
+  [`stat_diverging()`](https://ggsurveillance.biostats.dev/reference/geom_bar_diverging.md)
+  : Create diverging bar charts, diverging area charts or other plots
+  for opposing categorical data.
+- [`scale_x_continuous_diverging()`](https://ggsurveillance.biostats.dev/reference/scale_continuous_diverging.md)
+  [`scale_y_continuous_diverging()`](https://ggsurveillance.biostats.dev/reference/scale_continuous_diverging.md)
+  : Diverging continuous scales for diverging bar charts with
+  symmetrical limits
+- [`scale_y_discrete_reverse()`](https://ggsurveillance.biostats.dev/reference/scale_y_discrete_reverse.md)
+  [`scale_x_discrete_reverse()`](https://ggsurveillance.biostats.dev/reference/scale_y_discrete_reverse.md)
+  : Reversed discrete scale for 'ggplot2'
+
+## Date Binning and Seasonal Datr Alignment
+
+Functions for binning cases by date intervalls and aligning and
+comparing data across seasons
+
+- [`bin_by_date()`](https://ggsurveillance.biostats.dev/reference/bin_by_date.md)
+  : Aggregate data by time periods
+- [`align_dates_seasonal()`](https://ggsurveillance.biostats.dev/reference/align_dates_seasonal.md)
+  [`align_and_bin_dates_seasonal()`](https://ggsurveillance.biostats.dev/reference/align_dates_seasonal.md)
+  : Align dates for seasonal comparison
+
+## EpiGantt Charts
+
+Functions for EpiGantt Charts
+
+- [`geom_epigantt()`](https://ggsurveillance.biostats.dev/reference/geom_epigantt.md)
+  : Epi Gantt Chart: Visualize Epidemiological Time Intervals
+- [`scale_y_discrete_reverse()`](https://ggsurveillance.biostats.dev/reference/scale_y_discrete_reverse.md)
+  [`scale_x_discrete_reverse()`](https://ggsurveillance.biostats.dev/reference/scale_y_discrete_reverse.md)
+  : Reversed discrete scale for 'ggplot2'
+
+## Data Manipulation Helpers
+
+Various functions helper functions for common epi tasks
+
+- [`create_agegroups()`](https://ggsurveillance.biostats.dev/reference/create_agegroups.md)
+  : Create Age Groups from Numeric Values
+- [`geometric_mean()`](https://ggsurveillance.biostats.dev/reference/geometric_mean.md)
+  : Compute a Geometric Mean
+- [`uncount()`](https://ggsurveillance.biostats.dev/reference/uncount.md)
+  [`expand_counts()`](https://ggsurveillance.biostats.dev/reference/uncount.md)
+  : Duplicate rows according to a weighting variable
+
+## Datasets
+
+Included datasets for examples and demonstrations
+
+- [`influenza_germany`](https://ggsurveillance.biostats.dev/reference/influenza_germany.md)
+  : German Influenza (FLU) Surveillance data
+- [`linelist_hospital_outbreak`](https://ggsurveillance.biostats.dev/reference/linelist_hospital_outbreak.md)
+  : Line list of a fictional hospital outbreak (Data)
+- [`population_german_states`](https://ggsurveillance.biostats.dev/reference/population_german_states.md)
+  : Population of the German states (2023)
+
+## ggplot2 Layers and Functions
+
+### Geoms and Stats
+
+Geoms and Stats in this package
+
+- [`geom_bar_diverging()`](https://ggsurveillance.biostats.dev/reference/geom_bar_diverging.md)
+  [`geom_area_diverging()`](https://ggsurveillance.biostats.dev/reference/geom_bar_diverging.md)
+  [`stat_diverging()`](https://ggsurveillance.biostats.dev/reference/geom_bar_diverging.md)
+  : Create diverging bar charts, diverging area charts or other plots
+  for opposing categorical data.
+- [`geom_col_range()`](https://ggsurveillance.biostats.dev/reference/geom_col_range.md)
+  : Create a ranged bar chart
+- [`geom_epicurve()`](https://ggsurveillance.biostats.dev/reference/geom_epicurve.md)
+  [`stat_bin_date()`](https://ggsurveillance.biostats.dev/reference/geom_epicurve.md)
+  [`stat_date_count()`](https://ggsurveillance.biostats.dev/reference/geom_epicurve.md)
+  [`geom_epicurve_text()`](https://ggsurveillance.biostats.dev/reference/geom_epicurve.md)
+  [`geom_epicurve_point()`](https://ggsurveillance.biostats.dev/reference/geom_epicurve.md)
+  : Create an epidemic curve plot or bin/count observations by date
+  periods
+- [`geom_epigantt()`](https://ggsurveillance.biostats.dev/reference/geom_epigantt.md)
+  : Epi Gantt Chart: Visualize Epidemiological Time Intervals
+- [`geom_vline_year()`](https://ggsurveillance.biostats.dev/reference/geom_vline_year.md)
+  [`geom_hline_year()`](https://ggsurveillance.biostats.dev/reference/geom_vline_year.md)
+  : Automatically create lines at the turn of every year
+- [`stat_last_value()`](https://ggsurveillance.biostats.dev/reference/stat_last_value.md)
+  [`geom_label_last_value()`](https://ggsurveillance.biostats.dev/reference/stat_last_value.md)
+  [`geom_text_last_value()`](https://ggsurveillance.biostats.dev/reference/stat_last_value.md)
+  [`geom_label_last_value_repel()`](https://ggsurveillance.biostats.dev/reference/stat_last_value.md)
+  [`geom_text_last_value_repel()`](https://ggsurveillance.biostats.dev/reference/stat_last_value.md)
+  : Add labels or points to the last value of a line chart
+
+### Scales and Guides
+
+ggplot2 scales and guides in this package
+
+- [`scale_x_continuous_diverging()`](https://ggsurveillance.biostats.dev/reference/scale_continuous_diverging.md)
+  [`scale_y_continuous_diverging()`](https://ggsurveillance.biostats.dev/reference/scale_continuous_diverging.md)
+  : Diverging continuous scales for diverging bar charts with
+  symmetrical limits
+- [`scale_y_cases_5er()`](https://ggsurveillance.biostats.dev/reference/scale_y_cases_5er.md)
+  [`scale_x_cases_5er()`](https://ggsurveillance.biostats.dev/reference/scale_y_cases_5er.md)
+  : Continuous x-axis and y-axis scale for (case) counts
+- [`scale_y_discrete_reverse()`](https://ggsurveillance.biostats.dev/reference/scale_y_discrete_reverse.md)
+  [`scale_x_discrete_reverse()`](https://ggsurveillance.biostats.dev/reference/scale_y_discrete_reverse.md)
+  : Reversed discrete scale for 'ggplot2'
+- [`guide_axis_nested_date()`](https://ggsurveillance.biostats.dev/reference/guide_axis_nested_date.md)
+  : Nested axis guide for date scales
+
+### Labeling and Formatting
+
+Functions for formatting labels and annotations
+
+- [`label_date()`](https://ggsurveillance.biostats.dev/reference/label_date.md)
+  [`label_date_short()`](https://ggsurveillance.biostats.dev/reference/label_date.md)
+  : Date labeller
+- [`label_skip()`](https://ggsurveillance.biostats.dev/reference/label_skip.md)
+  : Skip labels on an axis
+- [`label_power10()`](https://ggsurveillance.biostats.dev/reference/label_power10.md)
+  : Format numbers as power-of-10 R expressions
+
+### Theming and Styling
+
+Functions for customizing plot appearance
+
+- [`theme_mod_disable_legend()`](https://ggsurveillance.biostats.dev/reference/theme_mod_disable_legend.md)
+  [`theme_mod_legend_position()`](https://ggsurveillance.biostats.dev/reference/theme_mod_disable_legend.md)
+  [`theme_mod_legend_top()`](https://ggsurveillance.biostats.dev/reference/theme_mod_disable_legend.md)
+  [`theme_mod_legend_bottom()`](https://ggsurveillance.biostats.dev/reference/theme_mod_disable_legend.md)
+  [`theme_mod_legend_left()`](https://ggsurveillance.biostats.dev/reference/theme_mod_disable_legend.md)
+  [`theme_mod_legend_right()`](https://ggsurveillance.biostats.dev/reference/theme_mod_disable_legend.md)
+  [`theme_mod_remove_legend_title()`](https://ggsurveillance.biostats.dev/reference/theme_mod_disable_legend.md)
+  : Quickly adjust the legend position
+- [`theme_mod_remove_minor_grid()`](https://ggsurveillance.biostats.dev/reference/theme_mod_remove_minor_grid.md)
+  [`theme_mod_remove_minor_grid_y()`](https://ggsurveillance.biostats.dev/reference/theme_mod_remove_minor_grid.md)
+  [`theme_mod_remove_minor_grid_x()`](https://ggsurveillance.biostats.dev/reference/theme_mod_remove_minor_grid.md)
+  [`theme_mod_remove_panel_grid()`](https://ggsurveillance.biostats.dev/reference/theme_mod_remove_minor_grid.md)
+  : Quickly remove the minor lines of the panel grid
+- [`theme_mod_rotate_x_axis_labels()`](https://ggsurveillance.biostats.dev/reference/theme_mod_rotate_axis_labels.md)
+  [`theme_mod_rotate_x_axis_labels_90()`](https://ggsurveillance.biostats.dev/reference/theme_mod_rotate_axis_labels.md)
+  [`theme_mod_rotate_x_axis_labels_45()`](https://ggsurveillance.biostats.dev/reference/theme_mod_rotate_axis_labels.md)
+  [`theme_mod_rotate_x_axis_labels_30()`](https://ggsurveillance.biostats.dev/reference/theme_mod_rotate_axis_labels.md)
+  [`theme_mod_rotate_x_axis_labels_60()`](https://ggsurveillance.biostats.dev/reference/theme_mod_rotate_axis_labels.md)
+  [`theme_mod_rotate_y_axis_labels()`](https://ggsurveillance.biostats.dev/reference/theme_mod_rotate_axis_labels.md)
+  : Rotate axis labels
+
+# Articles
+
+### All vignettes
+
+- [Seasonal Plots: Align case data for seasonal
+  analysis](https://ggsurveillance.biostats.dev/articles/align_dates_seasonal.md):
+- [EpiCurves: epicurves in ggplot with
+  ggsurveillance](https://ggsurveillance.biostats.dev/articles/Epicurves_with_ggsurveillance.md):
+- [EpiGantt: epigantt charts in ggplot with
+  ggsurveillance](https://ggsurveillance.biostats.dev/articles/Epigantt_with_ggsurveillance.md):

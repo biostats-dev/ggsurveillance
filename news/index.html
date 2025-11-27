@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggsurveillance</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,6 +43,19 @@
       <small>Source: <a href="https://github.com/biostats-dev/ggsurveillance/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.5.2" id="ggsurveillance-052">ggsurveillance 0.5.2<a class="anchor" aria-label="anchor" href="#ggsurveillance-052"></a></h2><p class="text-muted">CRAN release: 2025-11-27</p>
+<ul><li>
+<a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> 4.0.0 compatibility fixes.</li>
+<li>
+<code><a href="../reference/geom_epicurve.html">geom_epicurve()</a></code>: Now honours the <code>width</code> parameter correctly.</li>
+<li>
+<code><a href="../reference/label_power10.html">label_power10()</a></code>: Add “cdot” (e.g. <span class="math inline">\(2 \cdot 10^5\)</span>) as an option for the multiplication symbol. Improve <code>NA</code> handling.</li>
+<li>
+<code><a href="../reference/stat_last_value.html">stat_last_value()</a></code>: Apply <code>labeller</code> if a numeric value is provided for <code>label</code> aesthetic.</li>
+<li>
+<code><a href="../reference/create_agegroups.html">create_agegroups()</a></code>: Improve handling of age 0. Negative ages are now treated as <code>NA</code> or will be labelled according to <code>na_label</code>. Improve number padding.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.5.1" id="ggsurveillance-051">ggsurveillance 0.5.1<a class="anchor" aria-label="anchor" href="#ggsurveillance-051"></a></h2><p class="text-muted">CRAN release: 2025-07-02</p>
 <ul><li>Bug fix: Fix corner cases for the <code>fill_gaps</code> option in <code><a href="../reference/bin_by_date.html">bin_by_date()</a></code>
@@ -87,7 +100,7 @@
 <ul><li>
 <code><a href="../reference/stat_last_value.html">stat_last_value()</a></code> pulls the coordinates of the last value. E.g. can be used to add a point to the end of the line.</li>
 <li>
-<code><a href="../reference/stat_last_value.html">geom_label_last_value_repel()</a></code>: <code>ggrepel</code> versions for crowded plots with multiple lines</li>
+<code><a href="../reference/stat_last_value.html">geom_label_last_value_repel()</a></code>: <a href="https://ggrepel.slowkow.com/" class="external-link">ggrepel</a> versions for crowded plots with multiple lines</li>
 </ul></li>
 <li>New dataset: <code>population_german_states</code>
 </li>
@@ -144,7 +157,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

@@ -1,3 +1,11 @@
+# ggsurveillance 0.5.2
+
+-   `{ggplot2}` 4.0.0 compatibility fixes.
+-   `geom_epicurve()`: Now honours the `width` parameter correctly.
+-   `label_power10()`: Add "cdot" (e.g. $2 \cdot 10^5$) as an option for the multiplication symbol. Improve `NA` handling.
+-   `stat_last_value()`: Apply `labeller` if a numeric value is provided for `label` aesthetic.
+-   `create_agegroups()`: Improve handling of age 0. Negative ages are now treated as `NA` or will be labelled according to `na_label`. Improve number padding.
+
 # ggsurveillance 0.5.1
 
 -   Bug fix: Fix corner cases for the `fill_gaps` option in `bin_by_date()`
@@ -7,8 +15,8 @@
 ## New Features
 
 -   `bin_by_date()`: New `tidyverse`-compatible function for flexible date-based aggregation (binning). This function was previously internal to `geom_epicurve()` and `stat_bin_date()`.
-    -   It includes a simpler and faster `fill_gaps` argument to automatically fill gaps in a time series with 0s. 
--   `guide_axis_nested_date()`: New axis guide for creating nested date labels for hierarchical time periods (e.g., year > month > day). This feature is powered by the `{legendry}` package.
+    -   It includes a simpler and faster `fill_gaps` argument to automatically fill gaps in a time series with 0s.
+-   `guide_axis_nested_date()`: New axis guide for creating nested date labels for hierarchical time periods (e.g., year \> month \> day). This feature is powered by the `{legendry}` package.
 -   `label_power10()`: New `ggplot2`-compatible labeling function to format numbers in scientific notation with powers of 10 (e.g., $2 \times 10^5$).
 -   `geom_epicurve_text()` and `geom_epicurve_point()`: New geoms to easily add text annotations or points to cases in epidemic curves created with `geom_epicurve()`.
 
@@ -25,7 +33,7 @@
     -   `geom_col_range()`: The underlying geom which creates bars from `x`, `ymin` and `ymax` (or flipped).
 -   `geom_label_last_value()` for labeling of the last value of a time series (like `geom_line()`)
     -   `stat_last_value()` pulls the coordinates of the last value. E.g. can be used to add a point to the end of the line.
-    -   `geom_label_last_value_repel()`: `ggrepel` versions for crowded plots with multiple lines
+    -   `geom_label_last_value_repel()`: `{ggrepel}` versions for crowded plots with multiple lines
 -   New dataset: `population_german_states`
 -   `label_skip()` for skipping axis labels, e.g. only label every second tick
 -   re-export `label_date()` and `label_date_short()` from scales for date labels with a custom locale.

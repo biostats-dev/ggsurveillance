@@ -40,6 +40,22 @@ test_that("different formatting options work", {
     ),
     c("0-01", "02-03", "02-03", "04-09", "04-09", "10+")
   )
+
+  expect_identical(
+    create_agegroups(c(1:5, 10),
+      age_breaks = c(1:5, 10),
+      pad_numbers = TRUE, collapse_single_year_groups = TRUE
+    ),
+    c("01", "02", "03", "04", "05-09", "10+")
+  )
+
+  expect_identical(
+    create_agegroups(c(1:5, 10),
+      age_breaks = c(1:5, 10),
+      pad_numbers = 3, collapse_single_year_groups = TRUE
+    ),
+    c("001", "002", "003", "004", "005-009", "010+")
+  )
 })
 
 test_that("single year group collapsing works", {

@@ -14,7 +14,8 @@
 #' @param breaks_as_lower_bound Logical; if \code{TRUE} (default), breaks define the the lower bounds of the intervals (e.g., a break at 5 starts the '5-9' group).
 #' If \code{FALSE}, breaks define the upper bound (e.g., a break at 5 ends the '0-5' group).
 #' @param first_group_format Character string template for the first age group. Uses [glue::glue] syntax. \cr
-#' The variable `x` represents the upper bound of the first interval.\cr
+#' The variable `x` represents the upper bound of the first interval.
+#' Ignored if the first group is collapsed using `collapse_single_year_groups`. \cr
 #' Default: \code{"0-{x}"}. Other common styles: \code{"<={x}", "<{x+1}"}
 #' @param interval_format Character string template for intermediate age groups. Uses [glue::glue] syntax.\cr
 #' The variables `x` and `y` represent the lower and upper bounds of the interval, respectively.\cr
@@ -22,15 +23,21 @@
 #' @param last_group_format Character string template for the last age group. Uses [glue::glue] syntax. \cr
 #' The variable `x` represents the lower bound of the last interval.\cr
 #' Default: \code{"{x}+"}. Other common styles: \code{">={x}",">{x-1}"}
-#' @param pad_numbers Logical or numeric; if numeric, pad numbers up to the specified length (Tip: use \code{2}).
+#' @param pad_numbers Logical or numeric; if numeric, pad numbers up to the specified length
+#' (`TRUE` will be treated as `2`).
 #' Not compatible with calculations within glue formats. Default: \code{FALSE}
 #' @param pad_with Character to use for padding numbers. Default: \code{"0"}
 #' @param collapse_single_year_groups Logical; if \code{TRUE}, groups spanning a single year (e.g., from `age_breaks = c(1, 2)`)
 #' are formatted as a single number (e.g., "1") instead of a range (e.g., "1-1"). Default: \code{FALSE}
-#' @param na_label Label for \code{NA} values. If \code{NA}, keeps default \code{NA} handling. Default: \code{NA}
-#' @param return_factor Logical; if \code{TRUE}, returns a factor, if \code{FALSE} returns character vector. Default: \code{FALSE}
+#' @param na_label Label for \code{NA} values (including negative ages). If \code{NA}, keeps default \code{NA} handling. Default: \code{NA}
+#' @param return_factor Logical; if \code{TRUE}, returns a factor, if \code{FALSE} returns character vector.
+#' Can be used to keep the ordering and all possible levels of the age groups. Default: \code{FALSE}
 #'
 #' @return Vector of age group labels (character or factor depending on return_factor)
+#'
+#' @details
+#' Values below 0 are treated as `NA`.
+#'
 #'
 #' @examples
 #' # Basic usage
@@ -74,6 +81,7 @@ create_agegroups <- function(
   age_breaks <- sort(unique(floor(age_breaks)))
   age_breaks <- age_breaks[age_breaks != 0]
   breaks <- c(-Inf, age_breaks, Inf)
+  pad_numbers <- ifelse(is_bool(pad_numbers) & pad_numbers, 2L, pad_numbers)
 
   if (any(values < 0, na.rm = TRUE)) {
     cli::cli_warn("Negative ages detected. These will be treated as NA.")
@@ -100,7 +108,9 @@ create_agegroups <- function(
   labels <- c(
     # First Group
     case_when(
-      collapse_single_year_groups & (age_breaks[1] + corr_up == 0) ~ "0",
+      # Collapse groups if specified
+      collapse_single_year_groups & (age_breaks[1] + corr_up == 0) ~
+        stringr::str_pad("0", as.numeric(pad_numbers), pad = pad_with),
       TRUE ~ write_labels(first_group_format, age_breaks[1] + corr_up),
     ),
     # Mid group when more than 1 breaks was supplied
@@ -109,7 +119,7 @@ create_agegroups <- function(
         # Collapse groups if specified
         (collapse_single_year_groups &
           (age_breaks[1:(length(age_breaks) - 1)] + corr_low == age_breaks[2:length(age_breaks)] + corr_up)
-        ) ~ as.character(age_breaks[1:(length(age_breaks) - 1)] + corr_low),
+        ) ~ stringr::str_pad((age_breaks[1:(length(age_breaks) - 1)] + corr_low), as.numeric(pad_numbers), pad = pad_with),
         # Default
         TRUE ~ write_labels(
           interval_format,

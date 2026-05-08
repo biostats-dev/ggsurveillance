@@ -96,6 +96,7 @@ and vignettes see:
 ### Creating Epicurves
 
 ``` r
+
 library(ggplot2)
 library(tidyr)
 library(outbreaks)
@@ -123,6 +124,7 @@ Epicurve of the 2003 SARS outbreak in Canada
 ### Align surveillance data for seasonal comparison
 
 ``` r
+
 library(ggplot2)
 library(dplyr)
 library(ggsurveillance)
@@ -158,6 +160,7 @@ Seasonal influenza data from Germany by age group
 ### Create Epigantt plots to visualize exposure intervals in outbreaks
 
 ``` r
+
 library(dplyr)
 library(tidyr)
 library(ggplot2)
@@ -196,6 +199,7 @@ Useful for population pyramids, vaccination status, likert scales
 (sentiment) etc.
 
 ``` r
+
 library(dplyr)
 library(ggplot2)
 library(ggsurveillance)

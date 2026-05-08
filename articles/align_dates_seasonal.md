@@ -17,6 +17,7 @@ show how this is automated using `ggsurveillance`.
 ## Seasonal alignment and plot
 
 ``` r
+
 library(ggplot2)
 
 influenza_germany |>
@@ -34,6 +35,7 @@ ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence, color = season)) +
 ![](align_dates_seasonal_files/figure-html/unnamed-chunk-3-1.png)
 
 ``` r
+
 influenza_germany |>
   align_dates_seasonal(dates_from = ReportingWeek) |>
   group_by(AgeGroup, season) |>
@@ -53,6 +55,7 @@ influenza_germany |>
 ## Combining everything for the seasonal plot
 
 ``` r
+
 influenza_germany |>
   filter(AgeGroup == "00+") |>
   align_dates_seasonal(
@@ -87,6 +90,7 @@ ggplot(df_flu_aligned, aes(x = date_aligned, y = Incidence)) +
 ## Other visualisations
 
 ``` r
+
 influenza_germany |>
   filter(AgeGroup != "00+") |>
   align_dates_seasonal(dates_from = ReportingWeek) |>

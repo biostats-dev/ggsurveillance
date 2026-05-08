@@ -15,6 +15,7 @@ potential transmission routes identified. Like this:
 ### Start with the Line List
 
 ``` r
+
 linelist_hospital_outbreak
 #> # A tibble: 8 × 9
 #>   Patient ward_name_1        ward_start_of_stay_1 ward_end_of_stay_1 ward_name_2
@@ -34,6 +35,7 @@ linelist_hospital_outbreak
 ### Transform the Line List into long format for ggplot
 
 ``` r
+
 linelist_hospital_outbreak |>
   pivot_longer(
     cols = starts_with("ward"),
@@ -75,6 +77,7 @@ df_detections_long |> select(Patient, name, date)
 ### Plot the Epigantt chart
 
 ``` r
+
 ggplot(df_stays_long) +
   geom_epigantt(aes(y = Patient, xmin = start_of_stay, xmax = end_of_stay, color = name)) +
   geom_point(aes(y = Patient, x = date, shape = "Date of pathogen detection"), data = df_detections_long) +
@@ -88,6 +91,7 @@ ggplot(df_stays_long) +
 ## Outbreak 2: Fictional Varicella Outbreak in Berlin
 
 ``` r
+
 outbreaks::varicella_sim_berlin |>
   filter(center1 == "Platz der Luftbruecke") |>
   arrange(onset) |>
@@ -112,6 +116,7 @@ outbreaks::varicella_sim_berlin |>
 ![](Epigantt_with_ggsurveillance_files/figure-html/unnamed-chunk-6-1.png)
 
 ``` r
+
 ggplot(outbreaks::measles_hagelloch_1861, aes(y = case_ID, xmin = date_of_prodrome, xmax = date_of_rash, fill = class)) +
   geom_vline_year(color = "grey50") +
   geom_epigantt() +

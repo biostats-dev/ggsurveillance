@@ -8,6 +8,7 @@ already helpful and inspiring.
 ### Ebola Outbreak in Kikwit, Democratic Republic of the Congo 1995
 
 ``` r
+
 ggplot(outbreaks::ebola_kikwit_1995, aes(x = date, weight = onset)) +
   geom_epicurve(date_resolution = "week") +
   scale_x_date(date_breaks = "2 weeks", date_labels = "%V'%g", name = "week") +
@@ -20,6 +21,7 @@ ggplot(outbreaks::ebola_kikwit_1995, aes(x = date, weight = onset)) +
 ### SARS Outbreak in Canada 2003
 
 ``` r
+
 outbreaks::sars_canada_2003 |>
   pivot_longer(starts_with("cases"), names_prefix = "cases_", names_to = "origin") |>
   ggplot(aes(x = date, weight = value, fill = origin)) +
@@ -40,6 +42,7 @@ outbreaks::sars_canada_2003 |>
   creates a y-axis with more ticks and aligns 0 with the x-axis.
 
 ``` r
+
 influenza_germany |>
   # Keep Age Groups 00-14, 15-59, 60+
   filter(AgeGroup != "00+") |>
@@ -57,6 +60,7 @@ influenza_germany |>
 ## Extra
 
 ``` r
+
 influenza_germany |>
   # Calc Influenza Seasons
   align_dates_seasonal(dates_from = ReportingWeek) |>
